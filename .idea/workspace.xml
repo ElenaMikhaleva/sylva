@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="fixing bugs">
-      <change afterPath="$PROJECT_DIR$/styles/styles-neo.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/test.html" afterDir="false" />
+    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="changing layout">
+      <change afterPath="$PROJECT_DIR$/templates/geological-time-old.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/studies.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/test2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/geological-time.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/geological-time.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mesozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mesozoic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paleozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paleozoic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/test.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +80,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/elena/Study/Apps/timelines/Silva"
+    "last_opened_file_path": "C:/Users/elena/Study/Apps/timelines/Sylva"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -475,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788536974052</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="changing layout">
+      <option name="closed" value="true" />
+      <created>1788706592714</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1788706592714</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -496,6 +510,7 @@
     <MESSAGE value="editing" />
     <MESSAGE value="adding tree of life" />
     <MESSAGE value="fixing bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing bugs" />
+    <MESSAGE value="changing layout" />
+    <option name="LAST_COMMIT_MESSAGE" value="changing layout" />
   </component>
 </project>

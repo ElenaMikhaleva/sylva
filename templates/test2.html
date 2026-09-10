@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marginalia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F3EEE3;
+    --cream-2:#ECE5D5;
+    --ink:#211D1A;
+    --ink-soft:#5B564C;
+    --line:#DDD3BE;
+    --red:#C4272C;
+    --red-tint:#F3DAD4;
+    --red-ink:#7A1518;
+    --blue:#4A6FA5;
+    --blue-tint:#DDE5EE;
+    --blue-ink:#2C4568;
+    --green:#5C9A6B;
+    --green-tint:#DFEEE2;
+    --green-ink:#2E5E3B;
+    --purple:#8B6BB8;
+    --purple-tint:#E9E0F3;
+    --purple-ink:#54397E;
+    --yellow:#D9A62E;
+    --yellow-tint:#F5E7C4;
+    --yellow-ink:#7A5B0A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Archivo',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 32px;}
+
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:28px 32px;max-width:1040px;margin:0 auto;
+  }
+  .brand{font-family:'Fraunces',serif;font-weight:600;font-size:22px;}
+  .navlinks{display:flex;gap:6px;}
+  .navlinks button{
+    font-family:'Archivo',sans-serif;font-size:14px;font-weight:500;
+    background:none;border:none;color:var(--ink-soft);
+    padding:8px 14px;border-radius:20px;cursor:pointer;
+  }
+  .navlinks button.active{background:var(--ink);color:var(--cream);}
+  .navlinks button:not(.active):hover{background:var(--cream-2);color:var(--ink);}
+
+  section.page{display:none;padding-bottom:110px;}
+  section.page.active{display:block;}
+
+  .hero{padding:60px 0 40px;position:relative;}
+  .hero h1{font-size:52px;line-height:1.08;max-width:620px;}
+  .hero p{font-size:17px;color:var(--ink-soft);max-width:440px;margin-top:20px;line-height:1.6;}
+  .blob{position:absolute;right:10px;top:10px;width:150px;opacity:0.95;}
+
+  .bleedband{width:100vw;position:relative;left:50%;transform:translateX(-50%);overflow:hidden;margin-bottom:52px;}
+  .bleedband .bandinner{max-width:1040px;margin:0 auto;padding:64px 32px;position:relative;}
+  .bleedband .bandinner h2{font-size:50px;line-height:1.05;max-width:620px;position:relative;z-index:1;}
+  .bleedband .bandinner p{margin-top:16px;font-size:16px;max-width:440px;line-height:1.6;position:relative;z-index:1;}
+  .bandgraphic{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+
+  .cardgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:50px;}
+  .entrycard{
+    border:1px solid var(--line);border-radius:16px;padding:26px 22px;
+    background:var(--cream);cursor:pointer;transition:transform .15s,border-color .15s;
+  }
+  .entrycard:hover{border-color:var(--ink);transform:translateY(-3px);}
+  .iconwrap{width:56px;height:56px;position:relative;margin-bottom:18px;}
+  .iconwrap svg.blobshape{position:absolute;inset:0;width:100%;height:100%;}
+  .iconwrap svg.icon{position:relative;width:26px;height:26px;margin:15px;color:var(--ink);}
+  .entrycard h3{font-size:20px;margin-bottom:8px;}
+  .entrycard p{font-size:14px;color:var(--ink-soft);line-height:1.5;margin:0;}
+
+  /* MAP — connections across the site */
+  .mapwrap{margin-top:70px;padding-top:44px;border-top:1px solid var(--line);}
+  .mapwrap h2{font-size:28px;margin-bottom:8px;}
+  .mapwrap p{color:var(--ink-soft);font-size:14.5px;margin-bottom:8px;max-width:480px;}
+  .mapnode{cursor:pointer;}
+  .mapnode circle{fill:var(--ink);transition:fill .12s;}
+  .mapnode:hover circle{fill:var(--red);}
+  .mapnode text{font-family:'Archivo',sans-serif;font-weight:600;font-size:12.5px;fill:var(--ink);}
+  .mapnode:hover text{fill:var(--red-ink);}
+  .mapedge{stroke:var(--red);stroke-width:1.4;opacity:0.5;}
+
+  /* MATERIALS — filterable grid with riso-textured covers + detail view */
+  .filterrow{display:flex;align-items:baseline;gap:22px;margin-bottom:14px;flex-wrap:wrap;}
+  .filterlabel{font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin-right:2px;}
+  .filterchip{
+    font-family:'Archivo',sans-serif;font-weight:600;font-size:14px;color:var(--ink-soft);
+    cursor:pointer;padding-bottom:3px;border-bottom:2px solid transparent;
+  }
+  .filterchip.current{color:var(--ink);border-bottom-color:var(--red);}
+  .filterchip:hover{color:var(--ink);}
+
+  .matgrid{display:flex;flex-direction:column;margin-top:36px;}
+
+  .viewtoggle{display:flex;gap:18px;margin-bottom:8px;}
+  .viewbtn{font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;color:var(--ink-soft);cursor:pointer;padding-bottom:3px;border-bottom:2px solid transparent;}
+  .viewbtn.current{color:var(--ink);border-bottom-color:var(--red);}
+
+  /* LIST view — minimal, Notion-style rows */
+  .listrow{display:flex;align-items:center;gap:14px;padding:11px 4px;border-bottom:1px solid var(--line);cursor:pointer;}
+  .listrow:hover{background:var(--cream-2);}
+  .listrow .listicon{width:26px;height:34px;flex-shrink:0;border:1px solid var(--line);background:var(--cream-2);}
+  .listrow .listtitle{font-family:'Fraunces',serif;font-weight:600;font-size:15px;flex:1;min-width:0;}
+  .listrow .listcreator{font-size:12.5px;color:var(--ink-soft);width:170px;flex-shrink:0;}
+  .listrow .listmedium{font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink-soft);width:70px;flex-shrink:0;}
+  .listrow .liststatus{font-size:11px;font-weight:700;text-transform:uppercase;width:90px;flex-shrink:0;text-align:right;}
+  .liststatus.status-reading{color:var(--red-ink);}
+  .liststatus.status-finished{color:var(--blue-ink);}
+  .liststatus.status-queued{color:var(--ink-soft);}
+
+  /* CARD view — bordered, horizontal (cover left, text right) */
+  .hcard{display:flex;border:2px solid var(--ink);background:#FBF7ED;position:relative;cursor:pointer;margin-bottom:18px;}
+  .hcard .coverinset{width:110px;flex-shrink:0;aspect-ratio:200/260;border-right:2px solid var(--ink);overflow:hidden;background:var(--cream-2);}
+  .hcard.dashed .coverinset{border-right:2px dashed var(--ink);}
+  .hcard .hbody{flex:1;padding:20px 24px;position:relative;}
+  .hcard .plate-label{font-family:'Fraunces',serif;font-style:italic;font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+  .hcard h3{font-family:'Fraunces',serif;font-weight:600;font-size:20px;line-height:1.25;}
+  .hcard .creator{font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .hcard .stub{margin-top:10px;font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--blue-ink);}
+
+  /* status stamp — only on personal, tracked items */
+  .statusmark{
+    position:absolute;top:10px;right:10px;width:48px;height:48px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;transform:rotate(-11deg);
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:8.5px;text-transform:uppercase;
+    letter-spacing:0.02em;text-align:center;line-height:1.2;z-index:2;opacity:0.95;
+    background:var(--cream);
+  }
+  .statusmark.status-reading{border:1.5px solid var(--red);color:var(--red-ink);}
+  .statusmark.status-finished{border:1.5px solid var(--blue);color:var(--blue-ink);}
+  .statusmark.status-queued{border:1.5px solid var(--ink-soft);color:var(--ink-soft);}
+
+  .backlink{
+    font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;background:none;
+    border:none;color:var(--ink-soft);cursor:pointer;padding:0;margin-bottom:30px;
+  }
+  .backlink:hover{color:var(--ink);}
+  .detailtop{display:flex;gap:40px;}
+  .detailcover{width:120px;flex-shrink:0;aspect-ratio:200/260;border:1px solid var(--line);overflow:hidden;background:var(--cream-2);}
+  .detailinfo{padding-top:4px;}
+  .detailinfo .medium-tag{font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);}
+  .detailinfo h2{font-size:34px;margin-top:8px;max-width:440px;}
+  .detailinfo .creator{font-size:15px;color:var(--ink-soft);margin-top:6px;}
+  .detailinfo .blurb{margin-top:20px;font-size:15.5px;line-height:1.7;max-width:500px;color:var(--ink);}
+  .detailnotes{margin-top:44px;max-width:520px;}
+  .detailnotes .marginnote{margin-bottom:22px;}
+
+  /* STUDY NOTES — notebook: ruled paper, binder tabs, highlighter */
+  .studytop{display:flex;gap:2px;border-bottom:2px solid var(--ink);margin-bottom:0;}
+  .bindertab{
+    font-family:'Archivo',sans-serif;font-weight:600;font-size:13.5px;
+    padding:10px 20px 9px;border:1.5px solid var(--ink);border-bottom:none;
+    border-radius:8px 8px 0 0;position:relative;top:2px;background:var(--cream-2);cursor:pointer;
+  }
+  .bindertab.current{background:var(--ink);color:var(--cream);}
+  .studybody{display:grid;grid-template-columns:1fr 260px;gap:48px;margin-top:36px;}
+  .noteflow h2{font-size:32px;margin-bottom:8px;max-width:520px;}
+  .noteflow .datestamp{font-size:14px;color:var(--ink-soft);margin-bottom:26px;}
+  .noteflow h4{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:18px;color:var(--ink);margin:28px 0 10px;}
+  .noteflow p{font-size:15.5px;line-height:1.75;color:var(--ink);margin:0 0 14px;max-width:540px;}
+  .noteflow ul{margin:0 0 14px;padding-left:20px;font-size:15.5px;line-height:1.75;max-width:540px;list-style:none;}
+  .noteflow li{position:relative;padding-left:4px;margin-bottom:6px;}
+  .noteflow li::before{content:'—';position:absolute;left:-18px;color:var(--ink-soft);}
+  .hl{background:linear-gradient(120deg,#F3D874 0%,#EAC24B 100%);padding:1px 5px;border-radius:2px;font-weight:600;}
+  .marginnote{max-width:400px;margin:0;text-align:left;padding:4px 0 4px 16px;border-left:3px solid var(--red);}
+  .marginnote blockquote{margin:0;font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--red-ink);line-height:1.5;}
+  .marginnote .marktag{display:block;font-family:'Archivo',sans-serif;font-style:normal;font-size:11.5px;color:var(--ink-soft);margin-top:6px;}
+  .marginrail{padding-left:22px;border-left:3px solid var(--red);}
+  .rail-note{margin-bottom:34px;display:flex;gap:8px;}
+  .rail-note:first-child{margin-top:6px;}
+  .rail-note .doodle{flex-shrink:0;width:16px;height:16px;margin-top:3px;color:var(--red);}
+  .rail-note blockquote{margin:0;font-family:'Fraunces',serif;font-style:italic;font-size:15.5px;color:var(--red-ink);line-height:1.5;}
+  .rail-note .marktag{display:block;font-family:'Archivo',sans-serif;font-style:normal;font-size:11.5px;color:var(--ink-soft);margin-top:6px;}
+  .rail-note.plain{font-size:13.5px;color:var(--ink-soft);line-height:1.5;font-style:italic;}
+
+  /* TIMELINE — rock strata cross-section */
+  .strata-wrap{display:flex;gap:40px;align-items:stretch;}
+  .strata-col{width:110px;flex-shrink:0;}
+  .strata-info{flex:1;display:flex;flex-direction:column;}
+  .strata-block{padding:0 0 0 22px;border-left:3px solid var(--ink);position:relative;display:flex;flex-direction:column;justify-content:center;}
+  .strata-block::before{
+    content:'';position:absolute;left:-3px;top:50%;width:22px;height:2px;background:var(--ink);
+  }
+  .strata-block .eraname{font-family:'Fraunces',serif;font-weight:600;font-size:23px;}
+  .strata-block .tdate{font-size:12.5px;color:var(--ink-soft);margin:4px 0 8px;}
+  .strata-block p{font-size:14.5px;line-height:1.6;color:var(--ink);margin:0;max-width:460px;}
+  .strata-caption{font-size:12px;color:var(--ink-soft);font-style:italic;margin-top:14px;}
+
+  @media(max-width:720px){
+    .cardgrid{grid-template-columns:1fr;}
+    .hero h1{font-size:36px;}
+    .bleedband .bandinner h2{font-size:32px;}
+    .blob,.headblob{display:none;}
+    .matcard{gap:14px;}
+    .matcard .coverinset{width:52px;}
+    .detailtop{flex-direction:column;}
+    .detailcover{width:160px;}
+    .studybody{grid-template-columns:1fr;}
+    .marginrail{border-left:none;border-top:3px solid var(--red);padding-left:0;padding-top:22px;margin-top:10px;}
+    .strata-wrap{flex-direction:column;}
+    .strata-col{width:100%;height:60px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">Marginalia</div>
+  <div class="navlinks">
+    <button class="active" data-page="home">Home</button>
+    <button data-page="media">Materials</button>
+    <button data-page="study">Study notes</button>
+    <button data-page="timeline">Timeline</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="page active" id="home">
+    <div class="hero">
+      <svg class="blob" viewBox="0 0 200 200"><path fill="#C4272C" d="M60 40C90 20 140 30 155 65C170 100 155 140 120 160C85 180 40 170 25 135C10 100 25 62 60 40Z"/></svg>
+      <h1>A place for what you're taking in, and making sense of.</h1>
+      <p>Books and films you're working through, notes from what you're studying, and the timelines that tie it together — kept in one spot.</p>
+    </div>
+
+    <div class="cardgrid">
+      <div class="entrycard" onclick="go('media')">
+        <div class="iconwrap">
+          <svg class="blobshape" viewBox="0 0 56 56"><path fill="var(--red)" d="M12 20C18 8 40 6 48 18C56 30 50 46 36 50C22 54 6 46 5 34C4 26 7 27 12 20Z"/></svg>
+          <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M8 8C8 8 16 5 20 9C24 5 32 8 32 8V32C32 32 24 29 20 33C16 29 8 32 8 32V8Z" stroke="var(--cream)" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 9V33" stroke="var(--cream)" stroke-width="2.5"/></svg>
+        </div>
+        <h3>Materials</h3>
+        <p>Books, plays, films, podcasts — what you're taking in, with notes as you go.</p>
+      </div>
+      <div class="entrycard" onclick="go('study')">
+        <div class="iconwrap">
+          <svg class="blobshape" viewBox="0 0 56 56"><path fill="var(--red)" d="M10 14C20 4 44 8 50 22C56 36 46 52 30 52C14 52 2 42 3 28C3.5 21 5 19 10 14Z"/></svg>
+          <svg class="icon" viewBox="0 0 40 40" fill="none"><rect x="9" y="6" width="22" height="28" rx="2" stroke="var(--cream)" stroke-width="2.5"/><path d="M14 14H26M14 20H26M14 26H21" stroke="var(--cream)" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Study notes</h3>
+        <p>Конспекты and reading notes, organised by subject.</p>
+      </div>
+      <div class="entrycard" onclick="go('timeline')">
+        <div class="iconwrap">
+          <svg class="blobshape" viewBox="0 0 56 56"><path fill="var(--red)" d="M14 10C26 2 48 10 50 24C52 40 38 54 22 50C8 46 0 32 4 22C6 17 9 13 14 10Z"/></svg>
+          <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M8 20H32M14 12L8 20L14 28M26 12L32 20L26 28" stroke="var(--cream)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Timeline</h3>
+        <p>How things unfolded, laid out in order.</p>
+      </div>
+    </div>
+
+    <div class="mapwrap">
+      <h2>How it connects.</h2>
+      <p>A loose map of what's linked to what so far — click a point to jump there.</p>
+      <div style="overflow-x:auto;">
+        <svg viewBox="0 0 800 300" width="800" style="min-width:700px;display:block;">
+        <g class="mapedge-group">
+          <line class="mapedge" x1="260" y1="55" x2="150" y2="150"/>
+          <line class="mapedge" x1="260" y1="55" x2="400" y2="150"/>
+          <line class="mapedge" x1="150" y1="150" x2="400" y2="150"/>
+          <line class="mapedge" x1="400" y1="150" x2="260" y2="235"/>
+          <line class="mapedge" x1="560" y1="65" x2="560" y2="165"/>
+          <line class="mapedge" x1="70" y1="235" x2="70" y2="65"/>
+        </g>
+        <g class="mapnode" onclick="goToMaterial('poetics')"><circle cx="260" cy="55" r="6"/><text x="272" y="52">Poetics</text></g>
+        <g class="mapnode" onclick="goToMaterial('frogs')"><circle cx="150" cy="150" r="6"/><text x="162" y="147">Frogs</text></g>
+        <g class="mapnode" onclick="goToMaterial('oresteia')"><circle cx="400" cy="150" r="6"/><text x="412" y="147">Oresteia</text></g>
+        <g class="mapnode" onclick="goToMaterial('inourtime-pelop')"><circle cx="260" cy="235" r="6"/><text x="272" y="232">In Our Time</text></g>
+        <g class="mapnode" onclick="goToMaterial('perfect-days')"><circle cx="560" cy="65" r="6"/><text x="572" y="62">Perfect Days</text></g>
+        <g class="mapnode" onclick="goToMaterial('paris-texas')"><circle cx="560" cy="165" r="6"/><text x="572" y="162">Paris, Texas</text></g>
+        <g class="mapnode" onclick="go('study')"><circle cx="70" cy="235" r="6"/><text x="30" y="255">Linguistics</text></g>
+        <g class="mapnode" onclick="go('study')"><circle cx="70" cy="65" r="6"/><text x="82" y="62">Hebrew</text></g>
+        <g class="mapnode" onclick="goToMaterial('master-margarita')"><circle cx="700" cy="235" r="6"/><text x="600" y="255">The Master and Margarita</text></g>
+        <g class="mapnode" onclick="goToMaterial('klara')"><circle cx="700" cy="65" r="6"/><text x="612" y="62">Klara and the Sun</text></g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="media">
+    <div class="bleedband" style="background:#D9662E;">
+      <div class="bandgraphic">
+        <svg viewBox="0 0 1040 320" preserveAspectRatio="xMaxYMid slice" style="position:absolute;right:-60px;top:-20px;height:100%;opacity:0.9;">
+          <path d="M700 340 V140 C700 90 740 60 790 60 C840 60 880 90 880 140 V340" fill="none" stroke="#F3EEE3" stroke-width="14" opacity="0.55"/>
+          <path d="M840 340 V150 C840 100 880 70 930 70 C980 70 1020 100 1020 150 V340" fill="none" stroke="#F3EEE3" stroke-width="14" opacity="0.35"/>
+        </svg>
+      </div>
+      <div class="bandinner" style="color:#FBEEE3;">
+        <h2>What you're taking in.</h2>
+        <p style="color:#F6D9C4;">Books, plays, films, podcasts — and what stuck with you.</p>
+      </div>
+    </div>
+
+    <div id="matgridwrap">
+      <div class="filterrow">
+        <span class="filterlabel">Medium</span>
+        <div class="filterchip current" data-filtertype="medium" data-value="all">All</div>
+        <div class="filterchip" data-filtertype="medium" data-value="book">Books</div>
+        <div class="filterchip" data-filtertype="medium" data-value="play">Plays</div>
+        <div class="filterchip" data-filtertype="medium" data-value="film">Films</div>
+        <div class="filterchip" data-filtertype="medium" data-value="podcast">Podcasts</div>
+      </div>
+      <div class="filterrow">
+        <span class="filterlabel">Collection</span>
+        <div class="filterchip current" data-filtertype="collection" data-value="all">All</div>
+        <div class="filterchip" data-filtertype="collection" data-value="personal">Personal</div>
+        <div class="filterchip" data-filtertype="collection" data-value="ancient-greece">Ancient Greece</div>
+      </div>
+      <div class="filterrow" style="justify-content:space-between;">
+        <div class="viewtoggle" style="margin-bottom:0;">
+          <div class="viewbtn current" data-view="cards">Cards</div>
+          <div class="viewbtn" data-view="list">List</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <input id="matsearch" type="text" placeholder="Search title or creator…"
+                 style="font-family:'Archivo',sans-serif;font-size:13.5px;padding:7px 12px;border:1.5px solid var(--ink);border-radius:20px;background:var(--cream);width:200px;">
+          <select id="matsort" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;padding:7px 10px;border:1.5px solid var(--ink);border-radius:20px;background:var(--cream);cursor:pointer;">
+            <option value="default">Sort: default</option>
+            <option value="title">Sort: title A–Z</option>
+            <option value="creator">Sort: creator A–Z</option>
+            <option value="status">Sort: status</option>
+          </select>
+        </div>
+      </div>
+      <div class="matgrid" id="matgrid"></div>
+    </div>
+
+    <div id="matdetail" style="display:none;">
+      <button class="backlink" onclick="closeDetail()">&larr; Back to materials</button>
+      <div class="detailtop">
+        <div class="detailcover"></div>
+        <div class="detailinfo">
+          <div class="medium-tag" id="d-tag"></div>
+          <h2 id="d-title"></h2>
+          <div class="creator" id="d-creator"></div>
+          <p class="blurb" id="d-blurb"></p>
+        </div>
+      </div>
+      <div class="detailnotes" id="d-notes"></div>
+    </div>
+  </section>
+
+  <section class="page" id="study">
+    <div class="bleedband" style="background:#1F4A34;">
+      <div class="bandgraphic">
+        <svg viewBox="0 0 1040 320" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;">
+          <path d="M0 320 L0 220 C150 180 300 250 460 210 C620 170 760 230 1040 190 L1040 320 Z" fill="#2F6B4B" opacity="0.9"/>
+          <path d="M0 320 L0 260 C180 230 340 290 520 250 C700 210 860 270 1040 240 L1040 320 Z" fill="#4A8A63" opacity="0.85"/>
+          <path d="M0 320 L0 290 C220 275 400 310 620 285 C800 265 920 300 1040 285 L1040 320 Z" fill="#7BB98C" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="bandinner" style="color:#F1F6EE;">
+        <h2>What you're studying.</h2>
+        <p style="color:#CFE3D3;">Конспекты and reading notes, organised by subject.</p>
+      </div>
+    </div>
+    <div class="studytop">
+      <div class="bindertab current">Linguistics</div>
+      <div class="bindertab">Statistics</div>
+      <div class="bindertab">Art history</div>
+      <div class="bindertab">Hebrew</div>
+    </div>
+    <div class="studybody">
+      <div class="noteflow">
+        <h2>Sociolinguistics — variation</h2>
+        <div class="datestamp">Sept 3 · Linguistics</div>
+        <p>Labov's core finding: linguistic variation isn't random noise, it's socially structured. The same speaker shifts forms depending on formality, audience, and self-monitoring.</p>
+        <h4>Key terms</h4>
+        <ul>
+          <li><span class="hl">Sociolect</span> — variation tied to a social group rather than a region.</li>
+          <li><span class="hl">Prestige form</span> — the variant associated with higher social status.</li>
+          <li><span class="hl">Covert prestige</span> — a non-standard form valued within a group precisely because it isn't standard.</li>
+        </ul>
+        <h4>Question to revisit</h4>
+        <p>How much of "code-switching" is conscious versus automatic? Look at Bell's audience design model next.</p>
+      </div>
+      <div class="marginrail">
+        <div class="rail-note">
+          <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M2 14C6 6 12 4 17 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 6L17 8L14 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <blockquote>"The vernacular is the most systematic form of speech."</blockquote>
+            <span class="marktag">— Labov, quote directly later</span>
+          </div>
+        </div>
+        <div class="rail-note">
+          <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M10 2L12 8L18 8L13 12L15 18L10 14L5 18L7 12L2 8L8 8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          <div class="plain">Re-read Bell 1984 before next week's seminar.</div>
+        </div>
+        <div class="rail-note">
+          <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M3 5H17M3 10H17M3 15H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div>
+            <blockquote>Compare to code-switching in Modern Hebrew diglossia.</blockquote>
+            <span class="marktag">cross-reference</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="timeline">
+    <div class="bleedband" style="background:#F3EEE3;">
+      <div class="bandgraphic">
+        <svg viewBox="0 0 1040 320" preserveAspectRatio="xMaxYMid slice" style="position:absolute;right:-40px;top:-30px;height:110%;">
+          <circle cx="880" cy="150" r="110" fill="#F0C43B"/>
+          <g stroke="#4A6FA5" stroke-width="5" fill="none" opacity="0.85">
+            <path d="M700 150 Q 730 138 760 150 T 820 150 T 880 150 T 940 150 T 1000 150"/>
+            <path d="M700 172 Q 730 160 760 172 T 820 172 T 880 172 T 940 172 T 1000 172"/>
+            <path d="M700 194 Q 730 182 760 194 T 820 194 T 880 194 T 940 194 T 1000 194"/>
+            <path d="M700 216 Q 730 204 760 216 T 820 216 T 880 216 T 940 216 T 1000 216"/>
+            <path d="M700 238 Q 730 226 760 238 T 820 238 T 880 238 T 940 238 T 1000 238"/>
+            <path d="M700 260 Q 730 248 760 260 T 820 260 T 880 260 T 940 260 T 1000 260"/>
+          </g>
+        </svg>
+      </div>
+      <div class="bandinner" style="color:var(--ink);">
+        <h2>How it unfolded.</h2>
+        <p style="color:var(--ink-soft);">The geological time scale, oldest to most recent.</p>
+      </div>
+    </div>
+    <div class="strata-wrap">
+      <div class="strata-col">
+        <svg viewBox="0 0 110 600" preserveAspectRatio="none" width="100%" height="100%">
+          <rect x="0" y="0" width="110" height="80" fill="#F0C43B"/>
+          <rect x="0" y="80" width="110" height="100" fill="#3E9C7D"/>
+          <rect x="0" y="180" width="110" height="120" fill="#4A6FA5"/>
+          <rect x="0" y="300" width="110" height="300" fill="#B25C93"/>
+          <path d="M0 80 Q28 74 55 80 T110 80" stroke="#00000022" stroke-width="4" fill="none"/>
+          <path d="M0 180 Q28 172 55 180 T110 180" stroke="#00000022" stroke-width="4" fill="none"/>
+          <path d="M0 300 Q28 290 55 300 T110 300" stroke="#00000022" stroke-width="4" fill="none"/>
+        </svg>
+      </div>
+      <div class="strata-info">
+        <div class="strata-block" style="flex:0 0 80px;">
+          <div class="eraname">Cenozoic</div>
+          <div class="tdate">66 million years ago – present</div>
+          <p>Mammals diversify and expand, grasslands spread, and humans emerge in the last few million years of this era.</p>
+        </div>
+        <div class="strata-block" style="flex:0 0 100px;">
+          <div class="eraname">Mesozoic</div>
+          <div class="tdate">252 – 66 million years ago</div>
+          <p>Dinosaurs, early mammals, and flowering plants — ends with the asteroid impact and the extinction of the non-avian dinosaurs.</p>
+        </div>
+        <div class="strata-block" style="flex:0 0 120px;">
+          <div class="eraname">Paleozoic</div>
+          <div class="tdate">539 – 252 million years ago</div>
+          <p>The Cambrian explosion, fish, the first plants and insects on land, ending with the largest mass extinction on record.</p>
+        </div>
+        <div class="strata-block" style="flex:0 0 300px;">
+          <div class="eraname">Precambrian</div>
+          <div class="tdate">4.6 billion – 539 million years ago</div>
+          <p>Earth forms, an atmosphere develops, and the first single-celled life appears — the vast majority of Earth's history, with almost no fossil record.</p>
+        </div>
+      </div>
+    </div>
+    <div class="strata-caption">Layer thickness is stylised, not to scale — the Precambrian alone spans roughly 88% of Earth's history.</div>
+  </section>
+
+</div>
+
+<script>
+  function go(page){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+    window.scrollTo(0,0);
+  }
+  function goToMaterial(id){
+    go('media');
+    openDetail(id);
+  }
+  document.querySelectorAll('.navlinks button').forEach(b=>{
+    b.addEventListener('click', ()=>go(b.dataset.page));
+  });
+  document.querySelectorAll('.bindertab').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      document.querySelectorAll('.bindertab').forEach(x=>x.classList.remove('current'));
+      c.classList.add('current');
+    });
+  });
+
+  /* ---- MATERIALS: data, filters, detail view ---- */
+  /* Cover art is intentionally left blank — drop real cover images into
+     .coverinset (grid cards) and .detailcover (detail page) when ready.
+     Once there are real <img> tags, add loading="lazy" to each — that's
+     the main thing that keeps this fast once there are hundreds of entries.
+     The filtering/rendering logic below stays fast regardless of count. */
+
+  const MATERIALS = [
+    {
+      id:'poetics', title:'Poetics', creator:'Aristotle', medium:'book', collections:['ancient-greece'],
+      era:'c. 335 BCE', shape:'mask', colorA:'#C4272C', colorB:'#D9A62E',
+      blurb:'A short treatise on tragedy, plot, and catharsis — Aristotle picking apart what makes drama work.',
+      notes:[
+        {quote:'Catharsis: tragedy purges pity and fear by giving them full expression, not by suppressing them.', tag:'my paraphrase, worth re-checking against the Greek'},
+        {quote:'Plot over character — the "unity of action" idea keeps coming up in everything I read on story structure.', tag:'connects to screenwriting notes'}
+      ]
+    },
+    {
+      id:'oresteia', title:'Oresteia', creator:'Aeschylus', medium:'play', collections:['ancient-greece'],
+      era:'458 BCE', shape:'dagger', colorA:'#7A1518', colorB:'#4A6FA5',
+      blurb:'A trilogy following the House of Atreus through murder, matricide, and a trial that finally ends the cycle.',
+      notes:[
+        {quote:'The trilogy ends not with more killing, but with a trial — vengeance replaced by law.', tag:'the founding of the Areopagus'},
+        {quote:'The Furies get persuaded, not defeated — that felt like a strange and modern choice.', tag:'re-read the Eumenides'}
+      ]
+    },
+    {
+      id:'frogs', title:'Frogs', creator:'Aristophanes', medium:'play', collections:['ancient-greece'],
+      era:'405 BCE', shape:'frog', colorA:'#5C9A6B', colorB:'#D9A62E',
+      blurb:'Dionysus travels to the underworld to bring back a great tragic poet, and ends up judging a contest between Aeschylus and Euripides.',
+      notes:[
+        {quote:"The underworld poetry contest is basically ancient literary criticism performed as slapstick.", tag:'funnier than expected'},
+        {quote:'Written the year Euripides died — the whole play reads differently knowing that.', tag:'context to remember'}
+      ]
+    },
+    {
+      id:'odyssey', title:'Odyssey', creator:'film adaptation', medium:'film', collections:['ancient-greece'],
+      era:'epic → screen', shape:'ship', colorA:'#4A6FA5', colorB:'#C4272C',
+      blurb:'Homer\u2019s epic of the long way home — cunning over strength, and hospitality as a moral test at every stop.',
+      notes:[
+        {quote:'Every disguise Odysseus wears on the way home doubles as a test of xenia.', tag:'hospitality as the moral center'},
+        {quote:'The adaptation cuts most of the Telemachus scenes — curious what that does to the ending.', tag:'compare to the text'}
+      ]
+    },
+    {
+      id:'inourtime-pelop', title:'In Our Time: The Peloponnesian War', creator:'BBC Radio 4', medium:'podcast', collections:['ancient-greece'],
+      era:'', shape:'mic', colorA:'#8B6BB8', colorB:'#5C9A6B',
+      blurb:'A panel discussion on the long war between Athens and Sparta — good scaffolding before going back to Thucydides.',
+      notes:[
+        {quote:"Good refresher on Athens' strategic missteps before diving back into Thucydides.", tag:'listen again before the exam'}
+      ]
+    },
+    {
+      id:'master-margarita', title:'The Master and Margarita', creator:'Mikhail Bulgakov', medium:'book', collections:['personal'],
+      status:'reading', shape:'book', colorA:'#C4272C', colorB:'#D9A62E',
+      blurb:'The devil visits Soviet Moscow. Chapter 9 — the Griboyedov scenes are funnier than I expected.',
+      notes:[{quote:"Manuscripts don't burn.", tag:'ch. 24 — keep for the epigraph idea'}]
+    },
+    {
+      id:'perfect-days', title:'Perfect Days', creator:'Wim Wenders · 2023', medium:'film', collections:['personal'],
+      status:'finished', shape:'film', colorA:'#4A6FA5', colorB:'#C4272C',
+      blurb:'The routine as the whole point, not the obstacle to it.',
+      notes:[{quote:'Now is now, next time is next time.', tag:"the line that's stuck with me since"}]
+    },
+    {
+      id:'klara', title:'Klara and the Sun', creator:'Kazuo Ishiguro', medium:'book', collections:['personal'],
+      status:'queued', shape:'book', colorA:'#C4272C', colorB:'#D9A62E',
+      blurb:'Picked up after a recommendation — haven\u2019t started.',
+      notes:[{quote:'"Apparently the ending wrecks you."', tag:'— what S. said, no spoilers please'}]
+    },
+    {
+      id:'paris-texas', title:'Paris, Texas', creator:'Wim Wenders · 1984', medium:'film', collections:['personal'],
+      status:'finished', shape:'film', colorA:'#4A6FA5', colorB:'#C4272C',
+      blurb:'That opening drive across the desert, no dialogue for ten minutes.',
+      notes:[{quote:'The gas-station monologue near the end.', tag:'worth rewatching for that scene alone'}]
+    }
+  ];
+
+  let filterState = {medium:'all', collection:'all'};
+  let viewMode = 'cards';
+  let searchQuery = '';
+  let sortMode = 'default';
+
+  const STATUS_ORDER = {reading:0, finished:1, queued:2};
+  function sortItems(items){
+    const arr = items.slice();
+    if(sortMode === 'title') arr.sort((a,b)=>a.title.localeCompare(b.title));
+    else if(sortMode === 'creator') arr.sort((a,b)=>a.creator.localeCompare(b.creator));
+    else if(sortMode === 'status') arr.sort((a,b)=>(STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9));
+    return arr;
+  }
+
+  const STATUS_LABEL = {reading:'Now<br>Reading', finished:'Finished', queued:'Queued'};
+
+  function buildHCard(m){
+    const statusHTML = m.status ? `<div class="statusmark status-${m.status}">${STATUS_LABEL[m.status]}</div>` : '';
+    if(m.medium === 'book' || m.medium === 'play'){
+      return `
+        <div class="hcard" onclick="openDetail('${m.id}')">
+          <div class="coverinset"></div>
+          <div class="hbody">
+            ${statusHTML}
+            <div class="plate-label">${m.medium === 'play' ? 'From the playbill' : 'From the shelf'}</div>
+            <h3>${m.title}</h3>
+            <div class="creator">${m.creator}${m.era ? ' · ' + m.era : ''}</div>
+          </div>
+        </div>`;
+    }
+    const kicker = m.medium === 'podcast' ? 'Now playing' : 'Admit one';
+    const stubText = m.status ? (m.status==='reading' ? 'Watching' : (m.status.charAt(0).toUpperCase()+m.status.slice(1))) : (m.medium === 'podcast' ? 'Episode' : 'Screening');
+    return `
+      <div class="hcard dashed" onclick="openDetail('${m.id}')">
+        <div class="coverinset"></div>
+        <div class="hbody">
+          ${statusHTML}
+          <div class="plate-label">${kicker}</div>
+          <h3>${m.title}</h3>
+          <div class="creator">${m.creator}${m.era ? ' · ' + m.era : ''}</div>
+          <div class="stub">${stubText}</div>
+        </div>
+      </div>`;
+  }
+
+  function buildListRow(m){
+    const statusHTML = m.status ? `<span class="liststatus status-${m.status}">${m.status}</span>` : '<span class="liststatus"></span>';
+    return `
+      <div class="listrow" onclick="openDetail('${m.id}')">
+        <div class="listicon"></div>
+        <div class="listtitle">${m.title}</div>
+        <div class="listcreator">${m.creator}</div>
+        <div class="listmedium">${m.medium}</div>
+        ${statusHTML}
+      </div>`;
+  }
+
+  function renderGrid(){
+    const grid = document.getElementById('matgrid');
+    const q = searchQuery.trim().toLowerCase();
+    let items = MATERIALS.filter(m =>
+      (filterState.medium==='all' || m.medium===filterState.medium) &&
+      (filterState.collection==='all' || m.collections.includes(filterState.collection)) &&
+      (q === '' || m.title.toLowerCase().includes(q) || m.creator.toLowerCase().includes(q))
+    );
+    items = sortItems(items);
+    grid.innerHTML = items.length
+      ? items.map(viewMode === 'cards' ? buildHCard : buildListRow).join('')
+      : '<p style="color:var(--ink-soft);font-size:14px;padding:20px 0;">Nothing matches that search.</p>';
+  }
+
+  document.querySelectorAll('.filterchip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      const type = chip.dataset.filtertype;
+      document.querySelectorAll(`.filterchip[data-filtertype="${type}"]`).forEach(c=>c.classList.remove('current'));
+      chip.classList.add('current');
+      filterState[type] = chip.dataset.value;
+      renderGrid();
+    });
+  });
+
+  document.querySelectorAll('.viewbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.viewbtn').forEach(b=>b.classList.remove('current'));
+      btn.classList.add('current');
+      viewMode = btn.dataset.view;
+      renderGrid();
+    });
+  });
+
+  document.getElementById('matsearch').addEventListener('input', (e)=>{
+    searchQuery = e.target.value;
+    renderGrid();
+  });
+  document.getElementById('matsort').addEventListener('change', (e)=>{
+    sortMode = e.target.value;
+    renderGrid();
+  });
+
+  function openDetail(id){
+    const m = MATERIALS.find(x=>x.id===id);
+    if(!m) return;
+    document.getElementById('matgridwrap').style.display='none';
+    const detail = document.getElementById('matdetail');
+    detail.style.display='block';
+    detail.querySelector('.detailcover').innerHTML = '';
+    document.getElementById('d-tag').textContent = m.medium.toUpperCase() + (m.era ? ' · ' + m.era : '') + (m.status ? ' · ' + m.status : '');
+    document.getElementById('d-title').textContent = m.title;
+    document.getElementById('d-creator').textContent = m.creator;
+    document.getElementById('d-blurb').textContent = m.blurb;
+    document.getElementById('d-notes').innerHTML = (m.notes||[]).map(n => `
+      <div class="marginnote">
+        <blockquote>${n.quote}</blockquote>
+        <span class="marktag">${n.tag}</span>
+      </div>
+    `).join('');
+    window.scrollTo(0,0);
+  }
+  function closeDetail(){
+    document.getElementById('matdetail').style.display='none';
+    document.getElementById('matgridwrap').style.display='block';
+  }
+
+  renderGrid();
+</script>
+
+</body>
+</html>

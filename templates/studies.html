@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
 </head>
 <body>
 <header>
@@ -17,5 +18,23 @@
         </div>
     </nav>
 </header>
+<div class="frame">
+    <h1>Study Notes</h1>
+    <div class="tab-bar" id="studytabs">
+        <div class="tab-item current" data-subject="history">History</div>
+        <div class="tab-item" data-subject="biology">Biology</div>
+    </div>
+    <div class="subject-panel active" data-subject="history">
+        <h2>Paleontology</h2>
+        <a href="geological-time.html" class="no-under">
+            <div class="note-preview">
+                <div class="n-pre-title">Geological Time Scale</div>
+                <span class="n-pre-arrow">→</span>
+            </div>
+        </a>
+    </div>
+    <div class="subject-panel" data-subject="biology">
+    </div>
+</div>
 </body>
 </html>

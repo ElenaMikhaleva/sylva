@@ -29,6 +29,12 @@
     --yellow:#D9A62E;
     --yellow-tint:#F5E7C4;
     --yellow-ink:#7A5B0A;
+    --orange:#D9662E;
+    --orange-tint:#F5DDC7;
+    --orange-ink:#8A3E14;
+    --terracotta:#A85C3B;
+    --terracotta-tint:#EBDACE;
+    --terracotta-ink:#6E3A22;
 
     --eon-had:#B5482E;
     --eon-arch:#3C6D93;
@@ -82,7 +88,7 @@
   .bleedband .bandinner p{margin-top:16px;font-size:16px;max-width:440px;line-height:1.6;position:relative;z-index:1;}
   .bandgraphic{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
 
-  .cardgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:50px;}
+  .cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:50px;max-width:640px;}
   .entrycard{
     border:1px solid var(--line);border-radius:16px;padding:26px 22px;
     background:var(--cream);cursor:pointer;transition:transform .15s,border-color .15s;
@@ -142,6 +148,78 @@
     writing-mode:vertical-rl;text-transform:uppercase;color:var(--blue-ink);
   }
 
+  /* COLLECTIONS — theme subpages (e.g. Ancient Greece), reached from the Works hub */
+  .sectionlabel{font-family:'Archivo',sans-serif;font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);margin:0 0 16px;}
+  .collgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:52px;}
+  .collcard{
+    border:1.5px solid var(--ink);border-radius:14px;overflow:hidden;cursor:pointer;
+    background:#FBF7ED;transition:transform .15s;
+  }
+  .collcard:hover{transform:translateY(-3px);}
+  .collcard .stack{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:10px 10px 0;}
+  .collcard .swatch{aspect-ratio:2/3;border-radius:4px 4px 0 0;}
+  .collcard .body{padding:14px 16px 16px;}
+  .collcard h3{font-size:17px;}
+  .collcard .count{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
+
+  .backlink{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;margin-bottom:18px;}
+  .backlink:hover{color:var(--ink);}
+
+  .notesindex{border:1.5px solid var(--ink);border-radius:14px;overflow:hidden;background:#FBF7ED;}
+    .notesrow{display:flex;align-items:center;gap:18px;padding:18px 22px;cursor:pointer;border-bottom:1px solid var(--line);transition:background .15s;}
+    .notesrow:last-child{border-bottom:none;}
+    .notesrow:hover{background:var(--cream-2);}
+    .notesrow .ndate2{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent, var(--green));width:56px;flex-shrink:0;}
+    .notesrow .ntitle{font-family:'Fraunces',serif;font-weight:600;font-size:17px;}
+    .notesrow .nexcerpt{font-size:13px;color:var(--ink-soft);margin-top:3px;}
+    .notesrow .narrow{margin-left:auto;color:var(--ink-soft);flex-shrink:0;}
+
+  .workgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-bottom:20px;}
+  .workcard{cursor:pointer;}
+  .workcard .cover{
+    position:relative;aspect-ratio:2/3;border-radius:8px;border:1.5px solid var(--ink);
+    overflow:hidden;display:flex;align-items:flex-end;padding:14px;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 14px),
+      linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%),
+      var(--gcolor, var(--terracotta));
+    background-blend-mode:normal, normal, normal;
+    transition:transform .15s;
+  }
+  .workcard:hover .cover{transform:translateY(-3px);}
+  .cover .fmt{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;background:rgba(253,249,239,0.92);display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .cover .ctitle{font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:#FBF7ED;line-height:1.2;}
+  .cover .cauthor{font-family:'Archivo',sans-serif;font-size:11.5px;color:rgba(251,247,239,0.8);margin-top:4px;}
+  .workcard .meta{margin-top:10px;}
+  .workcard .tag{display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;padding:3px 9px;border-radius:20px;background:var(--gtint, var(--terracotta-tint));color:var(--gink, var(--terracotta-ink));}
+
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(33,29,26,0.55);
+    align-items:center;justify-content:center;padding:24px;z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#FBF7ED;border:1.5px solid var(--ink);border-radius:16px;max-width:640px;width:100%;
+    max-height:88vh;overflow-y:auto;box-shadow:10px 10px 0 var(--gcolor, var(--terracotta));
+    display:grid;grid-template-columns:200px 1fr;
+  }
+  .modal .mcover{
+    aspect-ratio:2/3;border-radius:12px 0 0 12px;display:flex;align-items:flex-end;padding:16px;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 14px),
+      linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%),
+      var(--gcolor, var(--terracotta));
+  }
+  .modal .mcover .ctitle{font-family:'Fraunces',serif;font-weight:600;font-size:19px;color:#FBF7ED;line-height:1.2;}
+  .modal .mbody{padding:26px 28px;position:relative;}
+  .modal .mclose{position:absolute;top:14px;right:16px;width:28px;height:28px;border-radius:50%;border:1px solid var(--ink);background:var(--cream-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+  .modal .mauthor{font-size:14px;color:var(--ink-soft);margin:4px 0 10px;}
+  .modal .mtags{display:flex;gap:6px;margin-bottom:16px;}
+  .modal h4{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:15px;margin:18px 0 8px;color:var(--ink-soft);}
+  .modal .mnote{font-size:14.5px;line-height:1.65;margin:0;}
+  .modal .mquote{border-left:3px solid var(--gcolor, var(--terracotta));padding-left:14px;margin:0 0 12px;}
+  .modal .mquote blockquote{margin:0;font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--gink, var(--terracotta-ink));line-height:1.5;}
+
   /* Reusable tab bar (Study notes + Timeline both use this) */
   .tabbar{display:flex;gap:2px;border-bottom:2px solid var(--ink);margin-bottom:0;flex-wrap:wrap;}
   .tabbtn{
@@ -155,15 +233,31 @@
   .tabbtn.current .dot{background:currentColor;}
 
   /* STUDY NOTES — notebook: ruled paper, binder tabs, highlighter */
+  .subject-panel{display:none;margin-top:36px;}
+  .subject-panel.active{display:block;}
+  .subject-panel .studybody{margin-top:0;}
+  .subject-panel .eonlayout{margin-top:0;}
+  .emptynote{font-size:14.5px;font-style:italic;color:var(--ink-soft);margin:0;}
+  .notecard{background:#FDF9EF;border:1.5px solid var(--ink);border-radius:14px;padding:34px 38px;box-shadow:8px 8px 0 var(--accent, var(--green));}
+  .notecard-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:24px;border-bottom:1.5px dashed var(--accent, var(--green));}
+  .notecard-head h2{font-size:26px;max-width:520px;}
+  .notecard-head .ndate{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--accent, var(--green));white-space:nowrap;}
   .studybody{display:grid;grid-template-columns:1fr 260px;gap:48px;margin-top:36px;}
-  .noteflow h2{font-size:32px;margin-bottom:8px;max-width:520px;}
-  .noteflow .datestamp{font-size:14px;color:var(--ink-soft);margin-bottom:26px;}
   .noteflow h4{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:18px;color:var(--ink);margin:28px 0 10px;}
+  .noteflow > h4:first-child{margin-top:0;}
   .noteflow p{font-size:15.5px;line-height:1.75;color:var(--ink);margin:0 0 14px;max-width:540px;}
   .noteflow ul{margin:0 0 14px;padding-left:20px;font-size:15.5px;line-height:1.75;max-width:540px;list-style:none;}
   .noteflow li{position:relative;padding-left:4px;margin-bottom:6px;}
   .noteflow li::before{content:'—';position:absolute;left:-18px;color:var(--ink-soft);}
   .hl{background:linear-gradient(120deg,#F3D874 0%,#EAC24B 100%);padding:1px 5px;border-radius:2px;font-weight:600;}
+
+  .callout{border:1.5px solid var(--ink);border-radius:10px;padding:16px 20px;margin:20px 0;background:var(--tint, var(--purple-tint));max-width:540px;}
+  .callout .ctag{display:flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--cink, var(--purple-ink));margin-bottom:9px;}
+  .callout .ctag .dot{width:7px;height:7px;border-radius:50%;background:var(--accent, var(--purple));flex-shrink:0;}
+  .callout p{margin:0;font-size:14.5px;line-height:1.6;}
+  .callout .term{font-family:'Fraunces',serif;font-weight:600;font-style:italic;}
+  .callout.formula .formula{font-family:'IBM Plex Mono',monospace;font-size:16px;text-align:center;padding:6px 0;color:var(--ink);}
+  .callout.formula .fnote{font-size:12.5px;color:var(--ink-soft);margin-top:8px;}
   .marginrail{padding-left:22px;border-left:3px solid var(--rail-color, var(--red));}
   .rail-note{margin-bottom:34px;display:flex;gap:8px;}
   .rail-note:first-child{margin-top:6px;}
@@ -171,6 +265,14 @@
   .rail-note blockquote{margin:0;font-family:'Fraunces',serif;font-style:italic;font-size:15.5px;color:var(--rail-ink, var(--red-ink));line-height:1.5;}
   .rail-note .marktag{display:block;font-family:'Archivo',sans-serif;font-style:normal;font-size:11.5px;color:var(--ink-soft);margin-top:6px;}
   .rail-note.plain{font-size:13.5px;color:var(--ink-soft);line-height:1.5;font-style:italic;}
+
+  .anchor{border-bottom:1.5px dotted var(--rail-color, var(--red));cursor:pointer;padding-bottom:1px;transition:background .15s;}
+  .anchor.hi{background:var(--khaki);border-radius:2px;}
+  .marginrail.aligned{position:relative;}
+  .marginrail.aligned .rail-note{position:absolute;left:0;right:0;margin-bottom:0;transition:top .15s;}
+  .marginrail.aligned .rail-note.hi{background:var(--khaki);border-radius:6px;padding:6px 8px;margin-left:-8px;}
+  .marginrail.aligned .rail-note.hi .doodle{color:var(--ink);}
+  .marginrail.aligned .rail-note.hi blockquote{color:var(--ink);}
 
   /* TIMELINE — strata sidebar + offset-shadow eon card, matching the reference design */
   .eonlayout{display:flex;gap:36px;align-items:flex-start;margin-top:8px;}
@@ -244,6 +346,10 @@
 
   @media(max-width:720px){
     .cardgrid{grid-template-columns:1fr;}
+    .collgrid{grid-template-columns:1fr;}
+    .workgrid{grid-template-columns:repeat(2,1fr);}
+    .modal{grid-template-columns:1fr;}
+    .modal .mcover{border-radius:12px 12px 0 0;aspect-ratio:16/9;}
     .hero h1{font-size:36px;}
     .bleedband .bandinner h2{font-size:32px;}
     .blob,.headblob{display:none;}
@@ -270,9 +376,8 @@
   <div class="brand">Marginalia</div>
   <div class="navlinks">
     <button class="active" data-page="home">Home</button>
-    <button data-page="media">Books &amp; films</button>
+    <button data-page="media">Works</button>
     <button data-page="study">Study notes</button>
-    <button data-page="timeline">Timeline</button>
   </div>
 </nav>
 
@@ -291,8 +396,8 @@
           <svg class="blobshape" viewBox="0 0 56 56"><path fill="var(--red)" d="M12 20C18 8 40 6 48 18C56 30 50 46 36 50C22 54 6 46 5 34C4 26 7 27 12 20Z"/></svg>
           <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M8 8C8 8 16 5 20 9C24 5 32 8 32 8V32C32 32 24 29 20 33C16 29 8 32 8 32V8Z" stroke="var(--cream)" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 9V33" stroke="var(--cream)" stroke-width="2.5"/></svg>
         </div>
-        <h3>Books &amp; films</h3>
-        <p>What you're reading and watching, with notes as you go.</p>
+        <h3>Works</h3>
+        <p>Books, films, plays, poems — whatever you're taking in, with notes as you go.</p>
       </div>
       <div class="entrycard" onclick="go('study')">
         <div class="iconwrap">
@@ -301,14 +406,6 @@
         </div>
         <h3>Study notes</h3>
         <p>Конспекты and reading notes, organised by subject.</p>
-      </div>
-      <div class="entrycard" onclick="go('timeline')">
-        <div class="iconwrap">
-          <svg class="blobshape" viewBox="0 0 56 56"><path fill="var(--blue)" d="M14 10C26 2 48 10 50 24C52 40 38 54 22 50C8 46 0 32 4 22C6 17 9 13 14 10Z"/></svg>
-          <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M8 20H32M14 12L8 20L14 28M26 12L32 20L26 28" stroke="var(--cream)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Timeline</h3>
-        <p>How things unfolded, laid out in order.</p>
       </div>
     </div>
   </section>
@@ -323,7 +420,7 @@
       </div>
       <div class="bandinner" style="color:#FBEEE3;">
         <h2>What you're taking in.</h2>
-        <p style="color:#F6D9C4;">Books and films, and what stuck with you.</p>
+        <p style="color:#F6D9C4;">Books, films, plays, poems — and what stuck with you.</p>
         <div style="display:flex;gap:8px;margin-top:26px;position:relative;z-index:1;">
           <span style="width:26px;height:34px;background:#F3EEE3;display:inline-block;"></span>
           <span style="width:26px;height:34px;background:#4A6FA5;display:inline-block;"></span>
@@ -332,6 +429,23 @@
         </div>
       </div>
     </div>
+
+    <div class="sectionlabel">Collections</div>
+    <div class="collgrid">
+      <div class="collcard" onclick="go('greece')">
+        <div class="stack">
+          <div class="swatch" style="background:var(--terracotta);"></div>
+          <div class="swatch" style="background:var(--red);"></div>
+          <div class="swatch" style="background:var(--yellow);"></div>
+        </div>
+        <div class="body">
+          <h3>Ancient Greece</h3>
+          <div class="count">5 works · philosophy, drama, epic, film</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sectionlabel">Recent</div>
     <div class="medialist">
       <div class="bookplate">
         <div class="stampmark">Now<br>Reading</div>
@@ -383,6 +497,27 @@
     </div>
   </section>
 
+  <section class="page" id="greece">
+    <div class="backlink" onclick="go('media')">← Works</div>
+    <div class="bleedband" style="background:var(--terracotta);">
+      <div class="bandgraphic">
+        <svg viewBox="0 0 1040 320" preserveAspectRatio="xMaxYMid slice" style="position:absolute;right:-20px;top:-10px;height:100%;opacity:0.85;">
+          <g stroke="#F3EEE3" stroke-width="6" fill="none" opacity="0.4">
+            <path d="M780 40 v240 M820 40 v240 M860 40 v240 M900 40 v240 M940 40 v240 M980 40 v240"/>
+            <path d="M760 40 h260 M760 280 h260"/>
+          </g>
+        </svg>
+      </div>
+      <div class="bandinner" style="color:#FBEEE3;">
+        <h2>Ancient Greece.</h2>
+        <p style="color:#EBD4C7;">Philosophy, drama, epic — and where the screen has picked it up since.</p>
+      </div>
+    </div>
+
+    <div class="workgrid" id="greeceGrid"></div>
+  </section>
+
+
   <section class="page" id="study">
     <div class="bleedband" style="background:#1F4A34;">
       <div class="bandgraphic">
@@ -397,95 +532,159 @@
         <p style="color:#CFE3D3;">Конспекты and reading notes, organised by subject.</p>
       </div>
     </div>
-    <div class="tabbar">
-      <div class="tabbtn current" data-group="study">Linguistics</div>
-      <div class="tabbtn" data-group="study">Statistics</div>
-      <div class="tabbtn" data-group="study">Art history</div>
-      <div class="tabbtn" data-group="study">Hebrew</div>
+    <div class="tabbar" id="studytabs">
+      <div class="tabbtn current" data-subject="linguistics">Linguistics</div>
+      <div class="tabbtn" data-subject="statistics">Statistics</div>
+      <div class="tabbtn" data-subject="arthistory">Art history</div>
+      <div class="tabbtn" data-subject="hebrew">Hebrew</div>
+      <div class="tabbtn" data-subject="paleontology">Paleontology</div>
     </div>
-    <div class="studybody">
-      <div class="noteflow">
-        <h2>Sociolinguistics — variation</h2>
-        <div class="datestamp">Sept 3 · Linguistics</div>
-        <p>Labov's core finding: linguistic variation isn't random noise, it's socially structured. The same speaker shifts forms depending on formality, audience, and self-monitoring.</p>
-        <h4>Key terms</h4>
-        <ul>
-          <li><span class="hl">Sociolect</span> — variation tied to a social group rather than a region.</li>
-          <li><span class="hl">Prestige form</span> — the variant associated with higher social status.</li>
-          <li><span class="hl">Covert prestige</span> — a non-standard form valued within a group precisely because it isn't standard.</li>
-        </ul>
-        <h4>Question to revisit</h4>
-        <p>How much of "code-switching" is conscious versus automatic? Look at Bell's audience design model next.</p>
+
+    <div class="subject-panel active" data-subject="linguistics">
+      <div id="ling-index">
+        <div class="sectionlabel">Linguistics notes</div>
+        <div class="notesindex">
+          <div class="notesrow" onclick="openLingNote()">
+            <span class="ndate2">Sep 3</span>
+            <div>
+              <div class="ntitle">Sociolinguistics — variation</div>
+              <div class="nexcerpt">Labov's core finding: variation isn't noise, it's socially structured.</div>
+            </div>
+            <span class="narrow">→</span>
+          </div>
+        </div>
       </div>
-      <div class="marginrail">
-        <div class="rail-note">
-          <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M2 14C6 6 12 4 17 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 6L17 8L14 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div>
-            <blockquote>"The vernacular is the most systematic form of speech."</blockquote>
-            <span class="marktag">— Labov, quote directly later</span>
+
+      <div id="ling-detail" style="display:none;">
+        <div class="backlink" onclick="closeLingNote()">← All linguistics notes</div>
+        <div class="notecard" style="--accent:var(--green);">
+          <div class="notecard-head">
+            <h2>Sociolinguistics — variation</h2>
+            <span class="ndate">Sept 3 · Linguistics</span>
+          </div>
+          <div class="studybody">
+            <div class="noteflow">
+              <p><span class="anchor" data-note="n1">Labov's core finding</span>: linguistic variation isn't random noise, it's socially structured. The same speaker shifts forms depending on formality, audience, and self-monitoring.</p>
+              <div class="callout" style="--accent:var(--purple);--cink:var(--purple-ink);--tint:var(--purple-tint);">
+                <div class="ctag"><span class="dot"></span>Definition</div>
+                <p><span class="term">Covert prestige</span> — the positive value a non-standard form holds within a group precisely because it signals in-group identity, even though it carries no status outside that group.</p>
+              </div>
+              <h4>Key terms</h4>
+              <ul>
+                <li><span class="hl">Sociolect</span> — variation tied to a social group rather than a region.</li>
+                <li><span class="hl">Prestige form</span> — the variant associated with higher social status.</li>
+                <li><span class="hl">Covert prestige</span> — a non-standard form valued within a group precisely because it isn't standard.</li>
+              </ul>
+              <div class="callout" style="--accent:var(--terracotta);--cink:var(--terracotta-ink);--tint:var(--terracotta-tint);">
+                <div class="ctag"><span class="dot"></span>Key info</div>
+                <p>Labov's department store study (1966) is the go-to citation for this — it's what most of the seminar reading builds on.</p>
+              </div>
+              <h4>Question to revisit</h4>
+              <p>How much of <span class="anchor" data-note="n3">"code-switching"</span> is conscious versus automatic? Look at <span class="anchor" data-note="n2">Bell's audience design model</span> next.</p>
+            </div>
+            <div class="marginrail aligned" style="--rail-color:var(--green);--rail-ink:var(--green-ink);">
+              <div class="rail-note" data-anchor="n1">
+                <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M2 14C6 6 12 4 17 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 6L17 8L14 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div>
+                  <blockquote>"The vernacular is the most systematic form of speech."</blockquote>
+                  <span class="marktag">— Labov, quote directly later</span>
+                </div>
+              </div>
+              <div class="rail-note" data-anchor="n2">
+                <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M10 2L12 8L18 8L13 12L15 18L10 14L5 18L7 12L2 8L8 8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                <div class="plain">Re-read Bell 1984 before next week's seminar.</div>
+              </div>
+              <div class="rail-note" data-anchor="n3">
+                <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M3 5H17M3 10H17M3 15H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <div>
+                  <blockquote>Compare to code-switching in Modern Hebrew diglossia.</blockquote>
+                  <span class="marktag">cross-reference</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="rail-note">
-          <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M10 2L12 8L18 8L13 12L15 18L10 14L5 18L7 12L2 8L8 8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-          <div class="plain">Re-read Bell 1984 before next week's seminar.</div>
+      </div>
+    </div>
+
+    <div class="subject-panel" data-subject="statistics">
+      <div class="notecard" style="--accent:var(--blue);">
+        <div class="notecard-head">
+          <h2>Standard deviation</h2>
+          <span class="ndate">Statistics</span>
         </div>
-        <div class="rail-note">
-          <svg class="doodle" viewBox="0 0 20 20" fill="none"><path d="M3 5H17M3 10H17M3 15H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <div>
-            <blockquote>Compare to code-switching in Modern Hebrew diglossia.</blockquote>
-            <span class="marktag">cross-reference</span>
+        <div class="studybody">
+          <div class="noteflow">
+            <p>How spread out a set of values is from the mean — the square root of the variance, which keeps the units the same as the original data.</p>
+            <div class="callout formula" style="--accent:var(--blue);--cink:var(--blue-ink);--tint:var(--blue-tint);">
+              <div class="ctag"><span class="dot"></span>Formula</div>
+              <div class="formula">σ = √( Σ(xᵢ − μ)² / N )</div>
+              <div class="fnote">Population version — divide by N−1 instead of N for a sample.</div>
+            </div>
+          </div>
+          <div class="marginrail" style="--rail-color:var(--blue);--rail-ink:var(--blue-ink);">
+            <div class="rail-note plain">Compare to variance — this is just its square root, in the original units.</div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="subject-panel" data-subject="arthistory">
+      <div class="notecard" style="--accent:var(--purple);">
+        <div class="notecard-head">
+          <h2>Art history</h2>
+          <span class="ndate">No notes yet</span>
+        </div>
+        <p class="emptynote">Start a note here whenever you begin this subject.</p>
+      </div>
+    </div>
+    <div class="subject-panel" data-subject="hebrew">
+      <div class="notecard" style="--accent:var(--yellow);">
+        <div class="notecard-head">
+          <h2>Hebrew</h2>
+          <span class="ndate">No notes yet</span>
+        </div>
+        <p class="emptynote">Start a note here whenever you begin this subject.</p>
+      </div>
+    </div>
+
+    <div class="subject-panel" data-subject="paleontology">
+      <div class="eonlayout">
+        <div class="eonrail" id="eonrail">
+          <div class="railblock current" data-eon="hadean" style="background:var(--eon-had);flex:1;"><span>HAD</span></div>
+          <div class="railblock" data-eon="archean" style="background:var(--eon-arch);flex:2.8;"><span>ARCH</span></div>
+          <div class="railblock" data-eon="proterozoic" style="background:var(--eon-prot);flex:3.6;"><span>PROT</span></div>
+          <div class="railblock" data-eon="phanerozoic" style="background:var(--eon-phan);flex:1;"><span>PHAN</span></div>
+        </div>
+
+        <div class="eoncard" id="eoncard" style="--accent:var(--eon-had);"></div>
       </div>
     </div>
   </section>
 
-  <section class="page" id="timeline">
-    <div class="bleedband" style="background:#2C4568;">
-      <div class="bandgraphic">
-        <svg viewBox="0 0 1040 320" preserveAspectRatio="xMaxYMid slice" style="position:absolute;right:-40px;top:-40px;height:120%;opacity:0.9;">
-          <circle cx="900" cy="140" r="90" fill="#D9A62E" opacity="0.85"/>
-          <g stroke="#F3EEE3" stroke-width="4" fill="none" opacity="0.5">
-            <circle cx="900" cy="140" r="120"/>
-            <circle cx="900" cy="140" r="150"/>
-            <circle cx="900" cy="140" r="180"/>
-          </g>
-        </svg>
-      </div>
-      <div class="bandinner" style="color:#EDF1F7;">
-        <h2>How it unfolded.</h2>
-        <p style="color:#C8D3E4;">Earth's history, eon by eon, from formation to today.</p>
-      </div>
-    </div>
+</div>
 
-    <div class="eonlayout">
-      <div class="eonrail" id="eonrail">
-        <div class="railblock current" data-eon="hadean" style="background:var(--eon-had);flex:1;"><span>HAD</span></div>
-        <div class="railblock" data-eon="archean" style="background:var(--eon-arch);flex:2.8;"><span>ARCH</span></div>
-        <div class="railblock" data-eon="proterozoic" style="background:var(--eon-prot);flex:3.6;"><span>PROT</span></div>
-        <div class="railblock" data-eon="phanerozoic" style="background:var(--eon-phan);flex:1;"><span>PHAN</span></div>
-      </div>
-
-      <div class="eoncard" id="eoncard" style="--accent:var(--eon-had);"></div>
-    </div>
-  </section>
-
+<div class="modal-overlay" id="workModal" onclick="if(event.target===this)closeWork()">
+  <div class="modal" id="workModalCard"></div>
 </div>
 
 <script>
   function go(page){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById(page).classList.add('active');
-    document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+    const navKey = (page === 'greece') ? 'media' : page;
+    document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('active', b.dataset.page===navKey));
     window.scrollTo(0,0);
   }
   document.querySelectorAll('.navlinks button').forEach(b=>{
     b.addEventListener('click', ()=>go(b.dataset.page));
   });
-  document.querySelectorAll('#study .tabbtn').forEach(c=>{
+  document.querySelectorAll('#studytabs .tabbtn').forEach(c=>{
     c.addEventListener('click', ()=>{
-      document.querySelectorAll('#study .tabbtn').forEach(x=>x.classList.remove('current'));
+      document.querySelectorAll('#studytabs .tabbtn').forEach(x=>x.classList.remove('current'));
       c.classList.add('current');
+      const subj = c.dataset.subject;
+      document.querySelectorAll('#study .subject-panel').forEach(p=>p.classList.toggle('active', p.dataset.subject===subj));
+      if(subj === 'paleontology') renderEon('hadean');
     });
   });
 
@@ -656,6 +855,168 @@
   });
 
   renderEon('hadean');
+
+  // WORKS — Ancient Greece collection
+  const genreStyle = {
+    philosophy:{c:'var(--purple)', t:'var(--purple-tint)', i:'var(--purple-ink)'},
+    comedy:{c:'var(--yellow)', t:'var(--yellow-tint)', i:'var(--yellow-ink)'},
+    tragedy:{c:'var(--red)', t:'var(--red-tint)', i:'var(--red-ink)'},
+    epic:{c:'var(--blue)', t:'var(--blue-tint)', i:'var(--blue-ink)'},
+    film:{c:'var(--orange)', t:'var(--orange-tint)', i:'var(--orange-ink)'}
+  };
+  const formatIcon = {book:'📖', drama:'🎭', movie:'🎬'};
+
+  const greeceWorks = [
+    {
+      id:'poetics', title:'Poetics', author:'Aristotle', format:'book', genre:'philosophy',
+      meta:'Treatise · c. 335 BCE',
+      note:"His account of tragedy — plot, character, catharsis — is the lens I keep reading every play through since.",
+      quotes:["Tragedy is an imitation of an action that is serious and complete."]
+    },
+    {
+      id:'frogs', title:'Frogs', author:'Aristophanes', format:'drama', genre:'comedy',
+      meta:'Play · 405 BCE',
+      note:"Dionysus going to the underworld to bring back a good tragedian is a very funny premise to build a whole play on.",
+      quotes:["Bring back a poet, for the city needs one."]
+    },
+    {
+      id:'oresteia', title:'Oresteia', author:'Aeschylus', format:'drama', genre:'tragedy',
+      meta:'Trilogy · 458 BCE',
+      note:"The shift from blood-vengeance to a trial by jury in the third part reads like the invention of justice on stage.",
+      quotes:["Wisdom comes through suffering."]
+    },
+    {
+      id:'odyssey-book', title:'Odyssey', author:'Homer', format:'book', genre:'epic',
+      meta:'Epic poem · c. 8th century BCE',
+      note:"Still the best-paced homecoming story there is — every delay earns its place.",
+      quotes:["Tell me, Muse, of the man of many ways."]
+    },
+    {
+      id:'odyssey-film', title:'Odyssey', author:'2026 film adaptation', format:'movie', genre:'film',
+      meta:'Film · 2026',
+      note:"Curious to see which parts of the poem survive the adaptation and which get cut for pacing.",
+      quotes:[]
+    }
+  ];
+
+  function renderGreeceGrid(){
+    const grid = document.getElementById('greeceGrid');
+    grid.innerHTML = greeceWorks.map(w=>{
+      const g = genreStyle[w.genre];
+      return `
+        <div class="workcard" onclick="openWork('${w.id}')">
+          <div class="cover" style="--gcolor:${g.c};">
+            <span class="fmt">${formatIcon[w.format]}</span>
+            <div>
+              <div class="ctitle">${w.title}</div>
+              <div class="cauthor">${w.author}</div>
+            </div>
+          </div>
+          <div class="meta">
+            <span class="tag" style="--gtint:${g.t};--gink:${g.i};">${w.genre}</span>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  renderGreeceGrid();
+
+  function openWork(id){
+    const w = greeceWorks.find(x=>x.id===id);
+    const g = genreStyle[w.genre];
+    document.getElementById('workModalCard').style.setProperty('--gcolor', g.c);
+    document.getElementById('workModalCard').style.setProperty('--gink', g.i);
+    document.getElementById('workModalCard').innerHTML = `
+      <div class="mcover" style="--gcolor:${g.c};">
+        <div class="ctitle">${w.title}</div>
+      </div>
+      <div class="mbody">
+        <div class="mclose" onclick="closeWork()">✕</div>
+        <h2>${w.title}</h2>
+        <div class="mauthor">${w.author} · ${w.meta}</div>
+        <div class="mtags">
+          <span class="tag" style="background:${g.t};color:${g.i};display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;padding:3px 9px;border-radius:20px;">${w.genre}</span>
+          <span class="tag" style="background:var(--cream-2);color:var(--ink-soft);display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;padding:3px 9px;border-radius:20px;">${w.format}</span>
+        </div>
+        <h4>My notes</h4>
+        <p class="mnote">${w.note}</p>
+        ${w.quotes.length ? `<h4>Quotes</h4>${w.quotes.map(q=>`<div class="mquote"><blockquote>"${q}"</blockquote></div>`).join('')}` : ''}
+      </div>
+    `;
+    document.getElementById('workModal').classList.add('open');
+  }
+  function closeWork(){
+    document.getElementById('workModal').classList.remove('open');
+  }
+
+  // MARGIN NOTE ALIGNMENT — positions each .rail-note level with the word/phrase
+  // it annotates (data-anchor matches the anchor span's data-note), like a real
+  // margin note sitting next to the line it refers to. Falls back gracefully
+  // if an anchor or rail isn't found.
+  function alignMarginNotes(rail){
+    const notes = Array.from(rail.querySelectorAll('.rail-note[data-anchor]'));
+    if(!notes.length) return;
+    const railTop = rail.getBoundingClientRect().top;
+    let items = notes.map(note=>{
+      const anchor = document.querySelector(`.anchor[data-note="${note.dataset.anchor}"]`);
+      const desired = anchor ? (anchor.getBoundingClientRect().top - railTop) : 0;
+      return {note, desired};
+    }).sort((a,b)=>a.desired-b.desired);
+
+    let cursor = 0;
+    items.forEach(item=>{
+      const top = Math.max(item.desired, cursor);
+      item.note.style.top = top + 'px';
+      cursor = top + item.note.offsetHeight + 18;
+    });
+    rail.style.minHeight = cursor + 'px';
+  }
+
+  function alignAllRails(){
+    document.querySelectorAll('.marginrail.aligned').forEach(alignMarginNotes);
+  }
+
+  function openLingNote(){
+    document.getElementById('ling-index').style.display = 'none';
+    document.getElementById('ling-detail').style.display = 'block';
+    alignAllRails();
+  }
+  function closeLingNote(){
+    document.getElementById('ling-detail').style.display = 'none';
+    document.getElementById('ling-index').style.display = 'block';
+  }
+  window.addEventListener('load', alignAllRails);
+  window.addEventListener('load', ()=>setTimeout(alignAllRails, 400));
+  let resizeT;
+  window.addEventListener('resize', ()=>{ clearTimeout(resizeT); resizeT = setTimeout(alignAllRails, 150); });
+
+  // hover pairing: touching the anchor word or its note highlights both
+  document.querySelectorAll('.anchor[data-note]').forEach(a=>{
+    const pairSel = `[data-anchor="${a.dataset.note}"]`;
+    a.addEventListener('mouseenter', ()=>{
+      a.classList.add('hi');
+      document.querySelectorAll(pairSel).forEach(n=>n.classList.add('hi'));
+    });
+    a.addEventListener('mouseleave', ()=>{
+      a.classList.remove('hi');
+      document.querySelectorAll(pairSel).forEach(n=>n.classList.remove('hi'));
+    });
+  });
+  document.querySelectorAll('.rail-note[data-anchor]').forEach(n=>{
+    const anchorSel = `.anchor[data-note="${n.dataset.anchor}"]`;
+    n.addEventListener('mouseenter', ()=>{
+      n.classList.add('hi');
+      document.querySelectorAll(anchorSel).forEach(a=>a.classList.add('hi'));
+    });
+    n.addEventListener('mouseleave', ()=>{
+      n.classList.remove('hi');
+      document.querySelectorAll(anchorSel).forEach(a=>a.classList.remove('hi'));
+    });
+  });
+
+  // re-align when a tab reveals a panel that was hidden during the initial load
+  document.querySelectorAll('#studytabs .tabbtn').forEach(t=>{
+    t.addEventListener('click', ()=>setTimeout(alignAllRails, 0));
+  });
 </script>
 
 </body>
