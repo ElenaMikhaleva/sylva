@@ -5,24 +5,23 @@ document.querySelectorAll('[data-src]').forEach(async (slot) => {
 });
 
 document.querySelectorAll('.carousel').forEach(carousel => {
+  const box = carousel.parentElement;
   const track = carousel.querySelector('.carousel-track');
   const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
-  const captionEl = carousel.querySelector('.carousel-caption');
-  const dotsWrap = carousel.querySelector('.carousel-dots');
+  const captionEl = box.querySelector('.carousel-caption');
+  const dotsWrap = box.querySelector('.carousel-dots');
   const prevBtn = carousel.querySelector('.carousel-prev');
   const nextBtn = carousel.querySelector('.carousel-next');
 
-  // Guard clause if track or slides are missing
   if (!track || !slides.length) return;
 
   let index = 0;
 
-  // Build dots
   if (dotsWrap) {
     dotsWrap.innerHTML = '';
     slides.forEach((_, i) => {
       const dot = document.createElement('button');
-      dot.className = 'carousel-dot' + (i === 0 ? ' is-active' : '');
+      dot.className = 'img-slot-dot' + (i === 0 ? ' is-active' : '');
       dot.setAttribute('aria-label', `Go to image ${i + 1}`);
       dot.addEventListener('click', () => goTo(i));
       dotsWrap.appendChild(dot);
@@ -40,11 +39,9 @@ document.querySelectorAll('.carousel').forEach(carousel => {
     }
   }
 
-  // Next / Prev Button Listeners
   if (prevBtn) prevBtn.addEventListener('click', () => goTo(index - 1));
   if (nextBtn) nextBtn.addEventListener('click', () => goTo(index + 1));
 
-  // Touch / Swipe Navigation
   let startX = 0;
   track.addEventListener('touchstart', e => {
     startX = e.touches[0].clientX;
@@ -75,5 +72,16 @@ document.addEventListener("DOMContentLoaded", () => {
         activePanel.classList.add("active");
       }
     });
+  });
+});
+
+document.querySelectorAll('.tl-segment').forEach(segment => {
+  segment.style.cursor = 'pointer';
+  segment.addEventListener('click', () => {
+    const targetId = segment.dataset.target;
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 });

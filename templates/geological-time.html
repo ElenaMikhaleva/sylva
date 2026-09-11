@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sylva</title>
+    <title>Sylva — Geological Time</title>
     <link rel="stylesheet" href="../styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,8 +13,8 @@
     <nav>
         <a class="brand" href="home.html">Sylva</a>
         <div class="navlinks">
-            <button>Studies</button>
-            <button>Library</button>
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
         </div>
     </nav>
 </header>
@@ -23,39 +23,43 @@
     <div class="crumbs">
         <p><a href="studies.html">History</a> · Paleontology</p>
     </div>
-    <p>Periods of Earth's history from 4567 million years ago to now, organized by lithology, fossils, and geomagnetic signatures.</p>
+    <p>Eons of Earth's history from 4567 million years ago to now, organized by lithology, fossils, and geomagnetic signatures.</p>
     <div class="layout-timeline">
         <div class="tl-spine">
-            <div class="tl-segment" style="--seg-color: var(--first); flex-grow: 11.74;">
+            <div class="tl-segment" data-target="hadean" style="--seg-color: var(--first); flex-grow: 11.74;">
                 <span class="tag">HAD</span>
             </div>
-            <div class="tl-segment" style="--seg-color: var(--second); flex-grow: 33.53;">
+            <div class="tl-segment" data-target="archean" style="--seg-color: var(--second); flex-grow: 33.53;">
                 <span class="tag">ARCH</span>
             </div>
-            <div class="tl-segment" style="--seg-color: var(--third); flex-grow: 42.96;">
+            <div class="tl-segment" data-target="proterozoic" style="--seg-color: var(--third); flex-grow: 42.96;">
                 <span class="tag">PROT</span>
             </div>
-            <div class="tl-segment" style="--seg-color: var(--fourth); flex-grow: 11.78;">
+            <div class="tl-segment" data-target="phanerozoic" style="--seg-color: var(--fourth); flex-grow: 11.78;">
                 <span class="tag">PHAN</span>
             </div>
         </div>
         <div class="tl-content">
-            <section class="card" data-accent="first">
+            <section class="card" data-accent="first" id="hadean">
                 <div class="card-head">
                     <div class="card-title">
-                        <h2>Hadean Eon</h2>
+                        <h2>Hadean</h2>
                         <span class="card-native">Катархей</span>
                     </div>
                     <span class="card-range">4567 – 4031 Mya</span>
+                    <p class="card-etym">from Greek <em>Hádēs</em> (underworld)</p>
                 </div>
                 <div class="card-body">
-                    <div class="img-box left">
+                    <div class="img-box right">
                         <div class="img-slot">
                             <img src="../src/hadean-eon.png">
                         </div>
+                        <div class="img-slot-foot">
+                            <div class="caption">Hadean Eon, illustration</div>
+                        </div>
                     </div>
                     <div class="card-text">
-                        <p class="card-etym">from Greek <em>Hádēs</em> (underworld)</p>
+
                         <p>Precambrian Supereon.</p>
                         <p>Very little evidence survived, so most of its history is reconstructed from indirect evidence.</p>
                         <ul>
@@ -67,8 +71,247 @@
                     </div>
                 </div>
             </section>
+            <section class="card" data-accent="second" id="archean">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Archean</h2>
+                        <span class="card-native">Архей</span>
+                    </div>
+                    <span class="card-range">4031 – 2500 Mya</span>
+                    <p class="card-etym">from Greek <em>arkhḗ</em> (beginning)</p>
+                </div>
+                <div class="card-body">
+                    <div class="img-box right">
+                        <div class="carousel">
+                            <div class="carousel-track">
+                                <figure class="carousel-slide" data-caption="Archean Eon illustration">
+                                    <img src="../src/archean-eon.png">
+                                </figure>
+                                <figure class="carousel-slide" data-caption="Acasta Gneiss, found in Canada — the oldest known solid rock formation.">
+                                    <img src="https://www.crystalworld.com.au/wp-content/uploads/2024/07/acasta-gneiss-1.jpg">
+                                </figure>
+                                <figure class="carousel-slide" data-caption="Stromatolites">
+                                    <img src="https://s3.amazonaws.com/www.explorersweb.com/wp-content/uploads/2023/09/13202450/shutterstock_1629041722.jpg">
+                                </figure>
+                                <figure class="carousel-slide" data-caption="Stromatolite">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Stromatolithe_Pal%C3%A9oarch%C3%A9en_-_MNHT.PAL.2009.10.1.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original">
+                                </figure>
+                            </div>
+                            <button class="carousel-arrow carousel-prev" aria-label="Previous image">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button class="carousel-arrow carousel-next" aria-label="Next image">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+                        <div class="img-slot-foot">
+                            <div class="caption carousel-caption"></div>
+                            <div class="img-slot-dots carousel-dots"></div>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <p>Precambrian Supereon.</p>
+                        <p>Early crust stabilized and primitive life began.</p>
+                        <ul>
+                            <li><span class="highlight">Earth forms</span> and gradually cools;</li>
+                            <li>Intense volcanic activity and frequent large asteroid impacts. <span class="highlight">Earth's surface is unstable</span>, many volcanic eruptions, crust is recycled;</li>
+                            <li><span class="highlight">Moon</span> forms (giant impact hypothesis);</li>
+                            <li>Eon ends with the beginning of the Archean, when solid rocks formed.</li>
+                        </ul>
+                        <ul>
+                            <li>Atmosphere: <span class="term" tabindex="0" data-def="CH₄&#10;colorless, odorless, and flammable gas">methane</span>, <span class="term" tabindex="0" data-def="CO₂&#10;colorless, odorless gas">carbon dioxide</span>, and <span class="term" tabindex="0" data-def="N₂&#10;colorless, odorless, and tasteless gas">nitrogene</span>, no free molecular <span class="term" tabindex="0" data-def="O₂&#10;colorless, odorless, and tasteless gas">oxygen</span> — unbreathable by nearly everything alive today:
+                                <ul>
+                                    <li>methane contributed to the greenhouse effect and may have helped keep surface water liquid;</li>
+                                    <li>methane created ecosystem for <span class="term" tabindex="0" data-def="primitive microbes that consume methane">methanotrophs</span>.</li>
+                                </ul>
+                            </li>
+                            <li><span class="highlight">Continental crust</span> and <span class="term" tabindex="0" data-def="There is a lack of geological evidence for specific continents.">protocontinents</span> formed;</li>
+                            <li>Stromatolites appeared — solid, domed structures built of thin layers of <span class="term" tabindex="0" data-def="осадок">sediment</span> by colonial <a href="phylogeny-origin.html">cyanobacteria</a>;</li>
+                            <li><span class="highlight">First life</span> appeared (<a href="phylogeny-origin.html">prokaryotes</a>).</li>
+                        </ul>
+                    </div>
+                    <div class="card-scale" style="--scale-lead: 70px;">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+                        <div class="event" style="left:67.34%;">
+                            <div class="label">cyanobacteria, 3.2 to 2.7 Bya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event middle" style="left:34.68%;">
+                            <div class="label">Bacteria, 3.5 Bya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="left:39.9%;">
+                            <div class="label">Archaea, 3.4 Bya</div>
+                            <div class="leader"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="third" id="proterozoic">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Proterozoic Eon</h2>
+                        <span class="card-native">Протерозой</span>
+                    </div>
+                    <span class="card-range">2500 – 538 Mya</span>
+                    <p class="card-etym">from Greek <em>próteros</em> (earlier) + <em>zōḗ</em> (life)</p>
+                </div>
+                <div class="card-body">
+                    <div class="img-box right">
+                        <div class="carousel">
+                            <div class="carousel-track">
+                                <figure class="carousel-slide" data-caption="Proterozoic Eon, illustration.">
+                                    <img src="../src/proterozoic-ill.png" alt="Proterozoic Eon">
+                                </figure>
+                                <figure class="carousel-slide" data-caption="Ediacaran fauna, illustration.">
+                                    <img src="../src/ediacaran-ill.png">
+                                </figure>
+                            </div>
+                            <button class="carousel-arrow carousel-prev" aria-label="Previous image">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button class="carousel-arrow carousel-next" aria-label="Next image">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+                        <div class="img-slot-foot">
+                            <div class="caption carousel-caption"></div>
+                            <div class="img-slot-dots carousel-dots"></div>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <p>Precambrian Supereon.</p>
+                          <p>Atmospheric oxidation and evolution of complex cells.</p>
+                          <ul>
+                              <li>Continents stabilize and grow (Kenorland, Columbia, Rodinia, then Pannotia);</li>
+                              <li>Atmosphere: The <span class="highlight">Great Oxidation Event</span> (GOE), <span class="term" tabindex="0" data-def="O₂">oxygen</span>  accumulates for the first time, mainly because of photosynthesis by <a href="phylogeny-origin.html">cyanobacteria</a>; </li>
+                              <li>Climate: <span class="term" tabindex="0" data-def="O₂">oxygen</span> reacted with <span class="term" tabindex="0" data-def="CH₄">methane</span> that was a powerful greenhouse gas, stripping Earth's insulation and plunging the planet into global <span class="highlight">Ice Ages</span> (Snowball Earth);</li>
+                              <li class="li-end">Species: oxygen was toxic to most existing <span class="term" tabindex="0" data-def="does not require oxygen">anaerobic</span> microbes, causing their extinction;</li>
+                              <li>Species: <a href="phylogeny-origin">eukaryotes</a> appear;</li>
+                              <li><span class="highlight">Multi-cellular organisms</span> appear (<a href="phylogeny-origin">algae</a>, <a href="phylogeny-origin">Ediacaran fauna</a>);</li>
+                              <li>Eon ends with the beginning of the Phanerozoic, when abundant animal fossils appear.</li>
+                          </ul>
+                    </div>
+                    <div class="card-scale" style="--scale-lead: 70px;">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+                        <div class="event" style="left:5.1%;">
+                            <div class="label">GOE, 2.4 Bya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event middle" style="left:43.32%;">
+                            <div class="label">eukaryotes, 1.7 Bya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="left:45.87%;">
+                            <div class="label">multi-cellular organisms, 1.6 Bya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event range" style="left:95.06%; width:5%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Ediacaran biota, 635–538 Mya</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="fourth" id="phanerozoic">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Phanerozoic</h2>
+                        <span class="card-native">Фанерозой</span>
+                    </div>
+                    <span class="card-range">538 Mya – today</span>
+                    <p class="card-etym">from Greek <em>phanerós</em> (visible) + <em>zōḗ</em> (life)</p>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <p>Abundant complex life and hard shell/bone fossil record.</p>
+                    </div>
+                    <div class="card-scale" style="--scale-lead: 100px;">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 53.15;"></div>
+                            <div style="flex-grow: 34.57;"></div>
+                            <div style="flex-grow: 12.26;"></div>
+                        </div>
+                        <div class="event middle" style="left:0.65%;">
+                            <div class="label">Cambrian Explosion, 538 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="left:12.64%;">
+                            <div class="label">land plants, 470 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event high" style="left:38.66%;">
+                            <div class="label">amphibians, 330 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event middle" style="left:53.16%;">
+                            <div class="label end">Great Dying, 330 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="left:58.2%;">
+                            <div class="label">mammals, 225 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="left:99.3%;">
+                            <div class="label">Homo, 2 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                    </div>
+                    <div class="card-grid">
+                        <a href="paleozoic.html" class="card-link">
+                            <div class="subcard">
+                                <h3>Paleozoic Era</h3>
+                                <span class="range">538 – 252 Mya</span>
+                                <p>Early life diversification to Pangaea formation.</p>
+                                <ul>
+                                    <li class="li-period">Cambrian</li>
+                                    <li class="li-period">Ordovician</li>
+                                    <li class="li-period">Silurian</li>
+                                    <li class="li-period">Devonian</li>
+                                    <li class="li-period">Carboniferous</li>
+                                    <li class="li-period">Permian</li>
+                              </ul>
+                          </div>
+                        </a>
+                        <a href="mesozoic.html" class="card-link">
+                            <div class="subcard">
+                                <h3>Mesozoic Era</h3>
+                                <span class="range">252 – 66 Mya</span>
+                                <p><span class="highlight">The Age of Reptiles</span> and breakup of Pangaea.</p>
+                                <ul>
+                                    <li class="li-period">Triassic</li>
+                                    <li class="li-period">Jurassic</li>
+                                    <li class="li-period">Cretaceous</li>
+                                </ul>
+                            </div>
+                        </a>
+                        <a href="cenozoic.html" class="card-link">
+                            <div class="subcard">
+                                <h3>Cenozoic Era</h3>
+                                <span class="range">66 Mya – today</span>
+                                <p><span class="highlight">The Age of Mammals</span> and recent Ice Ages.</p>
+                                <ul>
+                                    <li class="li-period">Paleogene</li>
+                                    <li class="li-period">Neogene</li>
+                                    <li class="li-period">Quaternary (humans)</li>
+                                </ul>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+    <h2>Related</h2>
+    <ul>
+        <li><a href="https://dinosaurpictures.org/ancient-earth#750" target="_blank">Ancient Earth Globe</a>  — interactive paleogeography model;</li>
+        <li><a href="https://www.prehistoricdomain.com/" target="_blank">Prehistoric Domain</a></li>
+    </ul>
 </div>
 </body>
 </html>

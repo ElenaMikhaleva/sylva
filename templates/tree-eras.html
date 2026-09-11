@@ -2,94 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DF — Origin of Species</title>
+    <title>Sylva — Origin of Species</title>
     <link rel="stylesheet" href="../styles/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="../scripts/main.js" defer></script>
     <style>
-:root {
-  --cream:#F3ECDD; --ink:#1C1A15; --ink-soft:#5B564A;
-  --paper:#F1ECDE; --paper-2:#E9E2CE; --border:1.5px; --radius:7px;
-  --archean:#3E6E8E; --proterozoic:#7C8F4B; --merge:#8C5E7A;
-}
-* { box-sizing:border-box; }
-body { margin:0; background:var(--cream); color:var(--ink); font-family:'Work Sans',sans-serif; line-height:1.6; }
-.frame { max-width:960px; margin:0 auto; padding:56px 20px 100px; }
-.kicker { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px; }
-h1 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,6vw,38px); margin:0 0 12px; }
-.dek { font-size:15px; color:var(--ink-soft); max-width:34em; margin:0 0 12px; }
-.legend { display:flex; gap:16px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-bottom:36px; align-items:center; }
-.legend span { display:inline-flex; align-items:center; gap:6px; }
-.legend i { width:16px; height:12px; border-radius:3px; display:inline-block; background:var(--paper); }
-.legend .lg-rank i { border:1.5px solid var(--ink-soft); }
-.legend .lg-lineage i { border:1.5px dashed var(--ink-soft); }
-.legend .lg-event i { width:8px; height:8px; border-radius:50%; background:var(--merge); }
-
-/* ---- Detail card: same system as your period cards ---- */
-.period-card {
-  background: var(--paper); border: var(--border) solid var(--ink-soft); border-radius: var(--radius);
-  box-shadow: 6px 6px 0 var(--accent-color, var(--ink)); padding: 24px; text-align:left;
-}
-.period-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:10px; border-bottom:1.5px dashed var(--accent-color); padding-bottom:14px; margin-bottom:16px; }
-.period-name { font-family:'Fraunces',serif; font-weight:600; font-size:22px; margin:0; }
-.period-native { font-weight:400; color:var(--ink-soft); font-size:0.6em; font-family:'JetBrains Mono', monospace; margin-left:6px; }
-.period-range { font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--accent-color); border-radius:999px; padding:4px 11px; white-space:nowrap; background:color-mix(in srgb, var(--accent-color) 14%, transparent); }
-.period-body { display:grid; grid-template-columns:1.3fr 1fr; gap:22px; align-items:start; }
-.period-body.no-image { grid-template-columns:1fr; }
-.period-text p { font-size:14.5px; margin:0 0 12px; }
-</style>
+        :root { --cream:#F3ECDD; --ink:#1C1A15; --ink-soft:#5B564A; --paper:#F1ECDE; --paper-2:#E9E2CE; --border:1.5px; --radius:7px; --archean:#3E6E8E; --proterozoic:#7C8F4B; --merge:#8C5E7A }
+        .dek { font-size:15px; color:var(--ink-soft); max-width:34em; margin:0 0 12px; }
+        .legend { display:flex; gap:16px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin-bottom:36px; align-items:center; }
+        .legend span { display:inline-flex; align-items:center; gap:6px; }
+        .legend i { width:16px; height:12px; border-radius:3px; display:inline-block; background:var(--paper); }
+        .legend .lg-rank i { border:1.5px solid var(--ink-soft); }
+        .legend .lg-lineage i { border:1.5px dashed var(--ink-soft); }
+        .legend .lg-event i { width:8px; height:8px; border-radius:50%; background:var(--merge); }
+        .layout-split { display:flex; gap:28px; align-items:flex-start; padding: 10px; }
+    </style>
+    <script src="../scripts/main.js" defer></script>
 </head>
 <body data-page="geological-time">
-<header class="masthead">
-    <div class="illustration-slot" data-src="../src/geol-time-header.svg"></div>
-    <div class="grain"></div>
-    <nav class="site-nav">
-        <div class="brand">
-            <div class="brand-mark">DF</div>
-            <div class="brand-text">Digital Forest</div>
-        </div>
-        <div class="site-links">
-            <a href="about.html">About</a>
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <button>Studies</button>
+            <button>Library</button>
         </div>
     </nav>
-    <div class="masthead-content" style="color: var(--first); position: relative; top: -10px; left: 140px; font-size: 52px;">
-        <h1>Origin<br><span style="display: inline-block; margin-left: 1em;"></span>of Species</h1>
-    </div>
 </header>
-<main>
-    <div class="frame">
-        <div class="intro-content">
-            <div class="kicker">
-                <span>History · Biology</span>
-            </div>
-            <p>Origins of species through periods of <a href="geological-time.html">geological time scale</a>.</p>
-        </div>
-        <div class="layout-split">
-            <div class="tree-flow" id="treeFlow">
-                <svg class="tree-links" id="treeLinks"></svg>
-            </div>
-            <aside class="detail-side" id="detailSide">
-                <p class="detail-placeholder">Tap a name to see its card here.</p>
-            </aside>
-        </div>
+<div class="frame">
+    <h1>Species of Geological Eras</h1>
+    <div class="crumbs">
+        <p><a href="studies.html">Biology</a> · Paleontology</p>
     </div>
-</main>
-
-  <footer class="site-footer" style="background:var(--olive)">
-      <svg viewBox="0 0 1400 260" preserveAspectRatio="xMidYMax slice">
-        <rect width="1400" height="260" fill="#93A45C"/>
-        <path d="M0,90 C260,60 540,105 800,75 C1040,48 1220,90 1400,70 L1400,260 L0,260 Z" fill="#D97848"/>
-        <path d="M0,150 C300,125 620,165 920,140 C1120,122 1270,140 1400,128 L1400,260 L0,260 Z" fill="#6B7A46"/>
-      </svg>
-      <div class="grain"></div>
-      <div class="footer-content">
-        <span>Digital Forest · 2026</span>
-        <span><a href="../index.html">Index</a></span>
-      </div>
-    </footer>
+    <p>Ancient species of <a href="geological-time.html">Geological Time Scale</a> eras.</p>
+    <div class="layout-split">
+        <div class="tree-flow" id="treeFlow">
+            <svg class="tree-links" id="treeLinks"></svg>
+        </div>
+        <aside class="detail-side" id="detailSide">
+            <p class="detail-placeholder">Tap a card for information.</p>
+        </aside>
+    </div>
+</div>
 <script>
 /* =====================================================================
    REUSABLE TREE-OF-LIFE ENGINE (flow-based)
@@ -150,7 +104,7 @@ const TREE_DATA = {
       ] },
 
     { id:'cyanobacteria', name:'Cyanobacteria', native:'Цианобактерии', kind:'rank', rankLabel:'phylum', color:'archean',
-      html:`<p>The first organisms to <span class="term" data-def="Using light energy to build sugars from CO₂ and water.">photosynthesize</span> using water, releasing oxygen as a byproduct.</p>`,
+      html:`<p>Cyanobacteria or blue-green algae. The first organisms to <span class="term" data-def="Using light energy to build sugars from CO₂ and water.">photosynthesize</span> using water, releasing oxygen as a byproduct.</p>`,
       today:`still exists as "blue-green algae".`,
       images:[
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5sDrTezdJoDtigu_B1pMN-XnTmEYyo4zhkA_tBIOpch2ep3UsMrLP6LHr4qpMnRfAt8TJskc4JHlxABYrPfLSrIi0qqdG9wbUNo8F67w&s=10'}
@@ -312,10 +266,10 @@ function cardHtml(item, badge) {
   const layoutClass = imagePos === 'right' ? 'img-right' : 'img-bottom';
   return `
     <div class="expand-pad">
-      <section class="card-card" style="--accent-color:var(--${item.color})">
+      <section class="card" style="--accent-color:var(--${item.color})">
         <div class="card-head">
-          <h3 class="period-name">${item.name}${item.native ? `<span class="period-native">${item.native}</span>` : ''}</h3>
-          ${badge ? `<span class="period-range">${badge}</span>` : ''}
+          <h2 class="card-title">${item.name}${item.native ? `<span class="card-native">${item.native}</span>` : ''}</h2>
+          ${badge ? `<span class="card-tag">${badge}</span>` : ''}
         </div>
         <div class="card-body ${hasImages ? '' : 'no-image'}">
           <div class="card-text">

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylva — Species</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --cream:#F3ECDD; --ink:#1C1A15; --ink-soft:#5B564A; --paper:#F1ECDE; --paper-2:#E9E2CE; --border:1.5px; --radius:7px; --amber:#C68A3E; --slate:#3D5A73; --rust:#C1502E; }
+        .tree-flow { position:relative; display:flex; flex-direction:row; align-items:stretch; gap:34px; overflow-x:auto; padding:6px 4px 10px; }
+.tree-links { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2; overflow:visible; }
+.stage { position:relative; z-index:1; display:flex; flex-direction:column; justify-content:space-around; gap:12px; flex:0 0 auto; }
+.stage-col { display:flex; flex-direction:column; align-items:center; width:150px; }
+        .node-btn {
+  appearance:none; -webkit-appearance:none;
+  font-family:'Fraunces', serif; font-weight:600; font-size:14px;
+  background: var(--paper); color: var(--ink);
+  border: 1.5px solid var(--accent-color, var(--ink-soft));
+  border-radius: var(--radius);
+  padding: 9px 10px;
+  cursor: pointer;
+  min-height: 40px;
+  min-width: 0;
+  width: 100%;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.node-btn.kind-lineage { border-style: dashed; }
+.node-btn:hover { background: var(--paper-2); }
+.node-btn.is-active { background: var(--accent-color, var(--ink-soft)); color: var(--cream); }
+.node-btn:focus { outline: none; }
+.node-btn:focus-visible { outline: 2px solid var(--accent-color, var(--ink-soft)); outline-offset: 2px; }
+
+/* ---- Shared detail card area, full width, below the diagram ---- */
+.detail-zone { margin-top: 8px; }
+.expand-wrap { display:grid; grid-template-rows:0fr; transition:grid-template-rows 0.28s ease; width:100%; }
+.expand-wrap.is-open { grid-template-rows:1fr; }
+.expand-inner { overflow:hidden; }
+.expand-pad { padding-top:6px; }
+    </style>
+    <script src="../scripts/main.js" defer></script>
+</head>
+<body>
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
+        </div>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Eukaryotes</h1>
+    <div class="crumbs">
+        <p><a href="studies.html">Biology</a> · Phylogeny</p>
+    </div>
+    <div class="layout-split">
+        <div class="tree-flow" id="treeFlow">
+    <svg class="tree-links" id="treeLinks"></svg>
+  </div>
+  <div class="detail-zone" id="detailZone"></div>
+    </div>
+</div>
+<script>
+
+const TREE_DATA = {
+  nodes: [
+    { id:'eukaryota', name:'Eukaryota', kind:'rank', rankLabel:'domain', color:'rust',
+      html:`<p>Appeared in endosymbiosis of 1st emerger.</p>`,
+      },
+
+    { id:'fungi', name:'Fungi', kind:'rank', rankLabel:'kingdom', color:'rust',
+      html:`<p>Yeasts, molds, and mushrooms. Have chitin in their cell walls. A fungus does not perform photosynthesis. Growth is their means of motility, except for spores (a few of which are flagellated), which may travel through the air or water. Fungi are the principal decomposers in ecological systems.</p>`,
+      },
+
+    { id:'plantae', name:'Plantae', kind:'rank', rankLabel:'kingdom', color:'rust',
+      html:`<p>Predominantly photosynthetic or came from photosynthetic ancestors.</p>`,
+      },
+
+    { id:'animalia', name:'Animalia', kind:'rank', rankLabel:'kingdom', color:'rust',
+      html:`<p>Animals consume organic material, breathe oxygen, have muscle cells, can reproduce sexually, and grow from a hollow sphere of cells, the blastula, during embryonic development. With few exceptions, animals are able to move.</p>`,
+      },
+
+    { id:'dickinsonia', name:'Dickinsonia', kind:'rank', rankLabel:'genus', color:'rust',
+      html:`<p>Organism from Ediacaran fauna.</p>`,
+      images:[
+        {src:'https://upload.wikimedia.org/wikipedia/commons/d/d9/Dickinsonia_costata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
+        {src:'https://hakaimagazine.com/wp-content/uploads/header-dickinsonia.jpg', caption:'Dickinsonia, illustration'}
+      ] },
+
+    { id:'spriggina', name:'Spriggina', kind:'rank', rankLabel:'genus', color:'rust',
+      html:`<p>Organism from Ediacaran fauna. The organism reached 3–5 centimetres (1.2–2.0 in) in length and may have been predatory. Its bottom was covered with two rows of tough interlocking plates, while one row covered its top; its front few segments fused to form a "head." A possible early ancestor to trilobites or arthropods.</p>`,
+      images:[
+        {src:'https://upload.wikimedia.org/wikipedia/commons/4/4e/Spriggina_Floundensi_4.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
+        {src:'https://paleozoo.com.au/resources/Spriggina_Model_Paleozoo.jpg', caption:'Spriggina, illustration'}
+      ] },
+
+    { id:'charnia', name:'Charnia', kind:'rank', rankLabel:'genus', color:'rust',
+      html:`<p>Have fed on nutrients in the water. Despite Charnia's fern-like appearance, it is not a photosynthetic plant or alga because the nature of the fossil beds where specimens have been found implies that it originally lived in deep water, well below the photic zone where photosynthesis can occur.</p>`,
+      images:[
+        {src:'https://www.charnwoodforest.org/wp-content/uploads/2023/09/Charnia.jpg'},
+        {src:'https://www.charnwoodforest.org/wp-content/uploads/2024/03/Charnia-Community-No-Labels-web-sq-1200x1200.png', caption:'Charnia, illustration'}
+      ] },
+
+    { id:'kimberella', name:'Kimberella', kind:'rank', rankLabel:'genus', color:'rust',
+      html:`<p>The slug-like organism fed by scratching the microbial surface on which it dwelt in a manner similar to the gastropods.</p>`,
+      images:[
+        {src:'https://upload.wikimedia.org/wikipedia/commons/6/6d/Kimberella_quadrata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
+        {src:'https://alchetron.com/cdn/kimberella-54aa8734-9432-45b4-83ba-ddca325beba-resize-750.jpeg', caption:'Kimberella, illustration'},
+      ] },
+
+    { id:'cloudinidae', name:'Cloudinidae', kind:'rank', rankLabel:'family', color:'rust',
+      html:`<p>Formed millimetre-scale conical fossils consisting of calcareous cones nested within one another.</p>`,
+      images:[
+        {src:'https://mediasvc.eurekalert.org/Api/v1/Multimedia/adfaa3b8-c9be-4724-b092-a70f51c4a437/Rendition/low-res/Content/Public'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCmocy_WB0m7tolyznESRfm3aXwmgIWRII121SJwSvsQ&s=10', caption:'Cloudina, illustration'},
+      ] },
+
+    { id:'arthropoda', name:'Arthropoda', kind:'rank', rankLabel:'phylum', color:'rust',
+      html:`<p><span class="term" tabindex="0" data-def="беспозвоночные">Invertebrates</span>, have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span> with a <span class="term" tabindex="0" data-def="tough but flexible, non-mineral outer coverings of an organism, that provide protection">cuticle</span> made of chitin, a body with differentiated segments, and paired jointed appendages. In order to keep growing, they must go through stages of <span class="term" tabindex="0" data-def="линька">moulting</span>.</p>`,
+      },
+
+    { id:'trilobita', name:'Trilobita', kind:'rank', rankLabel:'class', color:'rust',
+      html:`<p></p>`,
+      images:[
+        {src:'https://cdn.britannica.com/87/143487-050-EBA32F64/trilobites-rocks-Russia-Cambrian-Period.jpg'},
+        {src:'https://d3d0lqu00lnqvz.cloudfront.net/trilobite/Trilobite-Fossil.jpg'},
+        {src:'https://paleozoo.com.au/resources/Trilobite/Trilobite_COAL_B.jpg.opt582x326o0%2C0s582x326.jpg', caption:'Trilobite, model'},
+      ] },
+
+    { id:'radiodonta', name:'Radiodonta', kind:'rank', rankLabel:'order', color:'rust',
+      html:`<p>Arthropods with distinctive frontal appendages. Radiodonts were among the earliest large predators, and they also included sediment sifters and filter feeders.</p>`,
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-vtSxoky3vEeugqS5q-YaYyLseHHPK_yi67HZhFZhXx4j3NmyH4bfy6M&s=10', caption:'Radiodonta, illustration'},
+        {src:'https://images.theconversation.com/files/365975/original/file-20201028-15-xtazrw.jpg?ixlib=rb-4.1.1&rect=0%2C27%2C4667%2C3109&q=50&auto=format&w=768&h=512&fit=crop&dpr=2', caption:'Radiodonta, illustration'},
+      ] },
+
+    { id:'mollusca', name:'Mollusca', kind:'rank', rankLabel:'phylum', color:'rust',
+      html:`<p>Molluscs.</p>`,
+      },
+
+    { id:'cephalopoda', name:'Cephalopoda', kind:'rank', rankLabel:'class', color:'rust',
+      html:`<p>Cephalopods with bilateral body symmetry, a prominent head, and a set of arms or tentacles. Can squirt ink.</p>`,
+      },
+
+    { id:'nautilus', name:'Nautilus', kind:'rank', rankLabel:'genus', color:'rust',
+      html:`<p>Cephalopods with bilateral body symmetry, a prominent head, and a set of arms or tentacles. Can squirt ink.</p>`,
+      },
+
+    { id:'ammonitida', name:'Ammonitida', kind:'rank', rankLabel:'order', color:'rust',
+      html:`<p>True ammonites.</p>`,
+      },
+
+    { id:'octopoda', name:'Octopoda', kind:'rank', rankLabel:'order', color:'rust',
+      html:`<p>Octopus.</p>`,
+      },
+
+    { id:'medusozoa', name:'Medusozoa', kind:'rank', rankLabel:'subphylum', color:'rust',
+      html:`<p>Medusozoans have a medusa stage in their often complex life cycle.</p>`,
+      },
+
+    { id:'cubozoa', name:'Cubozoa', kind:'rank', rankLabel:'class', color:'rust',
+      html:`<p>Box jellyfish.</p>`,
+      },
+
+    { id:'scyphozoa', name:'Scyphozoa', kind:'rank', rankLabel:'class', color:'rust',
+      html:`<p>True jellyfish.</p>`,
+      },
+
+    { id:'staurozoa', name:'Staurozoa', kind:'rank', rankLabel:'class', color:'rust',
+      html:`<p>Stalked jellyfish.</p>`,
+      },
+  ],
+
+  layout: [
+    { type:'stage', items:[ {id:'eukaryota'} ] },
+    { type:'stage', items:[ {id:'fungi', from:'eukaryota'}, {id:'plantae', from:'eukaryota'}, {id:'animalia', from:'eukaryota'} ] },
+    { type:'stage', items:[ {id:'arthropoda', from:'animalia'}, {id:'mollusca', from:'animalia'} ] },
+    { type:'stage', items:[ {id:'medusozoa', from:'animalia'} ] },
+    { type:'stage', items:[ {id:'trilobita', from:'arthropoda'}, {id:'cephalopoda', from:'mollusca'}, {id:'cubozoa', from:'medusozoa'}, {id:'scyphozoa', from:'medusozoa'}, {id:'staurozoa', from:'medusozoa'} ] },
+    { type:'stage', items:[ {id:'radiodonta', from:'arthropoda'}, {id:'ammonitida', from:'cephalopoda'}, {id:'octopoda', from:'cephalopoda'} ] },
+    { type:'stage', items:[ {id:'cloudinidae', from:'animalia'} ] },
+    { type:'stage', items:[ {id:'dickinsonia', from:'animalia'}, {id:'spriggina', from:'animalia'}, {id:'charnia', from:'animalia'}, {id:'kimberella', from:'animalia'}, {id:'nautilus', from:'cephalopoda'} ] },
+  ]
+};
+
+/* ---- Renderer ---- */
+const flow = document.getElementById('treeFlow');
+const linksSvg = document.getElementById('treeLinks');
+const detailZone = document.getElementById('detailZone');
+const nodesById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));
+const simpleLinks = [];
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+function buildCarousel(images) {
+  const slides = images.map((img, i) => `
+    <figure class="carousel-slide" data-caption="${(img.caption||'').replace(/"/g,'&quot;')}">
+      <div class="img-slot">${img.src ? `<img src="${img.src}" alt="${(img.caption||'').replace(/"/g,'&quot;')}">` : `image ${i+1}`}</div>
+    </figure>`).join('');
+  return `<div class="carousel"><div class="carousel-viewport"><div class="carousel-track">${slides}</div>
+    <button class="carousel-arrow carousel-prev" aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="carousel-arrow carousel-next" aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div><div class="carousel-foot"><div class="carousel-caption"></div><div class="carousel-dots"></div></div></div>`;
+}
+function wireCarousel(root) {
+  root.querySelectorAll('.carousel').forEach(carousel => {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+    const captionEl = carousel.querySelector('.carousel-caption');
+    const dotsWrap = carousel.querySelector('.carousel-dots');
+    let index = 0;
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (i===0 ? ' is-active' : '');
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    });
+    const dots = Array.from(dotsWrap.children);
+    function goTo(i) {
+      index = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(-${index*100}%)`;
+      dots.forEach((d,di) => d.classList.toggle('is-active', di===index));
+      captionEl.textContent = slides[index].dataset.caption || '';
+    }
+    carousel.querySelector('.carousel-prev').addEventListener('click', () => goTo(index-1));
+    carousel.querySelector('.carousel-next').addEventListener('click', () => goTo(index+1));
+    let startX = 0;
+    track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+    track.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (dx > 40) goTo(index-1); else if (dx < -40) goTo(index+1);
+    });
+    goTo(0);
+  });
+}
+
+function cardHtml(item, badge) {
+  const hasImages = item.images && item.images.length;
+  return `
+    <div class="expand-pad">
+      <section class="card" style="--accent-color:var(--${item.color})">
+        <div class="card-head">
+          <h2 class="card-title">${item.name}${item.native ? `<span class="card-native">${item.native}</span>` : ''}</h2>
+          ${badge ? `<span class="card-tag">${badge}</span>` : ''}
+        </div>
+        <div class="card-body ${hasImages ? '' : 'no-image'}">
+          <div class="card-text">
+            ${item.html}
+            ${item.today ? `<div class="today-box"><strong>Today:</strong> ${item.today}</div>` : ''}
+          </div>
+          ${hasImages ? buildCarousel(item.images) : ''}
+        </div>
+      </section>
+    </div>`;
+}
+
+const globalExpand = document.createElement('div');
+globalExpand.className = 'expand-wrap';
+globalExpand.innerHTML = '<div class="expand-inner"></div>';
+detailZone.appendChild(globalExpand);
+let activeId = null;
+
+function toggleExpand(id, btn, item, badge) {
+  const inner = globalExpand.querySelector('.expand-inner');
+  const wasOpenForThis = globalExpand.classList.contains('is-open') && activeId === id;
+  document.querySelectorAll('.node-btn.is-active').forEach(b => b.classList.remove('is-active'));
+
+  if (wasOpenForThis) {
+    globalExpand.classList.remove('is-open');
+    activeId = null;
+    globalExpand.addEventListener('transitionend', () => { inner.innerHTML = ''; redrawLinks(); }, { once:true });
+  } else {
+    inner.innerHTML = cardHtml(item, badge);
+    wireCarousel(inner);
+    globalExpand.classList.add('is-open');
+    btn.classList.add('is-active');
+    activeId = id;
+    setTimeout(() => globalExpand.scrollIntoView({ behavior:'smooth', block:'start' }), 60);
+  }
+  redrawLinks();
+  setTimeout(redrawLinks, 320);
+}
+
+TREE_DATA.layout.forEach(entry => {
+  const stageEl = document.createElement('div');
+  stageEl.className = 'stage';
+  entry.items.forEach(item => {
+    const n = nodesById[item.id];
+    const col = document.createElement('div');
+    col.className = 'stage-col';
+    const btn = document.createElement('button');
+    btn.className = `node-btn kind-${n.kind}`;
+    btn.style.setProperty('--accent-color', `var(--${n.color})`);
+    btn.dataset.id = n.id;
+    btn.textContent = n.name;
+    btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
+    col.appendChild(btn);
+    stageEl.appendChild(col);
+    if (item.from) simpleLinks.push({ fromId:item.from, toId:n.id });
+  });
+  flow.appendChild(stageEl);
+});
+
+/* ---- Connector lines: left-edge-of-child to right-edge-of-parent ---- */
+function redrawLinks() {
+  const flowRect = flow.getBoundingClientRect();
+  linksSvg.innerHTML = '';
+  linksSvg.setAttribute('width', flowRect.width);
+  linksSvg.setAttribute('height', flowRect.height);
+
+  function edgeOf(el, side) {
+    const r = el.getBoundingClientRect();
+    return { x: (side==='right' ? r.right : r.left) - flowRect.left, y: r.top - flowRect.top + r.height/2 };
+  }
+  function drawLine(p1, p2) {
+    const path = svgEl('path', {
+      d:`M${p1.x},${p1.y} C${(p1.x+p2.x)/2},${p1.y} ${(p1.x+p2.x)/2},${p2.y} ${p2.x},${p2.y}`,
+      fill:'none', stroke:'var(--ink-soft)', 'stroke-width':'1.5'
+    });
+    linksSvg.appendChild(path);
+  }
+  simpleLinks.forEach(l => {
+    const from = document.querySelector(`.node-btn[data-id="${l.fromId}"]`);
+    const to = document.querySelector(`.node-btn[data-id="${l.toId}"]`);
+    if (from && to) drawLine(edgeOf(from,'right'), edgeOf(to,'left'));
+  });
+}
+
+redrawLinks();
+window.addEventListener('resize', redrawLinks);
+</script>
+</body>
+</html>
