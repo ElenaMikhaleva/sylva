@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sylva — Species</title>
+    <title>Sylva — Eukaryotes</title>
     <link rel="stylesheet" href="../styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
     </style>
     <script src="../scripts/main.js" defer></script>
 </head>
-<body>
+<body data-page="species">
 <header>
     <nav>
         <a class="brand" href="home.html">Sylva</a>
@@ -171,13 +171,21 @@ const TREE_DATA = {
     { id:'staurozoa', name:'Staurozoa', kind:'rank', rankLabel:'class', color:'rust',
       html:`<p>Stalked jellyfish.</p>`,
       },
+
+    { id:'cnidaria', name:'Cnidaria', kind:'rank', rankLabel:'phylum', color:'rust',
+      html:`<p>Aquatic invertebrates. Cnidarians mostly have two basic body forms: swimming medusae and sessile polyps, both of which are radially symmetrical with mouths surrounded by tentacles that bear cnidocytes, which are specialized stinging cells used to capture prey.</p>`,
+      },
+
+    { id:'anthozoa', name:'Anthozoa', kind:'rank', rankLabel:'subphylum', color:'rust',
+      html:`<p>Corals typically form compact colonies of many identical individual polyps. Coral species include the important reef builders that inhabit tropical oceans and secrete calcium carbonate to form a hard skeleton. A coral "group" is a colony of very many genetically identical polyps. Each polyp is a sac-like animal typically only a few millimeters in diameter and a few centimeters in height. A set of tentacles surround a central mouth opening. Each polyp excretes an exoskeleton near the base. Over many generations, the colony thus creates a skeleton characteristic of the species which can measure up to several meters in size. Although some corals are able to catch plankton and small fish using stinging cells on their tentacles, most corals obtain the majority of their energy and nutrients from photosynthesis.</p>`,
+      },
   ],
 
   layout: [
     { type:'stage', items:[ {id:'eukaryota'} ] },
     { type:'stage', items:[ {id:'fungi', from:'eukaryota'}, {id:'plantae', from:'eukaryota'}, {id:'animalia', from:'eukaryota'} ] },
-    { type:'stage', items:[ {id:'arthropoda', from:'animalia'}, {id:'mollusca', from:'animalia'} ] },
-    { type:'stage', items:[ {id:'medusozoa', from:'animalia'} ] },
+    { type:'stage', items:[ {id:'arthropoda', from:'animalia'}, {id:'mollusca', from:'animalia'}, {id:'cnidaria', from:'animalia'} ] },
+    { type:'stage', items:[ {id:'medusozoa', from:'cnidaria'}, {id:'anthozoa', from:'cnidaria'} ] },
     { type:'stage', items:[ {id:'trilobita', from:'arthropoda'}, {id:'cephalopoda', from:'mollusca'}, {id:'cubozoa', from:'medusozoa'}, {id:'scyphozoa', from:'medusozoa'}, {id:'staurozoa', from:'medusozoa'} ] },
     { type:'stage', items:[ {id:'radiodonta', from:'arthropoda'}, {id:'ammonitida', from:'cephalopoda'}, {id:'octopoda', from:'cephalopoda'} ] },
     { type:'stage', items:[ {id:'cloudinidae', from:'animalia'} ] },
