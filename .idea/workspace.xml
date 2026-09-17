@@ -8,10 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/geological-time.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/geological-time.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/paleozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paleozoic.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-eras.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-eras.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-eukaryotes.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-eukaryotes.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/tree-of-life.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-of-life.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -502,7 +499,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789119169240</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="changing layout">
+      <option name="closed" value="true" />
+      <created>1789384013195</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1789384013195</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

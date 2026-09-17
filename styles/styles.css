@@ -493,6 +493,11 @@ body[data-page="geological-time"] {
   --third: #7C8A3E;
   --fourth: #D6A63C;
 }
+body[data-page="species"] {
+  --rust: #C1502E;
+  --archean: #3D5A73;
+  --slate: #3D5A73;
+}
 body[data-page="paleozoic"] {
   --first: #C4472A;
   --second: #C97C3A;
@@ -901,6 +906,18 @@ body[data-page="paleozoic"] {
     align-items:center;
     width:150px;
     }
+body[data-page="species"] .stage {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 150px;
+}
+body[data-page="species"] .stage-col {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+}
 .dek {
     max-width:34em;
     margin:0 0 12px;

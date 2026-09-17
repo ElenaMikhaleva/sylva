@@ -301,12 +301,19 @@ simpleLinks.forEach(l => {
      <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
      <div class="detail-zone" id="detailZone"></div>
 */
+function svgEl(tag, attrs) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
 function initStageTree(TREE_DATA) {
+  const RANKS = TREE_DATA.ranks || ['domain','kingdom','phylum','class','order','family','genus','species'];
   const flow = document.getElementById('treeFlow');
   const linksSvg = document.getElementById('treeLinks');
   const detailZone = document.getElementById('detailZone');
   const nodesById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));
   const simpleLinks = [];
+  const ROW_HEIGHT = 70;
 
   const globalExpand = document.createElement('div');
   globalExpand.className = 'expand-wrap';
@@ -334,23 +341,64 @@ function initStageTree(TREE_DATA) {
     setTimeout(redrawLinks, 320);
   }
 
-  TREE_DATA.layout.forEach(entry => {
-    if (entry.type !== 'stage') return; // guard: previously missing — a non-stage entry threw and silently killed the whole render
+  /* ---- 1. Parent/child map, straight from each node's own `from` ---- */
+  const childrenOf = {};
+  const parentOf = {};
+  TREE_DATA.nodes.forEach(n => {
+    if (n.from) {
+      parentOf[n.id] = n.from;
+      (childrenOf[n.from] ||= []).push(n.id);
+      simpleLinks.push({ fromId: n.from, toId: n.id });
+    }
+  });
+  const allIds = TREE_DATA.nodes.map(n => n.id);
+  const roots = allIds.filter(id => !parentOf[id]);
+
+  /* ---- 2. Bottom-up slot assignment (unchanged — still purely about
+             parent/child structure, independent of column/rank) ---- */
+  const slot = {};
+  let nextLeafSlot = 0;
+  function assign(id) {
+    const kids = childrenOf[id];
+    if (!kids || !kids.length) { slot[id] = nextLeafSlot++; return slot[id]; }
+    const kidSlots = kids.map(assign);
+    slot[id] = (Math.min(...kidSlots) + Math.max(...kidSlots)) / 2;
+    return slot[id];
+  }
+  roots.forEach(assign);
+  const totalHeight = nextLeafSlot * ROW_HEIGHT;
+
+  /* ---- 3. Column = rank position. Unranked/lineage nodes → column 0.
+             Only non-empty columns get rendered, so skipped ranks
+             (globally unused) don't waste space — but a lineage that
+             skips a rank locally still just draws a longer connector,
+             since drawLine uses real pixel positions regardless of
+             how many columns apart the two nodes land. ---- */
+  function columnOf(n) {
+    if (!n.rankLabel) return 0;
+    const idx = RANKS.indexOf(n.rankLabel);
+    return idx >= 0 ? idx + 1 : RANKS.length + 1;
+  }
+  const byColumn = {};
+  TREE_DATA.nodes.forEach(n => (byColumn[columnOf(n)] ||= []).push(n));
+  const usedColumns = Object.keys(byColumn).map(Number).sort((a, b) => a - b);
+
+  usedColumns.forEach(col => {
     const stageEl = document.createElement('div');
     stageEl.className = 'stage';
-    entry.items.forEach(item => {
-      const n = nodesById[item.id];
-      const col = document.createElement('div');
-      col.className = 'stage-col';
+    stageEl.style.height = `${totalHeight}px`;
+    byColumn[col].forEach(n => {
+      const colEl = document.createElement('div');
+      colEl.className = 'stage-col';
+      colEl.style.top = `${slot[n.id] * ROW_HEIGHT + ROW_HEIGHT / 2}px`;
       const btn = document.createElement('button');
       btn.className = `node-btn kind-${n.kind}`;
       btn.style.setProperty('--accent-color', `var(--${n.color})`);
       btn.dataset.id = n.id;
       btn.textContent = n.name;
       btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
-      col.appendChild(btn);
-      stageEl.appendChild(col);
-      if (item.from) simpleLinks.push({ fromId: item.from, toId: n.id });
+      colEl.appendChild(btn);
+      stageEl.appendChild(colEl);
     });
     flow.appendChild(stageEl);
   });
@@ -365,20 +413,22 @@ function initStageTree(TREE_DATA) {
       return { x: (side === 'right' ? r.right : r.left) - flowRect.left, y: r.top - flowRect.top + r.height / 2 };
     }
     function drawLine(p1, p2, color) {
-  const path = svgEl('path', {
-    d:`M${p1.x},${p1.y} C${(p1.x+p2.x)/2},${p1.y} ${(p1.x+p2.x)/2},${p2.y} ${p2.x},${p2.y}`,
-    fill:'none', stroke: color || 'var(--text-soft)', 'stroke-width':'1.5'
-  });
-  linksSvg.appendChild(path);
-}
-
-simpleLinks.forEach(l => {
-  const from = document.querySelector(`.node-btn[data-id="${l.fromId}"]`);
-  const to = document.querySelector(`.node-btn[data-id="${l.toId}"]`);
-  if (from && to) drawLine(edgeOf(from,'right'), edgeOf(to,'left'), `var(--${nodesById[l.toId].color})`);
-});
+      const path = svgEl('path', {
+        d: `M${p1.x},${p1.y} C${(p1.x + p2.x) / 2},${p1.y} ${(p1.x + p2.x) / 2},${p2.y} ${p2.x},${p2.y}`,
+        fill: 'none', stroke: color || 'var(--text-soft)', 'stroke-width': '1.5'
+      });
+      linksSvg.appendChild(path);
+    }
+    simpleLinks.forEach(l => {
+      const from = document.querySelector(`.node-btn[data-id="${l.fromId}"]`);
+      const to = document.querySelector(`.node-btn[data-id="${l.toId}"]`);
+      if (from && to) drawLine(edgeOf(from, 'right'), edgeOf(to, 'left'), `var(--${nodesById[l.toId].color}, var(--text-soft))`);
+    });
   }
 
   redrawLinks();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawLinks);
+  setTimeout(redrawLinks, 300);
+  setTimeout(redrawLinks, 1000);
   window.addEventListener('resize', redrawLinks);
 }

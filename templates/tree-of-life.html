@@ -21,6 +21,7 @@
 <div class="frame">
     <h1>Species</h1>
     <div class="crumbs"><p><a href="studies.html">Biology</a> · Phylogeny</p></div>
+    <p>A reference map for biological classification, organizing organisms across formal taxonomic ranks.</p>
     <div class="layout-split">
         <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
         <div class="detail-zone" id="detailZone"></div>
@@ -28,83 +29,76 @@
 </div>
 <script>
 const TREE_DATA = {
-  nodes: [
+ranks: ['domain','kingdom','phylum','class','order','family','genus','species'],
+nodes: [
     { id:'luca', name:'LUCA', kind:'lineage', color:'rust',
-      html:`<p>The last universal common ancestor (LUCA) is the hypothesized latest common ancestral population of single-celled organisms from which all subsequent life forms descend.</p>`,
+      html:`<p>The <b>last universal common ancestor</b> (LUCA) is the hypothesized latest common ancestral population of single-celled organisms from which all subsequent life forms descend.</p>`
       },
-
-    { id:'bacteria', name:'Bacteria', native:'Бактерии', kind:'rank', rankLabel:'domain', color:'rust',
-      html:`<p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.</p><p>Consists of <span class="highlight">one biological cell</span>.</p>`,
+    { id:'bacteria', name:'Bacteria', rankLabel:'domain', kind:'rank', color:'rust', from:'luca',
+      html:`One of the two primary prokaryote <span class="term" data-def="a group of related organisms sharing a common ancestor">lineages</span>.</p><p>Consists of <span class="highlight">one biological cell</span>.`,
+      images:[{src:'https://www.pharmapproach.com/wp-content/uploads/2021/01/Diagram-of-a-bacterial-cell-showing-structural-parts-750x640.jpg', caption:'Bacteria cell structure.'}]
+      },
+    { id:'archaea', name:'Archaea', rankLabel:'domain', kind:'rank', color:'slate', from:'luca',
+      html:`<p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.<p>Consists of <span class="highlight">one biological cell</span>. Their cell membranes, enzymes, and genetic processes resemble those of eukaryotes more closely than bacteria.</p>`,
+      images:[{src:'https://xbio-live.s3.amazonaws.com/bio-dictionary/ARCHAEAIII.DP.RGB.png', caption:'Archaea cell structure'}]
+      },
+    { id:'pseudomonadati', name:'Pseudomonadati', rankLabel:'kingdom', kind:'rank', color:'rust', from:'bacteria',
+      html:`Major group of bacteria.`
+      },
+    { id:'bacillati', name:'Bacillati', rankLabel:'kingdom', kind:'rank', color:'archean', from:'bacteria',
+      html:`A major bacterial evolutionary <span class="term" data-def="a group of related organisms sharing a common ancestor">lineage</span>.`
+      },
+    { id:'cyanobacteria', name:'Cyanobacteria', native:'Цианобактерии', kind:'rank', rankLabel:'phylum', from:'bacillati', color:'archean',
+      html:`<p>Cyanobacteria or <b>blue-green algae</b> use sunlight, carbon dioxide, and water to generate energy, releasing oxygen as a waste product. They built large underwater colonies that formed fossilized rock structures known as stromatolites.</p>`,
       images:[
-        {src:'https://www.pharmapproach.com/wp-content/uploads/2021/01/Diagram-of-a-bacterial-cell-showing-structural-parts-750x640.jpg', caption:'Bacteria cell structure.'}
-      ] },
-
-    { id:'pseudomonadati', name:'Pseudomonadati', kind:'rank', rankLabel:'kingdom', color:'rust',
-      html:`<p></p>`,
-      },
-
-    { id:'bacillati', name:'Bacillati', kind:'rank', rankLabel:'kingdom', color:'rust',
-      html:`<p></p>`,
-      },
-
-    { id:'cyanobacteria', name:'Cyanobacteria', native:'Цианобактерии', kind:'rank', rankLabel:'phylum', color:'archean',
-      html:`<p>Cyanobacteria or blue-green algae</p>`,
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5sDrTezdJoDtigu_B1pMN-XnTmEYyo4zhkA_tBIOpch2ep3UsMrLP6LHr4qpMnRfAt8TJskc4JHlxABYrPfLSrIi0qqdG9wbUNo8F67w&s=10'},
+        {src:'https://s3.amazonaws.com/www.explorersweb.com/wp-content/uploads/2023/09/13202450/shutterstock_1629041722.jpg', caption:'Stromatolites'},
+        {src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Stromatolithe_Pal%C3%A9oarch%C3%A9en_-_MNHT.PAL.2009.10.1.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original', caption:'Stromatolite'}
+      ]
+    },
+    { id:'bacillota', name:'Bacillota', kind:'rank', rankLabel:'phylum', from:'bacillati', color:'archean',
+      html:`Represents dominant gut microbes.`
+    },
+    { id:'bacilli', name:'Bacilli', kind:'rank', rankLabel:'class', from:'bacillota', color:'archean',
+      html:`Represents dominant gut microbes both <span class="term" data-def="any rod-shaped bacteria">bacilli</span> and <span class="term" data-def="any spherical bacteria">cocci</span> bacteria.`
+    },
+    { id:'streptococcus', name:'Streptococcus', kind:'rank', rankLabel:'genus', from:'bacilli', color:'archean',
+      html:`<p>from Ancient Greek στρεπτός (streptós) 'twisted' and κόκκος (kókkos) 'grain').</p><p>Most are <span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">commensal organisms</span> as parts of the human <span class="term" data-def="the community of microorganisms that live together in a specific habitat, such as the human body or soil">microbiome</span>, for example in the mouth, skin, intestine, and upper respiratory tract. Some exist as <span class="term" data-def="a microorganism, that can infect a host and cause disease">pathogens</span> and cause infections collectively known as <span class="highlight">streptococcosis</span>.</p>`,
       images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5sDrTezdJoDtigu_B1pMN-XnTmEYyo4zhkA_tBIOpch2ep3UsMrLP6LHr4qpMnRfAt8TJskc4JHlxABYrPfLSrIi0qqdG9wbUNo8F67w&s=10'}
-      ] },
-
-    { id:'bacillota', name:'Bacillota', kind:'rank', rankLabel:'phylum', color:'archean',
-      html:`<p>Bacillota or Firmicutes</p>`
-      },
-
-    { id:'bacilli', name:'Bacilli', kind:'rank', rankLabel:'class', color:'archean',
-      html:`<p></p>`
-      },
-
-    { id:'streptococcus', name:'Streptococcus', kind:'rank', rankLabel:'genus', color:'archean',
-      html:`<p>from Ancient Greek στρεπτός (streptós) 'twisted' and κόκκος (kókkos) 'grain'). Most exist as commensal as parts of the human microbiome, for example in the mouth, skin, intestine, and upper respiratory tract. Some exist as pathogens and cause infections collectively known as streptococcosis.</p>`,
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5sDrTezdJoDtigu_B1pMN-XnTmEYyo4zhkA_tBIOpch2ep3UsMrLP6LHr4qpMnRfAt8TJskc4JHlxABYrPfLSrIi0qqdG9wbUNo8F67w&s=10'}
-      ] },
-
-    { id:'staphylococcus', name:'Staphylococcus', kind:'rank', rankLabel:'genus', color:'archean',
-      html:`<p>from the Ancient Greek words σταφυλή (staphylē), meaning “bunch of grapes”, and κόκκος (kokkos), meaning “berry” or “grain”. The genus contains commensal organisms of the skin and mucous membranes of humans and other animals, as well as opportunistic pathogens.</p>`,
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Streptococci.jpg/500px-Streptococci.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+      ]
+    },
+    { id:'staphylococcus', name:'Staphylococcus', kind:'rank', rankLabel:'genus', from:'bacilli', color:'archean',
+      html:`<p>from the Ancient Greek words σταφυλή (staphylē), meaning “bunch of grapes”, and κόκκος (kokkos), meaning “berry” or “grain”</p><p>The genus contains <span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">commensal</span> organisms of the skin and mucous membranes of humans and other animals, as well as opportunistic <span class="term" data-def="a microorganism, that can infect a host and cause disease">pathogens</span>.</p>`,
       images:[
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Staphylococcus_aureus_01.jpg/500px-Staphylococcus_aureus_01.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
-      ] },
-
-    { id:'salmonella', name:'Salmonella', kind:'rank', rankLabel:'genus', color:'archean',
-      html:`<p>Salmonella species are intracellular pathogens,[5] of which certain serotypes cause illness such as salmonellosis. Most infections are due to the ingestion of food contaminated by feces.</p>`,
-       },
-
-    { id:'treponemapallidum', name:'Treponema pallidum', kind:'rank', rankLabel:'species', color:'archean',
-      html:`<p>Bacterium that can cause syphilis.</p>`,
+      ]
+    },
+    { id:'salmonella', name:'Salmonella', kind:'rank', rankLabel:'genus', from:'enterobacteriaceae', color:'archean',
+      html:`<span class="term" data-def="a microorganism, that can infect a host and cause disease">Pathogens</span>, of which certain serotypes cause illness such as <span class="highlight">salmonellosis</span>. Most infections are due to the ingestion of food contaminated by feces.`,
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/SalmonellaNIAID.jpg/500px-SalmonellaNIAID.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Salmonella Typhimurium (red) invading cultured human cells'}
+      ]
+    },
+    { id:'treponemapallidum', name:'Treponema pallidum', kind:'rank', rankLabel:'species', from:'pseudomonadati', color:'archean',
+      html:`Bacterium that can cause <span class="highlight">syphilis</span>.`,
       images:[
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Treponema_pallidum.jpg/500px-Treponema_pallidum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
-      ] },
-
-    { id:'archaea', name:'Archaea', native:'Археи', kind:'rank', rankLabel:'domain', color:'slate',
-      html:`<p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.<p>Consists of <span class="highlight">one biological cell</span>. Their cell membranes, enzymes, and genetic processes resemble those of eukaryotes more closely than bacteria.</p>`,
-      today:`found almost everywhere.`,
+      ]
+    },
+    { id:'methanobacteriota', name:'Methanobacteriota', kind:'rank', rankLabel:'phylum', from:'archaea', color:'archean',
+      html:`Primarily known for producing methane as a byproduct of their energy metabolism.`,
+    },
+    { id:'enterobacteriaceae', name:'Enterobacteriaceae', kind:'rank', rankLabel:'order', from:'pseudomonadati', color:'archean',
+      html:`<span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">Commensal</span> organisms.`,
+    },
+    { id:'escherichiacoli', name:'Escherichia coli', native:'Кишечная палочка', kind:'rank', rankLabel:'species', from:'enterobacteriaceae', color:'archean',
+      html:`Common gut <span class="term" data-def="the smaller partner in a symbiotic relationship">symbiont</span>, specific <span class="term" data-def="штамм">strains</span> cause <span class="term" data-def="пищевое отправление">foodborne illness</span>.`,
       images:[
-        {src:'https://xbio-live.s3.amazonaws.com/bio-dictionary/ARCHAEAIII.DP.RGB.png', caption:'Bacteria cell structure'}
-      ] },
-
-    { id:'methanobacteriota', name:'Methanobacteriota', kind:'rank', rankLabel:'phylum', color:'slate',
-      html:`<p>Primarily known for producing methane as a byproduct of their energy metabolism.</p>`,
-      },
-  ],
-
-  layout: [
-    { type:'stage', items:[ {id:'luca'} ] },
-    { type:'stage', items:[ {id:'bacteria', from:'luca'}, {id:'archaea', from:'luca'} ] },
-    { type:'stage', items:[ {id:'pseudomonadati', from:'bacteria'}, {id:'bacillati', from:'bacteria'} ] },
-    { type:'stage', items:[ {id:'cyanobacteria', from:'bacteria'}, {id:'bacillota', from:'bacillati'}, {id:'methanobacteriota', from:'archaea'} ] },
-    { type:'stage', items:[ {id:'bacilli', from:'bacillota'} ] },
-    { type:'stage', items:[ {id:'salmonella', from:'pseudomonadati'}, {id:'streptococcus', from:'bacilli'}, {id:'staphylococcus', from:'bacilli'} ] },
-    { type:'stage', items:[ {id:'treponemapallidum', from:'pseudomonadati'} ] },
-  ]
-};
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/E_coli_at_10000x%2C_original.jpg/500px-E_coli_at_10000x%2C_original.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+      ]
+    }
+] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
 </script>
 </body>
