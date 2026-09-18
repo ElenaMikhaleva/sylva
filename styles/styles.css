@@ -711,6 +711,7 @@ body[data-page="paleozoic"] {
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
+  border: 1.5px dashed var(--text-soft);
 }
 .event.high .leader {
   height: 74px;

@@ -26,10 +26,14 @@
         <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
         <div class="detail-zone" id="detailZone"></div>
     </div>
+    <h2>Related</h2>
+    <ul>
+        <li><a href="https://www.mindat.org/" target="_blank">mindat.org</a> — database of species</li>
+    </ul>
 </div>
 <script>
 const TREE_DATA = {
-ranks: ['domain','kingdom','phylum','subphylum','class','order','family','genus','species'],
+ranks: ['domain','kingdom','phylum','subphylum'],
 nodes: [
     { id:'eukaryota', name:'Eukaryota', kind:'rank', rankLabel:'domain',
       html:`Appeared in endosymbiosis of 1st emerger.`
@@ -43,84 +47,35 @@ nodes: [
     { id:'animalia', name:'Animalia', from:'eukaryota', kind:'rank', rankLabel:'kingdom', color:'c-animalia',
       html:`<p>Animals</p><ul><li>consume organic material;</li><li>breathe oxygen;</li><li>have muscle cells;</li><li>can reproduce sexually;</li><li>grow from a hollow sphere of cells during embryonic development;</li><li>with few exceptions, are able to move.</li></ul>`
       },
-    { id:'cloudinidae', name:'Cloudinidae', from:'animalia', kind:'rank', rankLabel:'family', color:'c-animalia',
-      html:`Organism from Ediacaran fauna. Formed millimetre-scale conical fossils consisting of calcareous cones nested within one another.`,
-      images:[
-        {src:'https://mediasvc.eurekalert.org/Api/v1/Multimedia/adfaa3b8-c9be-4724-b092-a70f51c4a437/Rendition/low-res/Content/Public'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCmocy_WB0m7tolyznESRfm3aXwmgIWRII121SJwSvsQ&s=10', caption:'Cloudina, illustration'},
-      ] },
-    { id:'dickinsonia', name:'Dickinsonia', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
-      html:`Organism from Ediacaran fauna.`,
-      images:[
-        {src:'https://upload.wikimedia.org/wikipedia/commons/d/d9/Dickinsonia_costata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
-        {src:'https://hakaimagazine.com/wp-content/uploads/header-dickinsonia.jpg', caption:'Dickinsonia, illustration'}
-      ] },
-    { id:'spriggina', name:'Spriggina', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
-      html:`<p>Organism from Ediacaran fauna.</p><ul><li>reached 3–5 centimetres in length;</li><li>may have been predatory;</li><li>was covered with tough plates, plates on the front fused to form a "head";</li><li>a possible early ancestor to trilobites or arthropods.</li></ul>`,
-      images:[
-        {src:'https://upload.wikimedia.org/wikipedia/commons/4/4e/Spriggina_Floundensi_4.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
-        {src:'https://paleozoo.com.au/resources/Spriggina_Model_Paleozoo.jpg', caption:'Spriggina, illustration'}
-      ] },
-    { id:'charnia', name:'Charnia', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
-      html:`<ul><li>fed on nutrients in the water;</li><li>not photosynthetic, because it lived in deep water, below the photic zone where photosynthesis can occur.</li></ul>`,
-      images:[
-        {src:'https://www.charnwoodforest.org/wp-content/uploads/2023/09/Charnia.jpg'},
-        {src:'https://www.charnwoodforest.org/wp-content/uploads/2024/03/Charnia-Community-No-Labels-web-sq-1200x1200.png', caption:'Charnia, illustration'}
-      ] },
-    { id:'kimberella', name:'Kimberella', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
-      html:`Organism from Ediacaran fauna. Fed by scratching the microbial surface on which it dwelt.`,
-      images:[
-        {src:'https://upload.wikimedia.org/wikipedia/commons/6/6d/Kimberella_quadrata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
-        {src:'https://alchetron.com/cdn/kimberella-54aa8734-9432-45b4-83ba-ddca325beba-resize-750.jpeg', caption:'Kimberella, illustration'},
-      ] },
     { id:'arthropoda', name:'Arthropoda', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
       html:`<p><span class="term" tabindex="0" data-def="беспозвоночные">Invertebrates</span>, have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span> with a <span class="term" tabindex="0" data-def="tough but flexible, non-mineral outer coverings of an organism, that provide protection">cuticle</span> made of chitin, a body with differentiated segments, and paired jointed appendages. In order to keep growing, they must go through stages of <span class="term" tabindex="0" data-def="линька">moulting</span>.</p>`,
       },
-    { id:'trilobita', name:'Trilobita', from:'arthropoda', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'',
-      images:[
-        {src:'https://cdn.britannica.com/87/143487-050-EBA32F64/trilobites-rocks-Russia-Cambrian-Period.jpg'},
-        {src:'https://d3d0lqu00lnqvz.cloudfront.net/trilobite/Trilobite-Fossil.jpg'},
-        {src:'https://paleozoo.com.au/resources/Trilobite/Trilobite_COAL_B.jpg.opt582x326o0%2C0s582x326.jpg', caption:'Trilobite, model'},
-      ] },
-    { id:'radiodonta', name:'Radiodonta', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-animalia',
-      html:'',
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-vtSxoky3vEeugqS5q-YaYyLseHHPK_yi67HZhFZhXx4j3NmyH4bfy6M&s=10', caption:'Radiodonta, illustration'},
-        {src:'https://images.theconversation.com/files/365975/original/file-20201028-15-xtazrw.jpg?ixlib=rb-4.1.1&rect=0%2C27%2C4667%2C3109&q=50&auto=format&w=768&h=512&fit=crop&dpr=2', caption:'Radiodonta, illustration'},
-      ] },
     { id:'mollusca', name:'Mollusca', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
       html:'Molluscs.'
-      },
-    { id:'cephalopoda', name:'Cephalopoda', from:'mollusca', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'<p>Molluscs with bilateral body symmetry, a prominent head, and a set of arms or tentacles.</p><p>Can squirt ink.</p>'
-      },
-    { id:'nautiluspompilius', name:'Nautilus pompilius', from:'cephalopoda', kind:'rank', rankLabel:'species', color:'c-animalia',
-      html:'Nautilus pompilius or <b>chambered nautilus</b>'
-      },
-    { id:'ammonitida', name:'Ammonitida', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-animalia',
-      html:'True ammonites.'
-      },
-    { id:'octopoda', name:'Octopoda', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-animalia',
-      html:'Octopus.'
       },
     { id:'cnidaria', name:'Cnidaria', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
       html:`<p>Aquatic invertebrates. Cnidarians mostly have two basic body forms: swimming medusae and <span class="term" tabindex="0" data-def="Cylindrical form of Cnidaria, attaches to a surface like a rock. Example is a coral.">polyps</span>, both of which are radially symmetrical with mouths surrounded by tentacles.</p>`,
       },
-    { id:'cubozoa', name:'Cubozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'Box jellyfish.'
-      },
-    { id:'scyphozoa', name:'Scyphozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'True jellyfish.'
-      },
-    { id:'staurozoa', name:'Staurozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'Stalked jellyfish.'
+    { id:'medusozoa', name:'Medusozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+      html:'Medusozoans are distinguished by having a medusa stage in their often complex life cycle.'
       },
     { id:'anthozoa', name:'Anthozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
       html:'<p>Corals</p><ul><li>form compact colonies of many identical polyps. Each polyp is a sac-like animal, a set of tentacles surround a central mouth opening. Each polyp excretes an exoskeleton near the base;</li><li>the colony thus creates a skeleton characteristic of the species which can measure up to several meters in size</li><li>most corals obtain the majority of their energy and nutrients from photosynthesis.</li></ul>'
       },
-    { id:'medusozoa', name:'Medusozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
-      html:'Medusozoans are distinguished by having a medusa stage in their often complex life cycle.'
+    { id:'chordata', name:'Chordata', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
+      html:'<p>All chordates possess:</p><ul><li>a <span class="term" tabindex="0" data-def="a flexible, unsegmented, rod-like structure found in the embryonic stage of all chordates">notochord</span>;</li><li>a <span class="term" tabindex="0" data-def="a hollow cord of nervous tissue that runs along the back of chordate animals">dorsal nerve cord</span>;</li><li>an endostyle or <span class="term" tabindex="0" data-def="щитовидная железа">thyroid</span>;</li><li><span class="term" tabindex="0" data-def="жаберные щели">pharyngeal slits</span>;</li><li>a post-anal tail.</li></ul>'
+      },
+    { id:'vertebrata', name:'Vertebrata', from:'chordata', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+      html:'Vertebrates or <b>craniates</b> are animals with a <span class="term" tabindex="0" data-def="позвоночник">vertebral column</span> and a <span class="term" tabindex="0" data-def="skull">cranium</span>.'
+      },
+    { id:'myriapoda', name:'Myriapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+      html:'Terrestrial, multi-legged arthropods.'
+      },
+    { id:'hexapoda', name:'Hexapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+      html:'Arthropods with bodies divided into three main parts (head, <span class="term" tabindex="0" data-def="chest">thorax</span>, and abdomen) and possess three pairs of legs attached to the thorax.'
+      },
+    { id:'hexapoda', name:'Hexapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+      html:'Arthropods with bodies divided into three main parts (head, <span class="term" tabindex="0" data-def="chest">thorax</span>, and abdomen) and possess three pairs of legs attached to the thorax.'
       }
 ] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));

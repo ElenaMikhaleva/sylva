@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylva — Plantae</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
+</head>
+<body data-page="species">
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
+        </div>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Plantae</h1>
+    <div class="crumbs"><p><a href="studies.html">Biology</a> · Phylogeny</p></div>
+    <p>A reference map for biological classification of plants.</p>
+    <div class="layout-split">
+        <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
+        <div class="detail-zone" id="detailZone"></div>
+    </div>
+    <h2>Related</h2>
+    <ul>
+        <li><a href="https://www.mindat.org/" target="_blank">mindat.org</a> — database of species</li>
+    </ul>
+</div>
+<script>
+const TREE_DATA = {
+ranks: ['kingdom','phylum','subphylum','class','order','family','genus','species'],
+nodes: [
+    { id:'plantae', name:'Plantae', kind:'rank', rankLabel:'kingdom', color:'c-plantae',
+      html:`Predominantly photosynthetic or came from photosynthetic ancestors.`
+      },
+    { id:'cooksonia', name:'Cooksonia', from:'plantae', kind:'rank', rankLabel:'genus', color:'c-plantae',
+      html:'<p>Cooksonia had a simple <span class="term" tabindex="0" data-def="стебель">stalk</span> that branched dichotomously a few times.</p><p>Each branch ended in a spore-bearing capsule.</p><p>Cooksonia includes the oldest known plant to have a stem with vascular tissue.</p>'
+      },
+    { id:'polypodiopsida', name:'Polypodiopsida', from:'plantae', kind:'rank', rankLabel:'class', color:'c-plantae',
+      html:'Ferns, a group of vascular plants that reproduce via spores and have neither seeds nor flowers.'
+      }
+] };
+document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
+</script>
+</body>
+</html>

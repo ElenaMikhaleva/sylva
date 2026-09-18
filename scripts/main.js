@@ -363,7 +363,6 @@ TREE_DATA.nodes.forEach(n => {
   const gap = columnOf(n) - columnOf(parent);
   if (gap <= 1) return; // adjacent columns (or same/root) — normal connector, nothing to do
 
-  // Remove the direct parent→child link; we'll re-link through a ghost instead
   const linkIdx = simpleLinks.findIndex(l => l.fromId === n.from && l.toId === n.id);
   if (linkIdx !== -1) simpleLinks.splice(linkIdx, 1);
   childrenOf[n.from] = childrenOf[n.from].filter(id => id !== n.id);
