@@ -307,7 +307,7 @@ function svgEl(tag, attrs) {
   return el;
 }
 function initStageTree(TREE_DATA) {
-  const RANKS = TREE_DATA.ranks || ['domain','kingdom','phylum','class','order','family','genus','species'];
+  const RANKS = TREE_DATA.ranks || ['domain','kingdom','phylum','subphylum','class','order','family','genus','species'];
   const flow = document.getElementById('treeFlow');
   const linksSvg = document.getElementById('treeLinks');
   const detailZone = document.getElementById('detailZone');
@@ -354,6 +354,37 @@ function initStageTree(TREE_DATA) {
   const allIds = TREE_DATA.nodes.map(n => n.id);
   const roots = allIds.filter(id => !parentOf[id]);
 
+  const syntheticNodes = [];
+let ghostCounter = 0;
+
+TREE_DATA.nodes.forEach(n => {
+  if (!n.from) return;
+  const parent = nodesById[n.from];
+  const gap = columnOf(n) - columnOf(parent);
+  if (gap <= 1) return; // adjacent columns (or same/root) — normal connector, nothing to do
+
+  // Remove the direct parent→child link; we'll re-link through a ghost instead
+  const linkIdx = simpleLinks.findIndex(l => l.fromId === n.from && l.toId === n.id);
+  if (linkIdx !== -1) simpleLinks.splice(linkIdx, 1);
+  childrenOf[n.from] = childrenOf[n.from].filter(id => id !== n.id);
+
+  const ghostId = `__ghost${ghostCounter++}`;
+  const ghostCol = columnOf(parent) + Math.round(gap / 2); // midpoint column
+  const ghost = { id: ghostId, name: '···', kind: 'ghost', color: n.color, from: n.from, __ghostColumn: ghostCol };
+  syntheticNodes.push(ghost);
+  nodesById[ghostId] = ghost;
+
+  parentOf[ghostId] = n.from;
+  (childrenOf[n.from] ||= []).push(ghostId);
+  simpleLinks.push({ fromId: n.from, toId: ghostId });
+
+  parentOf[n.id] = ghostId;
+  (childrenOf[ghostId] ||= []).push(n.id);
+  simpleLinks.push({ fromId: ghostId, toId: n.id });
+});
+
+const allNodesIncludingGhosts = [...TREE_DATA.nodes, ...syntheticNodes];
+
   /* ---- 2. Bottom-up slot assignment (unchanged — still purely about
              parent/child structure, independent of column/rank) ---- */
   const slot = {};
@@ -375,15 +406,26 @@ function initStageTree(TREE_DATA) {
              since drawLine uses real pixel positions regardless of
              how many columns apart the two nodes land. ---- */
   function columnOf(n) {
-    if (!n.rankLabel) return 0;
-    const idx = RANKS.indexOf(n.rankLabel);
-    return idx >= 0 ? idx + 1 : RANKS.length + 1;
-  }
+  if (n.__ghostColumn != null) return n.__ghostColumn;
+  if (!n.rankLabel) return 0;
+  const idx = RANKS.indexOf(n.rankLabel);
+  return idx >= 0 ? idx + 1 : RANKS.length + 1;
+}
   const byColumn = {};
-  TREE_DATA.nodes.forEach(n => (byColumn[columnOf(n)] ||= []).push(n));
+  allNodesIncludingGhosts.forEach(n => (byColumn[columnOf(n)] ||= []).push(n));
   const usedColumns = Object.keys(byColumn).map(Number).sort((a, b) => a - b);
 
-  usedColumns.forEach(col => {
+  const headerRow = document.createElement('div');
+headerRow.className = 'stage-header-row';
+usedColumns.forEach(col => {
+  const label = document.createElement('div');
+  label.className = 'stage-header';
+  label.textContent = col === 0 ? '' : (RANKS[col - 1] || '');
+  headerRow.appendChild(label);
+});
+flow.parentElement.insertBefore(headerRow, flow);
+
+    usedColumns.forEach(col => {
     const stageEl = document.createElement('div');
     stageEl.className = 'stage';
     stageEl.style.height = `${totalHeight}px`;
@@ -391,13 +433,22 @@ function initStageTree(TREE_DATA) {
       const colEl = document.createElement('div');
       colEl.className = 'stage-col';
       colEl.style.top = `${slot[n.id] * ROW_HEIGHT + ROW_HEIGHT / 2}px`;
-      const btn = document.createElement('button');
-      btn.className = `node-btn kind-${n.kind}`;
-      btn.style.setProperty('--accent-color', `var(--${n.color})`);
-      btn.dataset.id = n.id;
-      btn.textContent = n.name;
-      btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
-      colEl.appendChild(btn);
+      if (n.kind === 'ghost') {
+        const dots = document.createElement('div');
+  dots.className = 'node-ghost';
+  dots.dataset.id = n.id;
+  dots.style.setProperty('--accent-color', `var(--${n.color})`);
+  dots.innerHTML = '<span></span><span></span><span></span>';
+  colEl.appendChild(dots);
+      } else {
+        const btn = document.createElement('button');
+        btn.className = `node-btn kind-${n.kind}`;
+        btn.style.setProperty('--accent-color', `var(--${n.color})`);
+        btn.dataset.id = n.id;
+        btn.textContent = n.name;
+        btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
+        colEl.appendChild(btn);
+      }
       stageEl.appendChild(colEl);
     });
     flow.appendChild(stageEl);
@@ -420,10 +471,10 @@ function initStageTree(TREE_DATA) {
       linksSvg.appendChild(path);
     }
     simpleLinks.forEach(l => {
-      const from = document.querySelector(`.node-btn[data-id="${l.fromId}"]`);
-      const to = document.querySelector(`.node-btn[data-id="${l.toId}"]`);
-      if (from && to) drawLine(edgeOf(from, 'right'), edgeOf(to, 'left'), `var(--${nodesById[l.toId].color}, var(--text-soft))`);
-    });
+  const from = document.querySelector(`[data-id="${l.fromId}"]`);
+  const to = document.querySelector(`[data-id="${l.toId}"]`);
+  if (from && to) drawLine(edgeOf(from, 'right'), edgeOf(to, 'left'), `var(--${nodesById[l.toId].color}, var(--text-soft))`);
+});
   }
 
   redrawLinks();
