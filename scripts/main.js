@@ -111,6 +111,45 @@ function wireCarousel(root) {
   });
 }
 
+const PERIODS = [
+  ['Cambrian','Cm'], ['Ordovician','O'], ['Silurian','S'], ['Devonian','D'],
+  ['Carboniferous','C'], ['Permian','P'], ['Triassic','T'], ['Jurassic','J'],
+  ['Cretaceous','K'], ['Paleogene','Pg'], ['Neogene','N'], ['Quaternary','Q']
+];
+function resolveColor(c) {
+  const el = document.createElement('span');
+  el.style.color = c;
+  document.body.appendChild(el);
+  const rgb = getComputedStyle(el).color;   // always "rgb(r, g, b)"
+  el.remove();
+  return rgb;
+}
+
+function inkOn(color) {
+  const m = resolveColor(color).match(/\d+(\.\d+)?/g);
+  if (!m) return '#1C2233';
+  const c = m.slice(0, 3).map(v => {
+    v = v / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  const L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  return (1.05 / (L + 0.05)) >= ((L + 0.05) / 0.067) ? '#fff' : '#1C2233';
+}
+
+function periodStrip(node, color) {
+  if (!node.lived || !node.lived.length) return '';
+  const names = PERIODS.map(p => p[0]);
+  const i0 = names.indexOf(node.lived[0]);
+  const end = node.lived[1] || (node.extinct ? node.lived[0] : 'Quaternary');
+  const i1 = names.indexOf(end);
+  if (i0 < 0 || i1 < 0) return '';
+  const c = color || node.color;
+  const boxes = PERIODS.map((p, i) =>
+    `<div class="pp${i >= i0 && i <= i1 ? ' on' : ''}" title="${p[0]}">${p[1]}</div>`
+  ).join('');
+  return `<div class="pstrip"${c ? ` style="--tl-on:${c}"` : ''} role="img" aria-label="Lived from ${names[i0]} to ${names[i1]}">${boxes}</div>`;
+}
+
 function cardHtml(item, badge, opts = {}) {
   const hasImages = item.images && item.images.length;
   const imageMarkup = hasImages
@@ -135,6 +174,7 @@ function cardHtml(item, badge, opts = {}) {
           </div>
           ${opts.imagePosition !== 'right' ? imageMarkup : ''}
         </div>
+        ${item.lived ? periodStrip(item, item.color) : ''}
       </section>
     </div>`;
 }
@@ -314,20 +354,52 @@ function svgEl(tag, attrs) {
   for (const k in attrs) el.setAttribute(k, attrs[k]);
   return el;
 }
+
+const RANKS = ['domain','kingdom','phylum','subphylum','class','infraclass','order','family','genus','species'];
+
 function initStageTree(TREE_DATA) {
-  const RANKS = TREE_DATA.ranks || ['domain','kingdom','phylum','subphylum','class','order','family','genus','species'];
+  /* ---- which ranks can be hidden ---- */
+  const CORE = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'];
+  const isExtra = n => !!n.rankLabel && !CORE.includes(n.rankLabel);   // subphylum, clade, superclass...
+  let showExtra = true;
+
   const flow = document.getElementById('treeFlow');
   const linksSvg = document.getElementById('treeLinks');
   const detailZone = document.getElementById('detailZone');
-  const nodesById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));
-  const simpleLinks = [];
-  const ROW_HEIGHT = 50;
+  const dataById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));   // never modified
+  const ROW_HEIGHT = 55;
+
+  let nodesById = {};
+  let simpleLinks = [];
+  let headerRow = null;
+  let activeId = null;
+
+  let toggleBtn = document.getElementById('toggle-extra');
+  if (!toggleBtn) {
+    toggleBtn = document.createElement('button');
+    toggleBtn.id = 'toggle-extra';
+    flow.parentElement.insertBefore(toggleBtn, flow);
+  }
+  const setToggleLabel = () => {
+    toggleBtn.textContent = showExtra ? 'Hide subtaxa' : 'Show subtaxa';
+  };
+  toggleBtn.onclick = () => {
+    showExtra = !showExtra;
+    setToggleLabel();
+    render();
+  };
+  setToggleLabel();
 
   const globalExpand = document.createElement('div');
   globalExpand.className = 'expand-wrap';
   globalExpand.innerHTML = '<div class="expand-inner"></div>';
   detailZone.appendChild(globalExpand);
-  let activeId = null;
+
+  function closeExpand() {
+    globalExpand.classList.remove('is-open');
+    globalExpand.querySelector('.expand-inner').innerHTML = '';
+    activeId = null;
+  }
 
   function toggleExpand(id, btn, item, badge) {
     const inner = globalExpand.querySelector('.expand-inner');
@@ -349,110 +421,139 @@ function initStageTree(TREE_DATA) {
     setTimeout(redrawLinks, 320);
   }
 
-  /* ---- 1. Parent/child map, straight from each node's own `from` ---- */
-  const childrenOf = {};
-  const parentOf = {};
-  TREE_DATA.nodes.forEach(n => {
-    if (n.from) {
-      parentOf[n.id] = n.from;
-      (childrenOf[n.from] ||= []).push(n.id);
-      simpleLinks.push({ fromId: n.from, toId: n.id });
+  function render() {
+    const RANK_LIST = RANKS.filter(r => showExtra || CORE.includes(r));
+    const visible = TREE_DATA.nodes.filter(n => showExtra || !isExtra(n));
+    const visibleIds = new Set(visible.map(n => n.id));
+
+    const parentFor = n => {
+      let p = n.from;
+      while (p && !visibleIds.has(p)) p = dataById[p] ? dataById[p].from : null;
+      return p || null;
+    };
+
+    function columnOf(n) {
+      if (n.__ghostColumn != null) return n.__ghostColumn;
+      if (!n.rankLabel) return 0;
+      const idx = RANK_LIST.indexOf(n.rankLabel);
+      return idx >= 0 ? idx + 1 : RANK_LIST.length + 1;
     }
-  });
-  const allIds = TREE_DATA.nodes.map(n => n.id);
-  const roots = allIds.filter(id => !parentOf[id]);
 
-  const syntheticNodes = [];
-let ghostCounter = 0;
+    nodesById = Object.fromEntries(visible.map(n => [n.id, n]));
+    simpleLinks = [];
+    flow.querySelectorAll(':scope > .stage').forEach(s => s.remove());
+    if (headerRow) headerRow.remove();
 
-TREE_DATA.nodes.forEach(n => {
-  if (!n.from) return;
-  const parent = nodesById[n.from];
-  const gap = columnOf(n) - columnOf(parent);
-  if (gap <= 1) return;
+    const childrenOf = {};
+    const parentOf = {};
+    visible.forEach(n => {
+      const p = parentFor(n);
+      if (p) {
+        parentOf[n.id] = p;
+        (childrenOf[p] ||= []).push(n.id);
+        simpleLinks.push({ fromId: p, toId: n.id });
+      }
+    });
+    const roots = visible.map(n => n.id).filter(id => !parentOf[id]);
 
-  const linkIdx = simpleLinks.findIndex(l => l.fromId === n.from && l.toId === n.id);
-  if (linkIdx !== -1) simpleLinks.splice(linkIdx, 1);
-  childrenOf[n.from] = childrenOf[n.from].filter(id => id !== n.id);
+    const syntheticNodes = [];
+    let ghostCounter = 0;
 
-  const ghostId = `__ghost${ghostCounter++}`;
-  const ghostCol = columnOf(parent) + Math.round(gap / 2);
-  const ghost = { id: ghostId, name: '···', kind: 'ghost', color: n.color, from: n.from, __ghostColumn: ghostCol };
-  syntheticNodes.push(ghost);
-  nodesById[ghostId] = ghost;
+    visible.forEach(n => {
+      const pId = parentOf[n.id];
+      if (!pId) return;
+      const parent = nodesById[pId];
+      const gap = columnOf(n) - columnOf(parent);
+      if (gap <= 1) return;
 
-  parentOf[ghostId] = n.from;
-  (childrenOf[n.from] ||= []).push(ghostId);
-  simpleLinks.push({ fromId: n.from, toId: ghostId });
+      const linkIdx = simpleLinks.findIndex(l => l.fromId === pId && l.toId === n.id);
+      if (linkIdx !== -1) simpleLinks.splice(linkIdx, 1);
+      childrenOf[pId] = childrenOf[pId].filter(id => id !== n.id);
 
-  parentOf[n.id] = ghostId;
-  (childrenOf[ghostId] ||= []).push(n.id);
-  simpleLinks.push({ fromId: ghostId, toId: n.id });
-});
+      const ghostId = `__ghost${ghostCounter++}`;
+      const ghostCol = columnOf(parent) + Math.round(gap / 2);
+      const ghost = { id: ghostId, name: '···', kind: 'ghost', color: n.color, from: pId, __ghostColumn: ghostCol };
+      syntheticNodes.push(ghost);
+      nodesById[ghostId] = ghost;
 
-const allNodesIncludingGhosts = [...TREE_DATA.nodes, ...syntheticNodes];
+      parentOf[ghostId] = pId;
+      (childrenOf[pId] ||= []).push(ghostId);
+      simpleLinks.push({ fromId: pId, toId: ghostId });
 
-  const slot = {};
-  let nextLeafSlot = 0;
-  function assign(id) {
-    const kids = childrenOf[id];
-    if (!kids || !kids.length) { slot[id] = nextLeafSlot++; return slot[id]; }
-    const kidSlots = kids.map(assign);
-    slot[id] = (Math.min(...kidSlots) + Math.max(...kidSlots)) / 2;
-    return slot[id];
-  }
-  roots.forEach(assign);
-  const totalHeight = nextLeafSlot * ROW_HEIGHT;
+      parentOf[n.id] = ghostId;
+      (childrenOf[ghostId] ||= []).push(n.id);
+      simpleLinks.push({ fromId: ghostId, toId: n.id });
+    });
 
-  function columnOf(n) {
-  if (n.__ghostColumn != null) return n.__ghostColumn;
-  if (!n.rankLabel) return 0;
-  const idx = RANKS.indexOf(n.rankLabel);
-  return idx >= 0 ? idx + 1 : RANKS.length + 1;
-}
-  const byColumn = {};
-  allNodesIncludingGhosts.forEach(n => (byColumn[columnOf(n)] ||= []).push(n));
-  const usedColumns = Object.keys(byColumn).map(Number).sort((a, b) => a - b);
+    const allNodesIncludingGhosts = [...visible, ...syntheticNodes];
 
-  const headerRow = document.createElement('div');
-headerRow.className = 'stage-header-row';
-usedColumns.forEach(col => {
-  const label = document.createElement('div');
-  label.className = 'stage-header';
-  label.textContent = col === 0 ? '' : (RANKS[col - 1] || '');
-  headerRow.appendChild(label);
-});
-flow.parentElement.insertBefore(headerRow, flow);
+    const slot = {};
+    let nextLeafSlot = 0;
+    function assign(id) {
+      const kids = childrenOf[id];
+      if (!kids || !kids.length) { slot[id] = nextLeafSlot++; return slot[id]; }
+      const kidSlots = kids.map(assign);
+      slot[id] = (Math.min(...kidSlots) + Math.max(...kidSlots)) / 2;
+      return slot[id];
+    }
+    roots.forEach(assign);
+    const totalHeight = nextLeafSlot * ROW_HEIGHT;
+
+    const byColumn = {};
+    allNodesIncludingGhosts.forEach(n => (byColumn[columnOf(n)] ||= []).push(n));
+    const usedColumns = Object.keys(byColumn).map(Number).sort((a, b) => a - b);
+
+    headerRow = document.createElement('div');
+    headerRow.className = 'stage-header-row';
+    usedColumns.forEach(col => {
+      const label = document.createElement('div');
+      label.className = 'stage-header';
+      label.textContent = col === 0 ? '' : (RANK_LIST[col - 1] || '');
+      headerRow.appendChild(label);
+    });
+    flow.parentElement.insertBefore(headerRow, flow);
 
     usedColumns.forEach(col => {
-    const stageEl = document.createElement('div');
-    stageEl.className = 'stage';
-    stageEl.style.height = `${totalHeight}px`;
-    byColumn[col].forEach(n => {
-      const colEl = document.createElement('div');
-      colEl.className = 'stage-col';
-      colEl.style.top = `${slot[n.id] * ROW_HEIGHT + ROW_HEIGHT / 2}px`;
-      if (n.kind === 'ghost') {
-        const dots = document.createElement('div');
-  dots.className = 'node-ghost';
-  dots.dataset.id = n.id;
-  dots.style.setProperty('--accent-color', `var(--${n.color})`);
-  dots.innerHTML = '<span></span><span></span><span></span>';
-  colEl.appendChild(dots);
-      } else {
-        const btn = document.createElement('button');
-        btn.className = `node-btn kind-${n.kind}`;
-        btn.style.setProperty('--accent-color', `var(--${n.color})`);
-        btn.dataset.id = n.id;
-        btn.id = `node-${n.id}`;
-        btn.innerHTML = `${n.name}${n.extinct ? '<span class="extinct-mark"> †</span>' : ''}`;
-        btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
-        colEl.appendChild(btn);
-      }
-      stageEl.appendChild(colEl);
+      const stageEl = document.createElement('div');
+      stageEl.className = 'stage';
+      stageEl.style.height = `${totalHeight}px`;
+      byColumn[col].forEach(n => {
+        const colEl = document.createElement('div');
+        colEl.className = 'stage-col';
+        colEl.style.top = `${slot[n.id] * ROW_HEIGHT + ROW_HEIGHT / 2}px`;
+        if (n.kind === 'ghost') {
+          const dots = document.createElement('div');
+          dots.className = 'node-ghost';
+          dots.dataset.id = n.id;
+          dots.style.setProperty('--accent-color', `var(--${n.color})`);
+          dots.innerHTML = '<span></span><span></span><span></span>';
+          colEl.appendChild(dots);
+        } else {
+          const btn = document.createElement('button');
+          btn.className = `node-btn kind-${n.kind}${n.extinct ? ' is-extinct' : ''}`;
+          btn.style.setProperty('--accent-color', `var(--${n.color})`);
+          btn.dataset.id = n.id;
+          btn.id = `node-${n.id}`;
+          btn.innerHTML = `${n.name}${n.extinct ? '<span class="extinct-mark"> †</span>' : ''}`;
+          btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
+          colEl.appendChild(btn);
+        }
+        stageEl.appendChild(colEl);
+      });
+      flow.appendChild(stageEl);
     });
-    flow.appendChild(stageEl);
-  });
+
+    /* 5. keep the open card in sync with what is now visible */
+    if (activeId && !nodesById[activeId]) {
+      closeExpand();                       // its node was just hidden
+    } else if (activeId) {
+      const b = document.getElementById(`node-${activeId}`);
+      if (b) b.classList.add('is-active');
+    }
+
+    redrawLinks();
+    setTimeout(redrawLinks, 50);
+  }
 
   function redrawLinks() {
     const flowRect = flow.getBoundingClientRect();
@@ -471,13 +572,13 @@ flow.parentElement.insertBefore(headerRow, flow);
       linksSvg.appendChild(path);
     }
     simpleLinks.forEach(l => {
-  const from = document.querySelector(`[data-id="${l.fromId}"]`);
-  const to = document.querySelector(`[data-id="${l.toId}"]`);
-  if (from && to) drawLine(edgeOf(from, 'right'), edgeOf(to, 'left'), `var(--${nodesById[l.toId].color}, var(--text-soft))`);
-});
+      const from = document.querySelector(`[data-id="${l.fromId}"]`);
+      const to = document.querySelector(`[data-id="${l.toId}"]`);
+      if (from && to) drawLine(edgeOf(from, 'right'), edgeOf(to, 'left'), `var(--${nodesById[l.toId].color}, var(--text-soft))`);
+    });
   }
 
-  redrawLinks();
+  render();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawLinks);
   setTimeout(redrawLinks, 300);
   setTimeout(redrawLinks, 1000);
@@ -486,6 +587,8 @@ flow.parentElement.insertBefore(headerRow, flow);
   function openFromHash() {
     const targetId = location.hash.replace('#node-', '');
     if (!targetId) return;
+    const raw = dataById[targetId];
+    if (raw && isExtra(raw) && !showExtra) { showExtra = true; setToggleLabel(); render(); }
     const n = nodesById[targetId];
     const btn = document.getElementById(`node-${targetId}`);
     if (n && btn) {
@@ -496,3 +599,4 @@ flow.parentElement.insertBefore(headerRow, flow);
   openFromHash();
   window.addEventListener('hashchange', openFromHash);
 }
+

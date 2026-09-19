@@ -2,192 +2,189 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DF — Mesozoic Era</title>
-    <link rel="stylesheet" href="../styles/styles-neo.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <title>Sylva — Mesozoic</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="../scripts/main.js" defer></script>
 </head>
-<body data-page="mesozoic">
-  <header class="masthead" style="background:var(--sky)">
-      <svg viewBox="0 0 1400  900" preserveAspectRatio="xMidYMax slice">
-        <rect width="1400" height="900" fill="#4E85B2"/>
-        <path d="M100,220 C150,175 260,175 295,225 C365,195 430,250 390,295 C450,305 435,355 365,355 L120,355 C45,355 35,300 90,285 C35,270 55,220 100,220 Z" fill="#F3ECDD"/>
-        <path d="M950,140 C1015,100 1130,105 1165,160 C1250,140 1310,195 1265,245 C1335,255 1315,310 1240,310 L975,310 C895,310 880,240 945,225 C880,210 895,150 950,140 Z" fill="#F3ECDD"/>
-        <path d="M0,600 C260,555 460,610 700,570 C940,530 1120,585 1400,545 L1400,900 L0,900 Z" fill="#93A45C"/>
-        <path d="M0,700 C280,665 540,715 800,675 C1040,635 1220,685 1400,660 L1400,900 L0,900 Z" fill="#D97848"/>
-        <g>
-          <ellipse cx="270" cy="700" rx="95" ry="58" fill="#4E85B2"/>
-          <rect x="255" y="742" width="14" height="92" fill="#4E85B2"/>
-        </g>
-        <path d="M0,800 C300,775 620,810 920,790 C1120,775 1270,790 1400,780 L1400,900 L0,900 Z" fill="#6B7A46"/>
-      </svg>
-      <div class="grain"></div>
-
-      <nav class="site-nav">
-        <div class="brand">
-          <div class="brand-mark">DF</div>
-          <div class="brand-text">Digital Forest</div>
+<body data-page="geological-time">
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
         </div>
-        <div class="site-links">
-          <a href="#about.html">About</a>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Mesozoic</h1>
+    <div class="crumbs">
+        <p><a href="studies.html">History</a> · Paleontology</p>
+    </div>
+    <p>The Mesozoic Era is the second of the three major eras of the <a href="geological-time.html#phanerozoic">Phanerozoic Eon</a>. Lasting nearly 186 million years from 252 to 66 Mya, it represents The Age of Reptiles. Below are Periods of Mesozoic.</p>
+    <div class="layout-timeline">
+        <div class="tl-spine">
+            <div class="tl-segment" data-target="cretaceous" style="--seg-color: var(--cretaceous); flex-grow: 42.47;">
+                <span class="tag">CR</span>
+            </div>
+            <div class="tl-segment" data-target="jurassic" style="--seg-color: var(--jurassic); flex-grow: 30.1;">
+                <span class="tag">J</span>
+            </div>
+            <div class="tl-segment" data-target="triassic" style="--seg-color: var(--triassic); flex-grow: 27.42;">
+                <span class="tag">TR</span>
+            </div>
         </div>
-      </nav>
-
-      <div class="masthead-content">
-          <div class="kicker">
-              <span>History · Paleontology</span>
-          </div>
-            <h1>Mesozoic Era</h1>
-            <p>Periods of <a href="geological-time.html#paleozoic">Mesozoic Era</a>.</p>
-      </div>
-    </header>
-
-  <main>
-      <div class="frame">
-          <div class="layout">
-              <aside class="spine">
-                  <div class="spine-track">
-                    <div class="segment" style="--seg-color: var(--first); flex-grow: 27.41;">
-                        <span class="tag">TR</span>
+        <div class="tl-content">
+            <section class="card" data-accent="cretaceous" id="cretaceous">
+                    <div class="card-head">
+                        <div class="card-title">
+                            <h2>Cretaceous</h2>
+                            <span class="card-native">Мел</span>
+                        </div>
+                        <span class="card-range">145 – 66 Mya</span>
                     </div>
-                    <div class="segment" style="--seg-color: var(--second); flex-grow: 30.1;">
-                        <span class="tag">JUR</span>
+                    <div class="card-body">
+                        <div class="card-scale" style="--scale-lead: 70px;">
+                            <div class="scale-fill">
+                                <div style="flex-grow: 56.96;"></div>
+                                <div style="flex-grow: 43.04;"></div>
+                            </div>
+                            <div class="event middle" style="left:96.2%;">
+                                <div class="label">Tyrannosaurus, 69 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                            <div class="event" style="left:99.5%;">
+                                <div class="label">K-Pg, 66 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                        </div>
+                        <div class="card-grid">
+                            <div class="subcard">
+                                <h3>Early Cretaceous</h3>
+                                <span class="range">145 – 100 Mya</span>
+                                <ul>
+                                    <li>Dinosaurs continued to be abundant.</li>
+                                </ul>
+                            </div>
+                            <div class="subcard">
+                                <h3>Late Cretaceous</h3>
+                                <span class="range">100 – 66 Mya</span>
+                                <ul>
+                                    <li>Climate became cooler;</li>
+                                    <li>The first <span class="highlight">flowering plants</span> evolved;</li>
+                                    <li>Dinosaurs thrived, new species (<a href="tree-animalia.html#tyrannosaurus">Tyrannosaurus</a>, <a href="tree-animalia.html#ankylosaurus">Ankylosaurus</a>, <a href="tree-animalia.html#triceratops">Triceratops</a>) appeared;</li>
+                                    <li>Mammals diversified, <span class="term" tabindex="0" data-def="сумчатые"><a href="tree-animalia.html#marsupiala">marsupials</a></span> and <a href="tree-animalia.html#placentalia">placental mammals</a> appear;</li>
+                                    <li><a href="tree-animalia.html#mosasaurs">Mosasaurs</a> filled the role of now-extinct ichthyosaurs;</li>
+                                    <li>At the end of Cretaceous, volcanic eruptions were poisoning the atmosphere. As this was continued a large meteor smashed into Earth, creating the Chicxulub Crater and causing <span class="highlight">The Cretaceous–Paleogene extinction event</span> (K–Pg), the fifth and most recent mass extinction event. Every living thing with a body mass over 10 kilograms became extinct (all non-avian dinosaurs).</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="segment" style="--seg-color: var(--third); flex-grow: 42.47;">
-                        <span class="tag">CRET</span>
+                </section>
+                <section class="card" data-accent="jurassic" id="jurassic">
+                    <div class="card-head">
+                        <div class="card-title">
+                            <h2>Jurassic</h2>
+                            <span class="card-native">Юра</span>
+                        </div>
+                        <span class="card-range">201 – 145 Mya</span>
                     </div>
-                  </div>
-              </aside>
-              <div class="content">
-                  <section class="period-card" data-accent="first">
-                      <div class="period-head">
-                          <h3 class="period-name">Triassic Period
-                              <span class="period-native">Триас</span>
-                          </h3>
-                          <span class="period-range">252 – 201 Mya</span>
-                      </div>
-                      <div class="period-body no-img">
-                          <div class="period-text">
-                              <p>The Triassic is mostly a transitional recovery period between the desolate aftermath of the Permian Extinction and the lush Jurassic Period.</p>
-                          </div>
-                      </div>
-                      <div class="subperiod-body">
-                          <div class="subperiod-scale">
-                              <div style="flex-grow: 9.8;"></div>
-                              <div style="flex-grow: 19.6;"></div>
-                              <div style="flex-grow: 70.58;"></div>
-                          </div>
-                          <div class="subperiod-grid">
-                              <div class="subperiod-card">
-                                  <h3>Early Triassic</h3>
-                                  <span class="range">252 – 247 Mya</span>
-                                  <ul>
-                                      <li>The Early Triassic was a hot and arid epoch in the aftermath of the Permian Extinction.</li>
-                                      <li>Temnospondyli recovered first and evolved into large aquatic predators during the Triassic. Other reptiles also diversified rapidly, with aquatic reptiles such as ichthyosaurs and sauropterygians proliferating in the seas.</li>
-                                      <li>On land, the first true archosaurs appeared, including pseudosuchians (crocodile relatives) and avemetatarsalians (bird/dinosaur relatives).</li>
-                                  </ul>
-                              </div>
-                              <div class="subperiod-card">
-                                  <h3>Middle Triassic</h3>
-                                  <span class="range">247 – 237 Mya</span>
-                                  <ul>
-                                      <li>Pangaea started to break up;</li>
-                                      <li>Phytoplankton, coral, crustaceans and many other marine invertebrates recovered from the Permian extinction;</li>
-                                      <li>On land, reptiles continued to diversify, conifer forests flourished, as well as the first flies.</li>
-                                  </ul>
-                              </div>
-                              <div class="subperiod-card">
-                                  <h3>Late Triassic</h3>
-                                  <span class="range">237 – 201 Mya</span>
-                                  <ul>
-                                      <li>Warm and arid with a strong monsoon climate. A 2 million years-long wet season which transformed the arid continental interior into lush alluvial forests.</li>
-                                      <li>The first true dinosaurs appeared, and pterosaurs evolved a bit later.</li>
-                                      <li>Many large reptilian competitors to the dinosaurs were wiped out by the Triassic–Jurassic extinction event.</li>
-                                  </ul>
-                              </div>
-                          </div>
-                      </div>
-                  </section>
-                  <section class="period-card" data-accent="second">
-                      <div class="period-head">
-                          <h3 class="period-name">Jurassic Period
-                              <span class="period-native">Юра</span>
-                          </h3>
-                          <span class="period-range">201 – 145 Mya</span>
-                      </div>
-                      <div class="period-body no-img">
-                          <div class="period-text">
-                              <ul>
-                                  <li>Climate was humid, as a result, the world was warm and partially tropical, though possibly with short colder intervals. Conifer savannahs made up a large portion of the world's forests.</li>
-                                  <li>Plesiosaurs, ichthyosaurs and ammonites dominated the seas, while dinosaurs, pterysaurs and other reptiles dominated the land</li>
-                                  <li>True mammals were present during the Jurassic, but remained small.</li>
-                              </ul>
-                          </div>
-                      </div>
-                  </section>
-                  <section class="period-card" data-accent="third">
-                      <div class="period-head">
-                          <h3 class="period-name">Cretaceous Period
-                              <span class="period-native">Мел</span>
-                          </h3>
-                          <span class="period-range">145 – 66 Mya</span>
-                      </div>
-                      <div class="period-body">
-                      </div>
-                      <div class="subperiod-body">
-                          <div class="subperiod-scale">
-                              <div style="flex-grow: 56.96;"></div>
-                              <div style="flex-grow: 43.03;"></div>
-                          </div>
-                          <div class="subperiod-grid">
-                              <div class="subperiod-card">
-                                  <h3>The Early Cretaceous Epoch</h3>
-                                  <span class="range">145 – 100 Mya</span>
-                                  <p>Dinosaurs continued to be abundant, with groups such as tyrannosauroids, avialans (birds), marginocephalians, and ornithopods seeing early glimpses of later success. Other tetrapods, such as stegosaurs and ichthyosaurs, declined significantly</p>
-                              </div>
-                              <div class="subperiod-card">
-                                  <h3>The Late Cretaceous Epoch</h3>
-                                  <span class="range">100 – 66 Mya</span>
-                                  <ul>
-                                      <li>Climate became cooler. The tropical climate was restricted to the equator and areas beyond the tropic lines featured more seasonal climates.</li>
-                                      <li>The first flowering plants evolved.</li>
-                                      <li>Dinosaurs still thrived as new species such as Tyrannosaurus, Ankylosaurus, Triceratops and hadrosaurs dominated the food web.</li>
-                                      <li>Mammals diversified, with metatherians (marsupials and kin) and eutherians (placentals and kin) coming into their own.</li>
-                                      <li>In the oceans, mosasaurs diversified to fill the role of the now-extinct ichthyosaurs, alongside huge plesiosaurs such as Elasmosaurus.</li>
-                                      <li>At the end of the Cretaceous, volcanic eruptions were poisoning the atmosphere. As this was continued, it is thought that a large meteor smashed into Earth, creating the Chicxulub Crater and causing the event known as the K–Pg extinction, the fifth and most recent mass extinction event, during which 75% of life on Earth became extinct, including all non-avian dinosaurs. Every living thing with a body mass over 10 kilograms became extinct.</li>
-                                  </ul>
-                              </div>
-                          </div>
-                      </div>
-                  </section>
-              </div>
-          </div>
-          <div class="intro-content">
-              <h2>Related</h2>
-              <ul>
-                  <li><a href="https://dinosaurpictures.org/ancient-earth#750" target="_blank">Ancient Earth Globe</a>  — interactive paleogeography model;</li>
-                  <li><a href="https://paleobiodb.org/#/" target="_blank">Paleobiology Database (PBDB)</a> — fossil occurrence search</li>
-                  <li><a href="https://www.digitalatlasofancientlife.org/" target="_blank">Digital Atlas of Ancient Life</a> — identification guides & field references;</li>
-                  <li><a href="https://www.prehistoricdomain.com/" target="_blank">Prehistoric Domain</a></li>
-              </ul>
-          </div>
-      </div>
-  </main>
-
-  <footer class="site-footer" style="background:var(--olive)">
-      <svg viewBox="0 0 1400 260" preserveAspectRatio="xMidYMax slice">
-        <rect width="1400" height="260" fill="#93A45C"/>
-        <path d="M0,90 C260,60 540,105 800,75 C1040,48 1220,90 1400,70 L1400,260 L0,260 Z" fill="#D97848"/>
-        <path d="M0,150 C300,125 620,165 920,140 C1120,122 1270,140 1400,128 L1400,260 L0,260 Z" fill="#6B7A46"/>
-      </svg>
-      <div class="grain"></div>
-      <div class="footer-content">
-        <span>Digital Forest · 2026</span>
-        <span><a href="../index.html">Index</a></span>
-      </div>
-    </footer>
+                    <div class="card-body">
+                        <div class="img-box right">
+                            <div class="img-slot">
+                                <img src="https://i.natgeofe.com/n/b84387cb-28f5-4611-a221-65ae275ae2e3/1028.jpg">
+                            </div>
+                            <div class="img-slot-foot">
+                                <div class="caption">Jurassic, illustration</div>
+                            </div>
+                        </div>
+                        <div class="card-text">
+                            <ul>
+                                <li>Humid climate made the world was warm and partially tropical. Conifer savannahs made up a large portion of the world's forests;</li>
+                                <li><a href="tree-animalia.html#plesiosaura">Plesiosaurs</a>, <a href="tree-animalia.html#ichthyosaura">ichthyosaurs</a> and <a href="tree-animalia.html#ammonitida">ammonites</a> dominated the seas;</li>
+                                <li>Dinosaurs, <a href="tree-animalia.html#pterosaura">pterosaurs</a> and other reptiles dominated the land;</li>
+                                <li>True mammals were present, but remained small.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <section class="card" data-accent="triassic" id="triassic">
+                    <div class="card-head">
+                        <div class="card-title">
+                            <h2>Triassic</h2>
+                            <span class="card-native">Триас</span>
+                        </div>
+                        <span class="card-range">251 – 201 Mya</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-scale" style="--scale-lead: 70px;">
+                            <div class="scale-fill">
+                                <div style="flex-grow: 7.84;"></div>
+                                <div style="flex-grow: 19.60;"></div>
+                                <div style="flex-grow: 70.58;"></div>
+                            </div>
+                            <div class="event middle" style="left:5.5%;">
+                                <div class="label">ichthyosaurs, 250 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                            <div class="event" style="left:6%;">
+                                <div class="label">archosaurs, 248 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                            <div class="event middle" style="left:40%;">
+                                <div class="label">eoraptor, 231 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                            <div class="event" style="left:46%;">
+                                <div class="label">pterosaurs, 228 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                            <div class="event" style="left:99.5%;">
+                                <div class="label">TJME, 201 Mya</div>
+                                <div class="leader"></div>
+                            </div>
+                        </div>
+                        <div class="card-grid">
+                        <div class="subcard">
+                            <h3>Early Triassic</h3>
+                            <span class="range">251 – 247 Mya</span>
+                            <ul>
+                                <li>a hot and arid period in the aftermath of <a href="paleozoic.html#permian">the Permian Extinction</a>;</li>
+                                <li>Tetrapod reptilians evolved into <span class="highlight">large aquatic predators</span> (<a href="tree-animalia.html#node-ichthyosauria">Ichthyosaurs</a>);</li>
+                                <li>On land, the first true <span class="term" tabindex="0" data-def="clade in Class Reptilia, extant representatives birds and crocodilians">archosaurs</span> appeared.</li>
+                            </ul>
+                        </div>
+                        <div class="subcard">
+                            <h3>Middle Triassic</h3>
+                            <span class="range">247 – 237 Mya</span>
+                            <ul>
+                                <li>Pangaea started to break up;</li>
+                                <li>Phytoplankton, coral, <span class="term" tabindex="0" data-def="ракообразные">crustaceans</span> and other marine invertebrates recovered from <a href="paleozoic.html#permian">the Permian extinction</a>;</li>
+                                <li>On land, reptiles continued to diversify, conifer forests flourished, the first flies appeared.</li>
+                            </ul>
+                        </div>
+                        <div class="subcard">
+                            <h3>Late Triassic</h3>
+                            <span class="range">237 – 201 Mya</span>
+                            <ul>
+                                <li>Climate: warm and arid with strong monsoons. A 2 million years-long wet season which transformed the arid continental interior into <span class="highlight">lush forests</span>;</li>
+                                <li>The first <span class="highlight">true dinosaurs</span> (<a href="tree-animalia.html#eoraptorlunensis">Eoraptor</a>) and <a href="tree-animalia.html#pterosauria"><span class="highlight">pterosaurs</span></a> appeared;</li>
+                                <li>Many large reptilian competitors to the dinosaurs were wiped out by <span class="highlight">the Triassic–Jurassic mass extinction</span> (TJME).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <h2>Related</h2>
+        <ul>
+            <li><a href="https://dinosaurpictures.org/ancient-earth#750" target="_blank">Ancient Earth Globe</a>  — interactive paleogeography model;</li>
+            <li><a href="https://www.prehistoricdomain.com/" target="_blank">Prehistoric Domain</a></li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>

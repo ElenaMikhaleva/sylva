@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylva — Vertebrates</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
+</head>
+<body data-page="species">
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
+        </div>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Vertebrates</h1>
+    <div class="crumbs"><p><a href="studies.html">Biology</a> · Phylogeny</p></div>
+    <p>A reference map for biological classification of vertebrate animals.</p>
+    <div class="layout-split">
+        <button id="toggle-extra">Hide subtaxa</button>
+        <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
+        <div class="detail-zone" id="detailZone"></div>
+    </div>
+    <h2>Related</h2>
+    <ul>
+        <li><a href="https://www.mindat.org/" target="_blank">mindat.org</a> — database of species</li>
+    </ul>
+</div>
+<script>
+const TREE_DATA = {
+ranks: ['kingdom','phylum','subphylum','class','infraclass','order','family','genus','species'],
+nodes: [
+    { id:'chordata', name:'Chordata', from:'animalia', kind:'rank', rankLabel:'phylum',
+      html:'<p>All chordates possess:</p><ul><li>a <span class="term" tabindex="0" data-def="a flexible, unsegmented, rod-like structure found in the embryonic stage of all chordates">notochord</span>;</li><li>a <span class="term" tabindex="0" data-def="a hollow cord of nervous tissue that runs along the back of chordate animals">dorsal nerve cord</span>;</li><li>an endostyle or <span class="term" tabindex="0" data-def="щитовидная железа">thyroid</span>;</li><li><span class="term" tabindex="0" data-def="жаберные щели">pharyngeal slits</span>;</li><li>a post-anal tail.</li></ul><p>All animals are <a href="tree-animalia.html">here</a></p>'
+      },
+    { id:'vertebrata', name:'Vertebrata', from:'chordata', kind:'rank', rankLabel:'subphylum',
+      html:'Vertebrates or <b>craniates</b> are animals with a <span class="term" tabindex="0" data-def="позвоночник">vertebral column</span> and a <span class="term" tabindex="0" data-def="skull">cranium</span>.'
+      },
+    { id:'placoderm', name:'Placoderm', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+      html:'Prehistoric fish with head and <span class="term" tabindex="0" data-def="chest">thorax</span> covered by armoured plates, and the rest of the body scaled or naked depending on the species.',
+      images:[
+        {src:'https://www.fossilguy.com/gallery/vert/placoderm/dunkleosteus/dunkleosteus-fossil-specimen-cmnh6090.jpg'},
+        {src:'https://www.darwinsdoor.co.uk/wp-content/uploads/2020/11/Dunkleosteus-Julio-Lacerda-PNG.png'}
+        ]
+      },
+    { id:'dimetrodon', name:'Dimetrodon', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      extinct:true,
+      html:'<span class="term" tabindex="0" data-def="all mammals and their extinct relatives">Synapsid</span> with large neural spine sail on its back formed by elongated spines extending from the vertebrae.',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Dimetrodon_incisivum_01.jpg/960px-Dimetrodon_incisivum_01.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxrS_nqHo73leVdXYdjbaexRjfQrFgptv1dFxJfEibffKjeGdbzFebPROhbBbMZmwPs39uytd0yWISqIDkKdTyPXddhkSx5tqXe2HcoaBvQg&s=10'}
+        ]
+      },
+    { id:'reptilia', name:'Reptilia', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata',
+      html:'Reptiles are <span class="term" tabindex="0" data-def="with four legs">tetrapod</span> vertebrate animals.'
+      },
+    { id:'ichthyosauria', name:'Ichthyosauria', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
+      extinct:true,
+      html:'<p>Ichthyosaurs</p><ul><li>from 1 to 26 metres in length;</li><li>resembled both modern fish and dolphins;</li><li>limbs had been fully transformed into flippers, which sometimes contained a very large number of digits and phalanges.</li></ul>',
+      images:[
+        {src:'https://www.newscientist.com/wp-content/uploads/2020/08/20140907/c0354182-ichthyosaur_preying_on_an_ammonite_illustration_web.jpg?w=840'},
+        {src:'https://cdn.mos.cms.futurecdn.net/QBuDU4hGFzoBuQHkncwDoR-1920-80.jpg'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Ichthyosaurus_communis_in_London.jpg/500px-Ichthyosaurus_communis_in_London.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+        ]
+      },
+    { id:'eoraptorlunensis', name:'E. lunensis', from:'eoraptor', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Eoraptor',
+      extinct:true,
+      html:'Small, lightly built dianosaur. The only species of genus <em>Eoraptor</em>.',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Eoraptor_Lunensis_20250105.jpg/500px-Eoraptor_Lunensis_20250105.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=<thumbnail></thumbnail>'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe0gKWIN4sYDgq2EaScW1Rkzv5QBf4HqWP7UmV7-d_-EML1M7O9StYPpu4&s=10'}
+        ]
+      },
+    { id:'eoraptor', name:'Eoraptor', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
+      extinct:true,
+      html:'The genus has only one species <em>Eoraptor lunensis</em>.'
+      },
+    { id:'pterosauria', name:'Pterosauria', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
+      extinct:true,
+      html:'<p>Pterosaurs</p><ul><li>warm-blooded flying reptiles;</li><li>the earliest vertebrates known to have evolved powered flight. Their wings were formed by a membrane of skin, muscle, and other tissues stretching from the ankles to a dramatically lengthened fourth finger.</li></ul>',
+      images:[
+        {src:'https://www.snexplores.org/wp-content/uploads/sites/3/2022/12/1030_LLA_pterosaurs_feat_rev.jpg'}
+        ]
+      },
+    { id:'plesiosauria', name:'Plesiosauria', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
+      extinct:true,
+      html:'<p>Marine reptiles that</p><ul><li>had a broad flat body and a short tail. Their limbs had evolved into four long <span class="term" tabindex="0" data-def="ласты">flippers</span>;</li><li>breathed air;</li><li><span class="term" tabindex="0" data-def="рождали живых детенышей">bore live young</span>;</li><li>there are indications that they were warm-blooded.</li></ul>',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Paleo_Hall_at_HMNS_plesiosaur.jpg/500px-Paleo_Hall_at_HMNS_plesiosaur.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://www.snexplores.org/wp-content/uploads/sites/3/2022/09/1440_AT_plesiosaur_swimmers.png?w=1030'}
+        ]
+      },
+    { id:'tyrannosaurusrex', name:'T.rex', from:'tyrannosaurus', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Tyrannosauridae → Tyrannosaurus',
+      extinct:true,
+      html:'An apex predator.',
+      images:[
+        {src:'https://npr.brightspotcdn.com/dims3/default/strip/false/crop/6016x4512+0+0/resize/6016x4512!/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F53%2F1b%2Fb88ca59b4560a60283b90e063e37%2Fap26195563377996.jpg'},
+        {src:'https://as1.ftcdn.net/v2/jpg/02/14/10/16/1000_F_214101651_rDo4CQsGCUQqMAYNgxR1JsrWilRKskYZ.jpg'}
+        ]
+      },
+    { id:'tyrannosaurus', name:'Tyrannosaurus', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Tyrannosauridae',
+      extinct:true,
+      html:'<ul><li>A bipedal carnivore with a massive skull balanced by a long, heavy tail. The forelimbs of Tyrannosaurus were short but unusually powerful for their size, and they had two clawed digits.</li></ul>'
+      },
+    { id:'ankylosaurus', name:'Ankylosaurus', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Ankylosauridae',
+      extinct:true,
+      html:'Armored dinosaur, contains only one species <em>A. magniventris</em>'
+      },
+    { id:'ankylosaurusmagniventris', name:'A.magniventris', from:'ankylosaurus', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Ankylosauridae → Ankylosaurus',
+      extinct:true,
+      html:'Armored dinosaur.',
+      images:[
+        {src:'https://images.dinosaurpictures.org/Ankylosaurus/Ankylosaurus_775883a1.jpg'},
+        {src:'https://people.ohio.edu/witmerl/collections/images/ankylosaurus_DSC_7105.JPG'},
+        ]
+      },
+    { id:'triceratops', name:'Triceratops', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Ceratopsidae',
+      extinct:true,
+      html:'Dinosaur.',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/LA-Triceratops_mount-2.jpg/500px-LA-Triceratops_mount-2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://preview.redd.it/how-smart-and-socially-complex-were-triceratops-3d-art-and-v0-69ee203201vf1.png?width=640&crop=smart&auto=webp&s=1b9967ac86717bf2fc42ae5e175a087554fd1c7f'},
+        ]
+      },
+    { id:'squamata', name:'Squamata', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
+      html:'<p>lizards, snakes</p><ul><li>skin with horny scales or shields, periodically undergo molting.</li></ul>',
+      },
+    { id:'mosasauridae', name:'Mosasauridae', from:'squamata', kind:'rank', rankLabel:'family', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Squamata',
+      extinct:true,
+      html:'Mosasaurs, large aquatic reptiles.',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Platecarpus_planifrons_Clean.png/960px-Platecarpus_planifrons_Clean.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCF2QSHR9e4eVeEqn3sl2sFhjHgbFJ-blkvyu27h2TUaVlCf0fo1DMZylt&s=10'},
+        ]
+      },
+    { id:'creodonta', name:'Creodonta', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
+      extinct:true,
+      html:'Carnivorous placental mammals.',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV7SfE9qMFtJ5kLnCVI1lIpTl1jncbXge2d3aAOKSLbw&s=10'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4KBVnoaereR7R9Plmng2giJnaTSHfIPqyx7BIlQ4MLEAWmPy3JZS7tM&s=10'}
+        ]
+      },
+    { id:'placentalia', name:'Placentalia', from:'mammalia', kind:'rank', rankLabel:'infraclass', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
+      html:'Animals that carry the fetus in the uterus of its mother to a relatively late stage of development.'
+      },
+    { id:'marsupialia', name:'Marsupialia', from:'mammalia', kind:'rank', rankLabel:'infraclass', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
+      html:'The young are born in a relatively undeveloped state and then nurtured within a pouch on their mother\'s abdomen.'
+      },
+    { id:'mammalia', name:'Mammalia', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata',
+      html:'<p>Mammals have:</p><ul><li>milk-producing mammary glands for feeding their young;</li><li>a broad neocortex region of the brain;</li><li>fur or hair;</li><li>three middle ear bones.</li></ul>'
+      },
+    { id:'aves', name:'Aves', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata',
+      html:'<p>Mammals have:</p><ul><li>milk-producing mammary glands for feeding their young;</li><li>a broad neocortex region of the brain;</li><li>fur or hair;</li><li>three middle ear bones.</li></ul>'
+      }
+] };
+document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
+</script>
+</body>
+</html>

@@ -5,12 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="changing layout">
+      <change afterPath="$PROJECT_DIR$/templates/geological-time-scale.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/tree-vertebrata.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/cenozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cenozoic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/geological-time-old.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/geological-time.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/eons.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mesozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mesozoic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paleozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paleozoic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/studies.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/studies.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/tree-animalia.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-animalia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-eukaryotes.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-eukaryotes.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-of-life.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-of-life.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/tree-plantae.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-plantae.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,14 +138,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Added info">
-      <option name="closed" value="true" />
-      <created>1772664513131</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1772664513131</updated>
     </task>
     <task id="LOCAL-00003" summary="Edited timeline of epochs">
       <option name="closed" value="true" />
@@ -525,7 +523,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789750959970</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="changing layout">
+      <option name="closed" value="true" />
+      <created>1789817719054</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1789817719055</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

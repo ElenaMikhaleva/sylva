@@ -19,10 +19,12 @@
     </nav>
 </header>
 <div class="frame">
-    <h1>Aniamalia</h1>
+    <h1>Animalia</h1>
     <div class="crumbs"><p><a href="studies.html">Biology</a> · Phylogeny</p></div>
     <p>A reference map for biological classification of animals.</p>
+    <button id="toggle-extra"></button>
     <div class="layout-split">
+
         <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
         <div class="detail-zone" id="detailZone"></div>
     </div>
@@ -35,44 +37,44 @@
 const TREE_DATA = {
 ranks: ['kingdom','phylum','subphylum','class','order','family','genus','species'],
 nodes: [
-    { id:'animalia', name:'Animalia', kind:'rank', rankLabel:'kingdom', color:'c-animalia',
+    { id:'animalia', name:'Animalia', kind:'rank', rankLabel:'kingdom',
       html:`<p>Animals</p><ul><li>consume organic material;</li><li>breathe oxygen;</li><li>have muscle cells;</li><li>can reproduce sexually;</li><li>grow from a hollow sphere of cells during embryonic development;</li><li>with few exceptions, are able to move.</li></ul><p>All kingdoms <a href="tree-eukaryotes.html">here</a>.`
       },
-    { id:'cloudinidae', name:'Cloudinidae', from:'cnidaria', kind:'rank', rankLabel:'family', color:'c-animalia',
+    { id:'cloudinidae', name:'Cloudinidae', from:'cnidaria', kind:'rank', rankLabel:'family', color:'c-cnidaria',
       html:`Organism from Ediacaran fauna. Formed millimetre-scale conical fossils consisting of calcareous cones nested within one another.`,
       images:[
         {src:'https://mediasvc.eurekalert.org/Api/v1/Multimedia/adfaa3b8-c9be-4724-b092-a70f51c4a437/Rendition/low-res/Content/Public'},
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCmocy_WB0m7tolyznESRfm3aXwmgIWRII121SJwSvsQ&s=10', caption:'Cloudina, illustration'},
       ] },
-    { id:'dickinsonia', name:'Dickinsonia', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
+    { id:'dickinsonia', name:'Dickinsonia', from:'animalia', kind:'rank', rankLabel:'genus',
       html:`Organism from Ediacaran fauna.`,
       images:[
         {src:'https://upload.wikimedia.org/wikipedia/commons/d/d9/Dickinsonia_costata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
         {src:'https://hakaimagazine.com/wp-content/uploads/header-dickinsonia.jpg', caption:'Dickinsonia, illustration'}
       ] },
-    { id:'spriggina', name:'Spriggina', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
+    { id:'spriggina', name:'Spriggina', from:'animalia', kind:'rank', rankLabel:'genus',
       html:`<p>Organism from Ediacaran fauna.</p><ul><li>reached 3–5 centimetres in length;</li><li>may have been predatory;</li><li>was covered with tough plates, plates on the front fused to form a "head";</li><li>a possible early ancestor to trilobites or arthropods.</li></ul>`,
       images:[
         {src:'https://upload.wikimedia.org/wikipedia/commons/4/4e/Spriggina_Floundensi_4.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
         {src:'https://paleozoo.com.au/resources/Spriggina_Model_Paleozoo.jpg', caption:'Spriggina, illustration'}
       ] },
-    { id:'charnia', name:'Charnia', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
+    { id:'charnia', name:'Charnia', from:'animalia', kind:'rank', rankLabel:'genus',
       html:`<ul><li>fed on nutrients in the water;</li><li>not photosynthetic, because it lived in deep water, below the photic zone where photosynthesis can occur.</li></ul>`,
       images:[
         {src:'https://www.charnwoodforest.org/wp-content/uploads/2023/09/Charnia.jpg'},
         {src:'https://www.charnwoodforest.org/wp-content/uploads/2024/03/Charnia-Community-No-Labels-web-sq-1200x1200.png', caption:'Charnia, illustration'}
       ] },
-    { id:'kimberella', name:'Kimberella', from:'animalia', kind:'rank', rankLabel:'genus', color:'c-animalia',
+    { id:'kimberella', name:'Kimberella', from:'animalia', kind:'rank', rankLabel:'genus',
       html:`Organism from Ediacaran fauna. Fed by scratching the microbial surface on which it dwelt.`,
       images:[
         {src:'https://upload.wikimedia.org/wikipedia/commons/6/6d/Kimberella_quadrata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
         {src:'https://alchetron.com/cdn/kimberella-54aa8734-9432-45b4-83ba-ddca325beba-resize-750.jpeg', caption:'Kimberella, illustration'},
       ] },
-    { id:'arthropoda', name:'Arthropoda', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
+    { id:'arthropoda', name:'Arthropoda', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-arthropoda',
       taxonPath: 'Animalia',
       html:`<p>Insects, arachnids, <span class="term" tabindex="0" data-def="многоножки">myriapods</span>, and <span class="term" tabindex="0" data-def="ракообразные">crustaceans</span></p><p><span class="term" tabindex="0" data-def="беспозвоночные">Invertebrates</span>, have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span> with a <span class="term" tabindex="0" data-def="tough but flexible, non-mineral outer coverings of an organism, that provide protection">cuticle</span> made of chitin, a body with differentiated segments, and paired jointed appendages. In order to keep growing, they must go through stages of <span class="term" tabindex="0" data-def="линька">moulting</span>.</p>`,
       },
-    { id:'trilobita', name:'Trilobita', from:'arthropoda', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'trilobita', name:'Trilobita', from:'arthropoda', kind:'rank', rankLabel:'class', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda',
       extinct:true,
       html:'Had an easily fossilized mineralised exoskeleton made of calcite, because of which left an extensive fossil record.',
@@ -81,7 +83,7 @@ nodes: [
         {src:'https://d3d0lqu00lnqvz.cloudfront.net/trilobite/Trilobite-Fossil.jpg'},
         {src:'https://paleozoo.com.au/resources/Trilobite/Trilobite_COAL_B.jpg.opt582x326o0%2C0s582x326.jpg', caption:'Trilobite, model'},
       ] },
-    { id:'radiodonta', name:'Radiodonta', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-animalia',
+    { id:'radiodonta', name:'Radiodonta', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda',
       extinct:true,
       html:'<p>Radiodonts</p><ul><li>distinguished by distinctive frontal appendages, which are morphologically diverse and were used for a variety of functions;</li><li>were among the earliest large predators, and they also included sediment sifters and filter feeders.</li></ul>',
@@ -89,18 +91,18 @@ nodes: [
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-vtSxoky3vEeugqS5q-YaYyLseHHPK_yi67HZhFZhXx4j3NmyH4bfy6M&s=10', caption:'Radiodonta, illustration'},
         {src:'https://images.theconversation.com/files/365975/original/file-20201028-15-xtazrw.jpg?ixlib=rb-4.1.1&rect=0%2C27%2C4667%2C3109&q=50&auto=format&w=768&h=512&fit=crop&dpr=2', caption:'Radiodonta, illustration'},
       ] },
-    { id:'mollusca', name:'Mollusca', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
+    { id:'mollusca', name:'Mollusca', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-mollusca',
       taxonPath: 'Animalia',
       html:'Molluscs'
       },
-    { id:'cephalopoda', name:'Cephalopoda', from:'mollusca', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'cephalopoda', name:'Cephalopoda', from:'mollusca', kind:'rank', rankLabel:'class', color:'c-mollusca',
       taxonPath: 'Animalia → Mollusca',
       html:'<p>Squids, octopus, cuttlefish, nautilus</p><p>Molluscs with bilateral body symmetry, a prominent head, and a set of arms or tentacles.</p><p>Can squirt ink.</p>'
       },
-    { id:'nautiluspompilius', name:'Nautilus pompilius', from:'cephalopoda', kind:'rank', rankLabel:'species', color:'c-animalia',
+    { id:'nautiluspompilius', name:'Nautilus pompilius', from:'cephalopoda', kind:'rank', rankLabel:'species', color:'c-mollusca',
       html:'Nautilus pompilius or <b>chambered nautilus</b>'
       },
-    { id:'ammonitida', name:'Ammonitida', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-animalia',
+    { id:'ammonitida', name:'Ammonitida', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-mollusca',
       taxonPath: 'Animalia → Mollusca → Cephalopoda',
       html:'True ammonites.',
       extinct:true,
@@ -108,37 +110,34 @@ nodes: [
         {src:'https://www.nhm.ac.uk/content/dam/nhm-www/discover/ammonite-explainer/ammonite-3d-render-two-column.jpg'},
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn8dgF-_40chmpXz-riM6m8zl3SDkbCp2CrTD_jC7w6kLEN-_w8U_gSxA&s=10'},
       ] },
-    { id:'octopoda', name:'Octopoda', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-animalia',
+    { id:'octopoda', name:'Octopoda', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-mollusca',
       html:'Octopus.'
       },
-    { id:'cnidaria', name:'Cnidaria', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
+    { id:'cnidaria', name:'Cnidaria', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-cnidaria',
       html:`<p>Aquatic invertebrates. Cnidarians mostly have two basic body forms: swimming medusae and <span class="term" tabindex="0" data-def="Cylindrical form of Cnidaria, attaches to a surface like a rock. Example is a coral.">polyps</span>, both of which are radially symmetrical with mouths surrounded by tentacles.</p>`,
       },
-    { id:'medusozoa', name:'Medusozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+    { id:'medusozoa', name:'Medusozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-cnidaria',
       html:'Medusozoans are distinguished by having a medusa stage in their often complex life cycle.'
       },
-    { id:'cubozoa', name:'Cubozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'cubozoa', name:'Cubozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-cnidaria',
       html:'Box jellyfish.'
       },
-    { id:'scyphozoa', name:'Scyphozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'scyphozoa', name:'Scyphozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-cnidaria',
       html:'True jellyfish.'
       },
-    { id:'staurozoa', name:'Staurozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'staurozoa', name:'Staurozoa', from:'medusozoa', kind:'rank', rankLabel:'class', color:'c-cnidaria',
       html:'Stalked jellyfish.'
       },
-    { id:'anthozoa', name:'Anthozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+    { id:'anthozoa', name:'Anthozoa', from:'cnidaria', kind:'rank', rankLabel:'subphylum', color:'c-cnidaria',
       html:'<p>Corals</p><ul><li>form compact colonies of many identical polyps. Each polyp is a sac-like animal, a set of tentacles surround a central mouth opening. Each polyp excretes an exoskeleton near the base;</li><li>the colony thus creates a skeleton characteristic of the species which can measure up to several meters in size</li><li>most corals obtain the majority of their energy and nutrients from photosynthesis.</li></ul>'
       },
-    { id:'chordata', name:'Chordata', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
-      html:'<p>All chordates possess:</p><ul><li>a <span class="term" tabindex="0" data-def="a flexible, unsegmented, rod-like structure found in the embryonic stage of all chordates">notochord</span>;</li><li>a <span class="term" tabindex="0" data-def="a hollow cord of nervous tissue that runs along the back of chordate animals">dorsal nerve cord</span>;</li><li>an endostyle or <span class="term" tabindex="0" data-def="щитовидная железа">thyroid</span>;</li><li><span class="term" tabindex="0" data-def="жаберные щели">pharyngeal slits</span>;</li><li>a post-anal tail.</li></ul>'
+    { id:'chordata', name:'Chordata', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-chordata',
+      html:'<p>All chordates possess:</p><ul><li>a <span class="term" tabindex="0" data-def="a flexible, unsegmented, rod-like structure found in the embryonic stage of all chordates">notochord</span>;</li><li>a <span class="term" tabindex="0" data-def="a hollow cord of nervous tissue that runs along the back of chordate animals">dorsal nerve cord</span>;</li><li>an endostyle or <span class="term" tabindex="0" data-def="щитовидная железа">thyroid</span>;</li><li><span class="term" tabindex="0" data-def="жаберные щели">pharyngeal slits</span>;</li><li>a post-anal tail.</li></ul><p>Full is <a href="tree-vertebrata">here</a></p>'
       },
-    { id:'vertebrata', name:'Vertebrata', from:'chordata', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
-      html:'Vertebrates or <b>craniates</b> are animals with a <span class="term" tabindex="0" data-def="позвоночник">vertebral column</span> and a <span class="term" tabindex="0" data-def="skull">cranium</span>.'
+    { id:'vertebrata', name:'Vertebrata', from:'chordata', kind:'rank', rankLabel:'subphylum', color:'c-chordata',
+      html:'<p>Vertebrates or <b>craniates</b> are animals with a <span class="term" tabindex="0" data-def="позвоночник">vertebral column</span> and a <span class="term" tabindex="0" data-def="skull">cranium</span>.</p><p>Full is <a href="tree-vertebrata">here</a></p>'
       },
-    { id:'placoderm', name:'Placoderm', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'Prehistoric fish with head and <span class="term" tabindex="0" data-def="chest">thorax</span> covered by armoured plates, and the rest of the body scaled or naked depending on the species.'
-      },
-    { id:'eurypterida', name:'Eurypterida', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-animalia',
+    { id:'eurypterida', name:'Eurypterida', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda',
       extinct:true,
       html:'Eurypterids or <b>sea scorpions</b>. Only the earliest eurypterids were marine; many later forms lived in fresh water.',
@@ -147,45 +146,43 @@ nodes: [
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Eurypterus_remipes_001.jpg/500px-Eurypterus_remipes_001.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
         ]
       },
-    { id:'myriapoda', name:'Myriapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+    { id:'myriapoda', name:'Myriapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda',
       html:'Terrestrial, multi-legged arthropods.'
       },
-    { id:'chilopoda', name:'Chilopoda', from:'myriapoda', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'chilopoda', name:'Chilopoda', from:'myriapoda', kind:'rank', rankLabel:'class', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda → Myriapoda',
       html:'<span class="term" tabindex="0" data-def="сороконожки">Centipedes</span> are arthropods with one pair of legs per body segment. All centipedes are venomous and can inflict painful stings, injecting their venom.',
       images:[
         {src:'https://media.gettyimages.com/id/185274173/photo/centipede.jpg?s=612x612&w=gi&k=20&c=3LunPSfyw0e11Xd4cbl3i_IfubfH41vikqijzoqx03s='}
         ]
       },
-    { id:'diplopoda', name:'Diplopoda', from:'myriapoda', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'diplopoda', name:'Diplopoda', from:'myriapoda', kind:'rank', rankLabel:'class', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda → Myriapoda',
       html:'<p><span class="term" tabindex="0" data-def="многоножки">Millipedes</span></p><ul><li>arthropods with two pairs of jointed legs on most body segments;</li><li>most are slow-moving detritivores, eating decaying leaves and other dead plant matter</li></ul>',
       images:[
         {src:'https://phylumproject.weebly.com/uploads/5/1/3/8/51387695/7725483_orig.jpg'}
         ]
       },
-    { id:'hexapoda', name:'Hexapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+    { id:'hexapoda', name:'Hexapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda',
       html:'<p>Insects</p><p>Arthropods with bodies divided into three main parts (head, <span class="term" tabindex="0" data-def="chest">thorax</span>, and abdomen) and possess three pairs of legs attached to the thorax.</p>'
       },
-    { id:'cladoselache', name:'Cladoselache', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-animalia',
-      html:'Cladoselache or <b>branch shark</b> is an extinct genus of shark.'
-      },
-    { id:'insecta', name:'Insecta', from:'hexapoda', kind:'rank', rankLabel:'class', color:'c-animalia',
+    { id:'insecta', name:'Insecta', from:'hexapoda', kind:'rank', rankLabel:'class', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda → Hexapoda',
       html:'<p>True insects</p><p>Have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span>, a three-part body (head, <span class="term" tabindex="0" data-def="chest">thorax</span> and abdomen), three pairs of jointed legs, compound eyes, and a pair of antennae.</p>'
       },
-    { id:'meganeuramonyi', name:'Meganeura monyi', from:'insecta', kind:'rank', rankLabel:'species', color:'c-animalia',
+    { id:'meganeuramonyi', name:'Meganeura monyi', from:'insecta', kind:'rank', rankLabel:'species', color:'c-arthropoda',
       taxonPath: 'Animalia → Arthropoda → Hexapoda → Insecta → Meganisoptera → Meganeuridae → Meganeurinae → Meganeura',
       html:'Resembled dragonflies, single wing length reached 32 centimetres, a wingspan around 65–75 cm. <em>M. monyi</em> is one of the largest known flying insect species.',
       images:[
         {src:'https://preview.redd.it/a-life-size-model-of-the-carboniferous-giant-griffinfly-v0-8vfwzi6mh5731.jpg?width=640&crop=smart&auto=webp&s=48c7d690aa19dbd024edc438f77e5e2fb2553749'}
         ]
       },
-    { id:'dimetrodon', name:'Dimetrodon', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-animalia',
-      html:'<span class="term" tabindex="0" data-def="all mammals and their extinct relatives">Synapsid</span> with large neural spine sail on its back formed by elongated spines extending from the vertebrae.'
-      }
+    { id:'reptilia', name:'Reptilia', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata',
+      html:'<p>Reptiles are <span class="term" tabindex="0" data-def="with four legs">tetrapod</span> vertebrate animals.</p><p>Full is <a href="tree-vertebrata">here</a>.</p>'
+      },
 ] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
 </script>

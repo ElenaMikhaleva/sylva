@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylva — Geological Time Scale</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
+</head>
+<body data-page="geological-time">
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
+        </div>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Geological Time Scale</h1>
+    <div class="crumbs">
+        <p><a href="studies.html">History</a> · Paleontology</p>
+    </div>
+    <p>All of Earth's history in one chart.</p>
+    <div class="chart" id="chart">
+        <div class="hd ma" title="Millions of years ago">Ma</div>
+        <div class="hd">Eon</div>
+        <div class="hd">Era</div>
+        <div class="hd">Period</div>
+        <div class="hd">Epoch</div>
+    </div>
+</div>
+<script>
+const TYPES = ['Eon', 'Era', 'Period', 'Epoch'];
+
+function N(k, s, e, o, ch){ return Object.assign({k:k, s:s, e:e, ch:ch || []}, o || {}); }
+
+const TREE = [
+  N('Hadean', 4560, 4000),
+  N('Archean', 4000, 2500, {}, [
+    N('Eoarchean', 4000, 3600),
+    N('Paleoarchean', 3600, 3200),
+    N('Mesoarchean', 3200, 2800),
+    N('Neoarchean', 2800, 2500)
+  ]),
+  N('Proterozoic', 2500, 539, {}, [
+    N('Paleoproterozoic', 2500, 1600, {}, [
+      N('Siderian', 2500, 2300), N('Rhyacian', 2300, 2050), N('Orosirian', 2050, 1800), N('Statherian', 1800, 1600)
+    ]),
+    N('Mesoproterozoic', 1600, 1000, {}, [
+      N('Calymmian', 1600, 1400), N('Ectasian', 1400, 1200), N('Stenian', 1200, 1000)
+    ]),
+    N('Neoproterozoic', 1000, 539, {}, [
+      N('Tonian', 1000, 720),
+      N('Cryogenian', 720, 635, {note:'Snowball Earth: ice may have reached the equator.'}),
+      N('Ediacaran', 635, 539, {note:'The first large, complex multicellular life.'})
+    ])
+  ]),
+  N('Phanerozoic', 539, 0, {pz:1}, [
+    N('Paleozoic', 539, 252, {}, [
+      N('Cambrian', 539, 487, {}, [
+        N('Terreneuvian', 539, 521), N('Series 2', 521, 514), N('Miaolingian', 514, 506.5), N('Furongian', 506.5, 487)
+      ]),
+      N('Ordovician', 487, 444, {}, [
+        N('Early', 487, 470), N('Middle', 470, 458), N('Late', 458, 444)
+      ]),
+      N('Silurian', 444, 419, {}, [
+        N('Llandovery', 444, 433), N('Wenlock', 433, 427), N('Ludlow', 427, 423), N('Pridoli', 423, 419)
+      ]),
+      N('Devonian', 419, 359, {}, [
+        N('Early', 419, 393), N('Middle', 393, 383), N('Late', 383, 359)
+      ]),
+      N('Carboniferous', 359, 299, {}, [
+        N('Mississippian', 359, 323, {type:'Subperiod'}), N('Pennsylvanian', 323, 299, {type:'Subperiod'})
+      ]),
+      N('Permian', 299, 252, {}, [
+        N('Cisuralian', 299, 273), N('Guadalupian', 273, 259), N('Lopingian', 259, 252)
+      ])
+    ]),
+    N('Mesozoic', 252, 66, {}, [
+      N('Triassic', 252, 201, {}, [
+        N('Early', 252, 247), N('Middle', 247, 237), N('Late', 237, 201)
+      ]),
+      N('Jurassic', 201, 145, {}, [
+        N('Early', 201, 175), N('Middle', 175, 162), N('Late', 162, 145)
+      ]),
+      N('Cretaceous', 145, 66, {}, [
+        N('Early', 145, 100), N('Late', 100, 66)
+      ])
+    ]),
+    N('Cenozoic', 66, 0, {}, [
+      N('Paleogene', 66, 23, {}, [
+        N('Paleocene', 66, 56, {}),
+        N('Eocene', 56, 34, {}),
+        N('Oligocene', 34, 23, {})
+      ]),
+      N('Neogene', 23, 2.58, {}, [
+        N('Miocene', 23, 5.3, {}),
+        N('Pliocene', 5.3, 2.58, {})
+      ]),
+      N('Quaternary', 2.58, 0, {}, [
+        N('Pleistocene', 2.58, 0.0117, {}),
+        N('Holocene', 0.0117, 0, {})
+      ])
+    ])
+  ])
+];
+
+function fmt(x){
+  if (x >= 10) return Math.round(x).toLocaleString('en-US');
+  if (x >= 1) return String(Math.round(x * 10) / 10);
+  return String(Math.round(x * 1000) / 1000);
+}
+function dateText(n){
+  if (n.s < 0.1) return Math.round(n.s * 1e6).toLocaleString('en-US') + ' years ago to today';
+  if (n.e === 0) return fmt(n.s) + ' Ma to today';
+  if (n.e < 0.1) return fmt(n.s) + ' Ma to ' + Math.round(n.e * 1e6).toLocaleString('en-US') + ' years ago';
+  return fmt(n.s) + '–' + fmt(n.e) + ' Ma';
+}
+
+const rootStyle = getComputedStyle(document.getElementById('chart'));
+const slug = k => k.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const hasVar = name => rootStyle.getPropertyValue(name).trim() !== '';
+
+function prep(node, depth, parent, idx, n, pz){
+  node.depth = depth;
+  node.pz = pz || node.pz;
+  node.type = node.type || TYPES[depth];
+  const v = '--' + slug(node.k);
+  const ownInk = hasVar(v + '-ink') ? 'var(' + v + '-ink)' : undefined;
+  if (hasVar(v)) {
+    node.c = 'var(' + v + ')';
+    node.w = 0;
+    node.ink = ownInk;
+  } else if (node.c) {
+    node.w = 0;
+    node.ink = node.ink || ownInk;
+  } else if (parent) {
+    const amt = n > 1 ? 0.5 - 0.4 * (idx / (n - 1)) : 0.3;
+    node.c = parent.c;
+    node.w = 100 * (1 - (1 - parent.w / 100) * (1 - amt));
+    node.ink = ownInk || parent.ink;
+  } else {
+    node.c = 'var(--ink)';
+    node.w = 0;
+    node.ink = ownInk;
+  }
+  node.ch.forEach((k, i) => prep(k, depth + 1, node, i, node.ch.length, node.pz));
+}
+TREE.forEach(function(t, i){ prep(t, 0, null, i, TREE.length, false); });
+
+const rowH = [];
+let row = 3;
+const macells = [];
+let breakRow = 0;
+
+function emit(node){
+  if (!node.ch.length) {
+    node.h = node.pz ? Math.max(30, Math.round((node.s - node.e) * 4.2)) : 44;
+    node.r0 = node.r1 = row;
+    rowH.push(node.h);
+    macells.push({r: row, s: node.s});
+    row++;
+    return;
+  }
+  const kids = node.ch.slice().reverse();
+  kids.forEach(emit);
+  node.r0 = kids[0].r0;
+  node.r1 = kids[kids.length - 1].r1;
+  node.h = kids.reduce(function(a, k){ return a + k.h; }, 0);
+}
+
+const tops = TREE.slice().reverse();
+tops.forEach(function(t, i){
+  emit(t);
+  if (i === 0) { breakRow = row; rowH.push(56); row++; }
+});
+
+const chart = document.getElementById('chart');
+
+function add(html, style, cls, title){
+  const d = document.createElement('div');
+  d.className = cls;
+  d.style.cssText = style;
+  if (title) d.title = title;
+  d.innerHTML = html;
+  chart.appendChild(d);
+  return d;
+}
+
+add('0', 'grid-column:1/2;grid-row:2/3', 'macell');
+add('Today', 'grid-column:2/6;grid-row:2/3', 'today');
+
+function cells(node){
+  const col = node.depth + 2;
+  const leaf = !node.ch.length;
+  const name = node.k + (node.x ? ' †' : '');
+  const dates = dateText(node);
+  const label = '<div class="lab">' + name + (node.h >= 56 ? '<small>' + dates + '</small>' : '') + '</div>';
+  const title = node.k + ' ' + node.type + ', ' + dates + (node.note ? '. ' + node.note : '');
+  add(label,
+      'grid-column:' + col + '/' + (leaf ? 6 : col + 1) + ';grid-row:' + node.r0 + '/' + (node.r1 + 1) +
+      ';--c:' + node.c + ';--w:' + Math.round(node.w) + '%' + (node.ink ? ';--ink-on:' + node.ink : ''),
+      'cell' + (node.w >= 30 ? ' light' : ''), title);
+  node.ch.forEach(cells);
+}
+tops.forEach(cells);
+
+macells.forEach(function(m){
+  add(fmt(m.s), 'grid-column:1/2;grid-row:' + m.r + '/' + (m.r + 1), 'macell');
+});
+
+add('Everything below is squeezed: each row is hundreds of millions of years, drawn the same height.',
+    'grid-column:1/6;grid-row:' + breakRow + '/' + (breakRow + 1), 'brk');
+
+chart.style.gridTemplateRows = ['48px', '32px'].concat(rowH.map(function(h){ return h + 'px'; })).join(' ');
+</script>
+</body>
+</html>
