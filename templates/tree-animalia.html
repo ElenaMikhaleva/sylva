@@ -36,7 +36,7 @@ const TREE_DATA = {
 ranks: ['kingdom','phylum','subphylum','class','order','family','genus','species'],
 nodes: [
     { id:'animalia', name:'Animalia', kind:'rank', rankLabel:'kingdom', color:'c-animalia',
-      html:`<p>Animals</p><ul><li>consume organic material;</li><li>breathe oxygen;</li><li>have muscle cells;</li><li>can reproduce sexually;</li><li>grow from a hollow sphere of cells during embryonic development;</li><li>with few exceptions, are able to move.</li></ul>`
+      html:`<p>Animals</p><ul><li>consume organic material;</li><li>breathe oxygen;</li><li>have muscle cells;</li><li>can reproduce sexually;</li><li>grow from a hollow sphere of cells during embryonic development;</li><li>with few exceptions, are able to move.</li></ul><p>All kingdoms <a href="tree-eukaryotes.html">here</a>.`
       },
     { id:'cloudinidae', name:'Cloudinidae', from:'cnidaria', kind:'rank', rankLabel:'family', color:'c-animalia',
       html:`Organism from Ediacaran fauna. Formed millimetre-scale conical fossils consisting of calcareous cones nested within one another.`,
@@ -69,33 +69,45 @@ nodes: [
         {src:'https://alchetron.com/cdn/kimberella-54aa8734-9432-45b4-83ba-ddca325beba-resize-750.jpeg', caption:'Kimberella, illustration'},
       ] },
     { id:'arthropoda', name:'Arthropoda', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
-      html:`<p><span class="term" tabindex="0" data-def="беспозвоночные">Invertebrates</span>, have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span> with a <span class="term" tabindex="0" data-def="tough but flexible, non-mineral outer coverings of an organism, that provide protection">cuticle</span> made of chitin, a body with differentiated segments, and paired jointed appendages. In order to keep growing, they must go through stages of <span class="term" tabindex="0" data-def="линька">moulting</span>.</p>`,
+      taxonPath: 'Animalia',
+      html:`<p>Insects, arachnids, <span class="term" tabindex="0" data-def="многоножки">myriapods</span>, and <span class="term" tabindex="0" data-def="ракообразные">crustaceans</span></p><p><span class="term" tabindex="0" data-def="беспозвоночные">Invertebrates</span>, have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span> with a <span class="term" tabindex="0" data-def="tough but flexible, non-mineral outer coverings of an organism, that provide protection">cuticle</span> made of chitin, a body with differentiated segments, and paired jointed appendages. In order to keep growing, they must go through stages of <span class="term" tabindex="0" data-def="линька">moulting</span>.</p>`,
       },
     { id:'trilobita', name:'Trilobita', from:'arthropoda', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'',
+      taxonPath: 'Animalia → Arthropoda',
+      extinct:true,
+      html:'Had an easily fossilized mineralised exoskeleton made of calcite, because of which left an extensive fossil record.',
       images:[
         {src:'https://cdn.britannica.com/87/143487-050-EBA32F64/trilobites-rocks-Russia-Cambrian-Period.jpg'},
         {src:'https://d3d0lqu00lnqvz.cloudfront.net/trilobite/Trilobite-Fossil.jpg'},
         {src:'https://paleozoo.com.au/resources/Trilobite/Trilobite_COAL_B.jpg.opt582x326o0%2C0s582x326.jpg', caption:'Trilobite, model'},
       ] },
     { id:'radiodonta', name:'Radiodonta', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-animalia',
-      html:'',
+      taxonPath: 'Animalia → Arthropoda',
+      extinct:true,
+      html:'<p>Radiodonts</p><ul><li>distinguished by distinctive frontal appendages, which are morphologically diverse and were used for a variety of functions;</li><li>were among the earliest large predators, and they also included sediment sifters and filter feeders.</li></ul>',
       images:[
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-vtSxoky3vEeugqS5q-YaYyLseHHPK_yi67HZhFZhXx4j3NmyH4bfy6M&s=10', caption:'Radiodonta, illustration'},
         {src:'https://images.theconversation.com/files/365975/original/file-20201028-15-xtazrw.jpg?ixlib=rb-4.1.1&rect=0%2C27%2C4667%2C3109&q=50&auto=format&w=768&h=512&fit=crop&dpr=2', caption:'Radiodonta, illustration'},
       ] },
     { id:'mollusca', name:'Mollusca', from:'animalia', kind:'rank', rankLabel:'phylum', color:'c-animalia',
-      html:'Molluscs.'
+      taxonPath: 'Animalia',
+      html:'Molluscs'
       },
     { id:'cephalopoda', name:'Cephalopoda', from:'mollusca', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'<p>Molluscs with bilateral body symmetry, a prominent head, and a set of arms or tentacles.</p><p>Can squirt ink.</p>'
+      taxonPath: 'Animalia → Mollusca',
+      html:'<p>Squids, octopus, cuttlefish, nautilus</p><p>Molluscs with bilateral body symmetry, a prominent head, and a set of arms or tentacles.</p><p>Can squirt ink.</p>'
       },
     { id:'nautiluspompilius', name:'Nautilus pompilius', from:'cephalopoda', kind:'rank', rankLabel:'species', color:'c-animalia',
       html:'Nautilus pompilius or <b>chambered nautilus</b>'
       },
     { id:'ammonitida', name:'Ammonitida', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-animalia',
-      html:'True ammonites.'
-      },
+      taxonPath: 'Animalia → Mollusca → Cephalopoda',
+      html:'True ammonites.',
+      extinct:true,
+      images:[
+        {src:'https://www.nhm.ac.uk/content/dam/nhm-www/discover/ammonite-explainer/ammonite-3d-render-two-column.jpg'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn8dgF-_40chmpXz-riM6m8zl3SDkbCp2CrTD_jC7w6kLEN-_w8U_gSxA&s=10'},
+      ] },
     { id:'octopoda', name:'Octopoda', from:'cephalopoda', kind:'rank', rankLabel:'order', color:'c-animalia',
       html:'Octopus.'
       },
@@ -127,28 +139,49 @@ nodes: [
       html:'Prehistoric fish with head and <span class="term" tabindex="0" data-def="chest">thorax</span> covered by armoured plates, and the rest of the body scaled or naked depending on the species.'
       },
     { id:'eurypterida', name:'Eurypterida', from:'arthropoda', kind:'rank', rankLabel:'order', color:'c-animalia',
-      html:'Eurypterids or <b>sea scorpions</b>. Only the earliest eurypterids were marine; many later forms lived in fresh water.'
+      taxonPath: 'Animalia → Arthropoda',
+      extinct:true,
+      html:'Eurypterids or <b>sea scorpions</b>. Only the earliest eurypterids were marine; many later forms lived in fresh water.',
+      images:[
+        {src:'https://cdn.sci.news/images/enlarge10/image_11919e-Archopterus-anjiensis.jpg'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Eurypterus_remipes_001.jpg/500px-Eurypterus_remipes_001.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        ]
       },
     { id:'myriapoda', name:'Myriapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
+      taxonPath: 'Animalia → Arthropoda',
       html:'Terrestrial, multi-legged arthropods.'
       },
     { id:'chilopoda', name:'Chilopoda', from:'myriapoda', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'Centipedes are arthropods with one pair of legs per body segment. All centipedes are venomous and can inflict painful stings, injecting their venom.'
+      taxonPath: 'Animalia → Arthropoda → Myriapoda',
+      html:'<span class="term" tabindex="0" data-def="сороконожки">Centipedes</span> are arthropods with one pair of legs per body segment. All centipedes are venomous and can inflict painful stings, injecting their venom.',
+      images:[
+        {src:'https://media.gettyimages.com/id/185274173/photo/centipede.jpg?s=612x612&w=gi&k=20&c=3LunPSfyw0e11Xd4cbl3i_IfubfH41vikqijzoqx03s='}
+        ]
       },
     { id:'diplopoda', name:'Diplopoda', from:'myriapoda', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'<ul><li>Millipedes are a group of arthropods with two pairs of jointed legs on most body segments;</li><li>most are slow-moving detritivores, eating decaying leaves and other dead plant matter</li></ul>'
+      taxonPath: 'Animalia → Arthropoda → Myriapoda',
+      html:'<p><span class="term" tabindex="0" data-def="многоножки">Millipedes</span></p><ul><li>arthropods with two pairs of jointed legs on most body segments;</li><li>most are slow-moving detritivores, eating decaying leaves and other dead plant matter</li></ul>',
+      images:[
+        {src:'https://phylumproject.weebly.com/uploads/5/1/3/8/51387695/7725483_orig.jpg'}
+        ]
       },
     { id:'hexapoda', name:'Hexapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
-      html:'Arthropods with bodies divided into three main parts (head, <span class="term" tabindex="0" data-def="chest">thorax</span>, and abdomen) and possess three pairs of legs attached to the thorax.'
+      taxonPath: 'Animalia → Arthropoda',
+      html:'<p>Insects</p><p>Arthropods with bodies divided into three main parts (head, <span class="term" tabindex="0" data-def="chest">thorax</span>, and abdomen) and possess three pairs of legs attached to the thorax.</p>'
       },
     { id:'cladoselache', name:'Cladoselache', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-animalia',
       html:'Cladoselache or <b>branch shark</b> is an extinct genus of shark.'
       },
     { id:'insecta', name:'Insecta', from:'hexapoda', kind:'rank', rankLabel:'class', color:'c-animalia',
-      html:'Insects have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span>, a three-part body (head, <span class="term" tabindex="0" data-def="chest">thorax</span> and abdomen), three pairs of jointed legs, compound eyes, and a pair of antennae.'
+      taxonPath: 'Animalia → Arthropoda → Hexapoda',
+      html:'<p>True insects</p><p>Have an <span class="term" tabindex="0" data-def="a hard outer covering">exoskeleton</span>, a three-part body (head, <span class="term" tabindex="0" data-def="chest">thorax</span> and abdomen), three pairs of jointed legs, compound eyes, and a pair of antennae.</p>'
       },
     { id:'meganeuramonyi', name:'Meganeura monyi', from:'insecta', kind:'rank', rankLabel:'species', color:'c-animalia',
-      html:'Resembled dragonflies, single wing length reached 32 centimetres, a wingspan around 65–75 cm. <em>M. monyi</em> is one of the largest known flying insect species.'
+      taxonPath: 'Animalia → Arthropoda → Hexapoda → Insecta → Meganisoptera → Meganeuridae → Meganeurinae → Meganeura',
+      html:'Resembled dragonflies, single wing length reached 32 centimetres, a wingspan around 65–75 cm. <em>M. monyi</em> is one of the largest known flying insect species.',
+      images:[
+        {src:'https://preview.redd.it/a-life-size-model-of-the-carboniferous-giant-griffinfly-v0-8vfwzi6mh5731.jpg?width=640&crop=smart&auto=webp&s=48c7d690aa19dbd024edc438f77e5e2fb2553749'}
+        ]
       },
     { id:'dimetrodon', name:'Dimetrodon', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-animalia',
       html:'<span class="term" tabindex="0" data-def="all mammals and their extinct relatives">Synapsid</span> with large neural spine sail on its back formed by elongated spines extending from the vertebrae.'

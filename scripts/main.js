@@ -111,21 +111,29 @@ function wireCarousel(root) {
   });
 }
 
-function cardHtml(item, badge) {
+function cardHtml(item, badge, opts = {}) {
   const hasImages = item.images && item.images.length;
+  const imageMarkup = hasImages
+    ? (opts.imagePosition === 'right'
+        ? `<div class="img-box right">${buildMedia(item.images)}</div>`
+        : buildMedia(item.images))
+    : '';
   return `
     <div class="expand-pad">
       <section class="card" style="--accent-color:var(--${item.color})">
         <div class="card-head">
           <h2 class="card-title">${item.name}${item.native ? `<span class="card-native">${item.native}</span>` : ''}</h2>
           ${badge ? `<span class="card-tag">${badge}</span>` : ''}
+          ${item.etymology ? `<p class="card-etym">${item.etymology}</p>` : ''}
         </div>
-        <div class="card-body ${hasImages ? '' : 'no-image'}">
+        ${item.taxonPath ? `<p class="card-taxon">${item.taxonPath}</p>` : ''}
+        <div class="card-body">
+          ${opts.imagePosition === 'right' ? imageMarkup : ''}
           <div class="card-text">
             ${item.html}
             ${item.today ? `<div class="today-box"><strong>Today:</strong> ${item.today}</div>` : ''}
           </div>
-          ${hasImages ? buildMedia(item.images) : ''}
+          ${opts.imagePosition !== 'right' ? imageMarkup : ''}
         </div>
       </section>
     </div>`;
@@ -313,7 +321,7 @@ function initStageTree(TREE_DATA) {
   const detailZone = document.getElementById('detailZone');
   const nodesById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));
   const simpleLinks = [];
-  const ROW_HEIGHT = 70;
+  const ROW_HEIGHT = 50;
 
   const globalExpand = document.createElement('div');
   globalExpand.className = 'expand-wrap';
@@ -330,7 +338,7 @@ function initStageTree(TREE_DATA) {
       activeId = null;
       globalExpand.addEventListener('transitionend', () => { inner.innerHTML = ''; redrawLinks(); }, { once: true });
     } else {
-      inner.innerHTML = cardHtml(item, badge);
+      inner.innerHTML = cardHtml(item, badge, { imagePosition: 'right' });
       wireCarousel(inner);
       globalExpand.classList.add('is-open');
       btn.classList.add('is-active');
@@ -361,14 +369,14 @@ TREE_DATA.nodes.forEach(n => {
   if (!n.from) return;
   const parent = nodesById[n.from];
   const gap = columnOf(n) - columnOf(parent);
-  if (gap <= 1) return; // adjacent columns (or same/root) — normal connector, nothing to do
+  if (gap <= 1) return;
 
   const linkIdx = simpleLinks.findIndex(l => l.fromId === n.from && l.toId === n.id);
   if (linkIdx !== -1) simpleLinks.splice(linkIdx, 1);
   childrenOf[n.from] = childrenOf[n.from].filter(id => id !== n.id);
 
   const ghostId = `__ghost${ghostCounter++}`;
-  const ghostCol = columnOf(parent) + Math.round(gap / 2); // midpoint column
+  const ghostCol = columnOf(parent) + Math.round(gap / 2);
   const ghost = { id: ghostId, name: '···', kind: 'ghost', color: n.color, from: n.from, __ghostColumn: ghostCol };
   syntheticNodes.push(ghost);
   nodesById[ghostId] = ghost;
@@ -384,8 +392,6 @@ TREE_DATA.nodes.forEach(n => {
 
 const allNodesIncludingGhosts = [...TREE_DATA.nodes, ...syntheticNodes];
 
-  /* ---- 2. Bottom-up slot assignment (unchanged — still purely about
-             parent/child structure, independent of column/rank) ---- */
   const slot = {};
   let nextLeafSlot = 0;
   function assign(id) {
@@ -398,12 +404,6 @@ const allNodesIncludingGhosts = [...TREE_DATA.nodes, ...syntheticNodes];
   roots.forEach(assign);
   const totalHeight = nextLeafSlot * ROW_HEIGHT;
 
-  /* ---- 3. Column = rank position. Unranked/lineage nodes → column 0.
-             Only non-empty columns get rendered, so skipped ranks
-             (globally unused) don't waste space — but a lineage that
-             skips a rank locally still just draws a longer connector,
-             since drawLine uses real pixel positions regardless of
-             how many columns apart the two nodes land. ---- */
   function columnOf(n) {
   if (n.__ghostColumn != null) return n.__ghostColumn;
   if (!n.rankLabel) return 0;
@@ -444,7 +444,8 @@ flow.parentElement.insertBefore(headerRow, flow);
         btn.className = `node-btn kind-${n.kind}`;
         btn.style.setProperty('--accent-color', `var(--${n.color})`);
         btn.dataset.id = n.id;
-        btn.textContent = n.name;
+        btn.id = `node-${n.id}`;
+        btn.innerHTML = `${n.name}${n.extinct ? '<span class="extinct-mark"> †</span>' : ''}`;
         btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
         colEl.appendChild(btn);
       }
@@ -481,4 +482,17 @@ flow.parentElement.insertBefore(headerRow, flow);
   setTimeout(redrawLinks, 300);
   setTimeout(redrawLinks, 1000);
   window.addEventListener('resize', redrawLinks);
+
+  function openFromHash() {
+    const targetId = location.hash.replace('#node-', '');
+    if (!targetId) return;
+    const n = nodesById[targetId];
+    const btn = document.getElementById(`node-${targetId}`);
+    if (n && btn) {
+      toggleExpand(n.id, btn, n, n.rankLabel || null);
+      setTimeout(() => btn.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+  }
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
 }

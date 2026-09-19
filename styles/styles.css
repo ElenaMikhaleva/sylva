@@ -1020,4 +1020,9 @@ body[data-page="species"] .tree-flow {
 .expand-pad {
     padding-top:6px;
     }
-
+.card-taxon {
+  font-family: var(--ff-label);
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+  margin: 4px 0 12px;
+}

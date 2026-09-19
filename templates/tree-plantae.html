@@ -36,13 +36,23 @@ const TREE_DATA = {
 ranks: ['kingdom','phylum','subphylum','class','order','family','genus','species'],
 nodes: [
     { id:'plantae', name:'Plantae', kind:'rank', rankLabel:'kingdom', color:'c-plantae',
-      html:`Predominantly photosynthetic or came from photosynthetic ancestors.`
+      html:`<p>Predominantly photosynthetic or came from photosynthetic ancestors.</p><p>All kingdoms <a href="tree-eukaryotes.html">here</a>.`
       },
     { id:'cooksonia', name:'Cooksonia', from:'plantae', kind:'rank', rankLabel:'genus', color:'c-plantae',
-      html:'<p>Cooksonia had a simple <span class="term" tabindex="0" data-def="стебель">stalk</span> that branched dichotomously a few times.</p><p>Each branch ended in a spore-bearing capsule.</p><p>Cooksonia includes the oldest known plant to have a stem with vascular tissue.</p>'
+      taxonPath: 'Plantae',
+      extinct:true,
+      html:'<p>Cooksonia had a simple <span class="term" tabindex="0" data-def="стебель">stalk</span> that branched dichotomously a few times.</p><p>Each branch ended in a spore-bearing capsule.</p><p>Cooksonia includes the oldest known plant to have a stem with vascular tissue.</p>',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Cooksonia_sp._-_MUSE.jpg/250px-Cooksonia_sp._-_MUSE.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Reconstruction of Cooksonia'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Cooksonia_NMNH.jpg/500px-Cooksonia_NMNH.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'C. perton fossil'}
+        ]
       },
     { id:'polypodiopsida', name:'Polypodiopsida', from:'plantae', kind:'rank', rankLabel:'class', color:'c-plantae',
-      html:'Ferns, a group of vascular plants that reproduce via spores and have neither seeds nor flowers.'
+      taxonPath: 'Plantae → Tracheophyta',
+      html:'Ferns, a group of vascular plants that reproduce via spores and have neither seeds nor flowers.',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe71G29yx0pa-_O_0cP-yS27Wh2w-wus_CKW7nXqDykBtSra1jNtt_MMdT&s=10'}
+        ]
       }
 ] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
