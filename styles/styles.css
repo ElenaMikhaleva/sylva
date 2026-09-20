@@ -16,7 +16,7 @@
     --fs-xl: 30px;
 
     --ff-title: 'Fraunces',serif;
-    --ff-label: 'JetBrains Mono', monospace;
+    --ff-label: 'Golos Text', sans-serif;
     --ff-body: 'Work Sans',sans-serif;
 
     --border-rad: 7px;
@@ -91,7 +91,7 @@ h2 {
     display:inline-flex;
     align-items:center;
     gap:6px;
-    font-size: var(--fs-s);
+    font-size: var(--fs-base);
     font-weight:300;
     color:var(--text-soft);
     cursor:pointer;
@@ -242,8 +242,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 14px;
   margin-top: 10px;
+  margin-bottom: 10px;
   padding: 16px;
   box-sizing: border-box;
   height: 100%;
@@ -256,13 +256,6 @@ a {
   min-width: 0;
   margin-top: 10px;
   margin-left: 30px;
-}
-.subcard-row .img-box {
-  width: 100%;
-  max-width: 510px;
-  margin: 0;
-  align-self: center;
-  overflow: visible;
 }
 .subcard-row h3 {
     font-family: var(--ff-title);;
@@ -282,6 +275,11 @@ a {
 .subcard-row li{
     margin-bottom:3px;
     }
+.subcard-row .img-box {
+    width: 100%;
+  max-width: 600px;
+  margin-inline: auto;
+}
 .highlight {
   text-decoration: underline;
   text-decoration-color: var(--accent-color);
@@ -361,13 +359,40 @@ li::before {
 .li-end::before {
     content:"†";
     }
-.img-box {
-  border-radius: var(--border-rad);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+/* ============ IMAGES ============ */
+
+.carousel-viewport,
+.img-slot {
+  position: relative;
   overflow: hidden;
+  width: 100%;
+  height: var(--frame-h, clamp(240px, 52vw, 300px));
+  aspect-ratio: auto;
+  border-radius: var(--border-rad);
+  background-color: color-mix(in srgb, var(--accent-color, var(--text-soft)) 22%, var(--bg-darker));
+  background-image: radial-gradient(circle at center,
+    color-mix(in srgb, var(--accent-color, var(--text-soft)) 45%, transparent) 1.1px, transparent 1.7px);
+  background-size: 7px 7px;
 }
+.carousel-viewport::after,
+.img-slot::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+  opacity: .3;
+}
+.carousel-arrow { z-index: 3; }
+
+.carousel-viewport img,
+.img-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
 .img-box.right {
   float: right;
   width: 50%;
@@ -378,6 +403,7 @@ li::before {
   align-items: stretch;
   position: relative;
   z-index: 1;
+  --frame-h: 240px;
 }
 .carousel {
   display: flex;
@@ -559,43 +585,17 @@ body[data-page="species"] {
   --c-cnidaria: #2F7FCB;
 }
 body[data-page="history"] {
-  --bronzeage-gr: #DB6F3B;
-  --darkage-gr: #B4B96C;
-  --archaic-gr: #7C8B2F;
-  --classical-gr: #7DB1DD;
-  --hellenistic-gr: #3B78BA;
-  --roman-gr: #1F4E8C;
-  --byzantine-gr: #C9AEE0;
-  --latin-gr: #9A70C4;
-  --ottoman-gr: #6A3F94;
-  --modern-gr: #BE3B72;
+  --bronzeage-gr: #E39A6D;
+  --darkage-gr: #C9683A;
+  --archaic-gr: #9E4324;
+  --classical-gr: #8DBBE0;
+  --hellenistic-gr: #5A93CB;
+  --roman-gr: #D9A3BB;
+  --byzantine-gr: #B96A90;
+  --latin-gr: #8E3B66;
+  --ottoman-gr: #5F2245;
+  --modern-gr: #1F4E8C;
 }
-.card[data-accent="modern-gr"] { --accent-color: var(--modern-gr); }
-.card[data-accent="ottoman-gr"] { --accent-color: var(--ottoman-gr); }
-.card[data-accent="latin-gr"] { --accent-color: var(--latin-gr); }
-.card[data-accent="hadean"] { --accent-color: var(--hadean); }
-.card[data-accent="archean"] { --accent-color: var(--archean); }
-.card[data-accent="proterozoic"] { --accent-color: var(--proterozoic); }
-.card[data-accent="phanerozoic"] { --accent-color: var(--phanerozoic); }
-.card[data-accent="cambrian"] { --accent-color: var(--cambrian); }
-.card[data-accent="ordovician"] { --accent-color: var(--ordovician); }
-.card[data-accent="silurian"] { --accent-color: var(--silurian); }
-.card[data-accent="devonian"] { --accent-color: var(--devonian); }
-.card[data-accent="carboniferous"] { --accent-color: var(--carboniferous); }
-.card[data-accent="permian"] { --accent-color: var(--permian); }
-.card[data-accent="paleogene"] { --accent-color: var(--paleogene); }
-.card[data-accent="neogene"] { --accent-color: var(--neogene); }
-.card[data-accent="quaternary"] { --accent-color: var(--quaternary); }
-.card[data-accent="triassic"] { --accent-color: var(--triassic); }
-.card[data-accent="jurassic"] { --accent-color: var(--jurassic); }
-.card[data-accent="cretaceous"] { --accent-color: var(--cretaceous); }
-.card[data-accent="bronzeage-gr"] { --accent-color: var(--bronzeage-gr); }
-.card[data-accent="darkage-gr"] { --accent-color: var(--darkage-gr); }
-.card[data-accent="archaic-gr"] { --accent-color: var(--archaic-gr); }
-.card[data-accent="classical-gr"] { --accent-color: var(--classical-gr); }
-.card[data-accent="hellenistic-gr"] { --accent-color: var(--hellenistic-gr); }
-.card[data-accent="roman-gr"] { --accent-color: var(--roman-gr); }
-.card[data-accent="byzantine-gr"] { --accent-color: var(--byzantine-gr); }
 
 /* STUDY NOTES */
 
@@ -713,6 +713,42 @@ body[data-page="history"] {
     align-items:center;
     font-family: var(--ff-label);
     }
+.page-intro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;      /* was flex-end: both columns start at the top */
+  gap: 16px 36px;
+}
+.page-intro > p {
+  margin: 0;                    /* removes the default top margin */
+  flex: 1 1 320px;
+  max-width: 44ch;
+}
+
+.intro-years {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 6px;
+  margin-left: auto;
+}
+.intro-label {
+  font-family: var(--ff-label);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  line-height: 1.35;
+}
+.years-figure {
+  font-family: var(--ff-label);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
 .layout-timeline {
     display:grid;
     grid-template-columns:120px 1fr;
@@ -756,31 +792,51 @@ body[data-page="history"] {
     flex-direction:column;
     gap:40px;
     }
-.card-scale{
-    position: relative;
-    display:flex;
-    height:12px;
-    border-radius:999px;
-    margin-top: var(--scale-lead, 50px);
-    margin-bottom: var(--scale-lead-bottom, 30px);
-  }
-.card-scale.no-events {
-  margin-top: 0;
+.tl-side {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 95vh;
+  min-height: 460px;
+}
+.tl-side .tl-spine {
+  position: static;
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+.tl-now {
+  font-family: var(--ff-label);
+  font-size: var(--fs-xs);
+  color: var(--text-soft);
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.card-scale {
+  position: relative;
+  display: flex;
+  height: 12px;
+  border-radius: 999px;
+  margin-top: var(--scale-lead, 10px);
+  margin-bottom: var(--scale-lead-bottom, 30px);
+  --span: calc(var(--from) - var(--to));
+  background: color-mix(in srgb, var(--accent-color) 12%, var(--bg-dark));
 }
 .scale-fill {
   display: flex;
-  width: 100%;
+  width: calc((var(--start, 1) - var(--end, 0)) / var(--span, 1) * 100%);
+  margin-left: calc((var(--from, 0) - var(--start, 0)) / var(--span, 1) * 100%);
   height: 100%;
   border-radius: 999px;
   overflow: hidden;
 }
-.scale-fill > div {
-  background: var(--accent-color);
-}
+.scale-fill > div { background: var(--accent-color); flex-grow: 1; }
 .scale-fill > div:nth-last-child(1) { opacity: 0.3; }
 .scale-fill > div:nth-last-child(2) { opacity: 0.5; }
 .scale-fill > div:nth-last-child(3) { opacity: 0.8; }
 .scale-fill > div:nth-last-child(4) { opacity: 1; }
+.scale-fill > div:only-child { opacity: 0.8; }
 .event {
   position: absolute;
   bottom: 0px;
@@ -790,6 +846,7 @@ body[data-page="history"] {
   align-items: center;
   pointer-events: none;
   z-index: 2;
+  left: calc((var(--p-from) - var(--start)) / var(--span) * 100%);
 }
 .event .label {
     position: static;
@@ -812,11 +869,13 @@ body[data-page="history"] {
     background-color: var(--text-soft);
 }
 .event.range {
-  transform: none;
+    transform: none;
+    left: calc((var(--from) - var(--start)) / var(--span) * 100%);
+    width: calc((var(--start) - var(--end)) / var(--span) * 100%);
 }
 .event.range .range-border {
   position: absolute;
-  bottom: 0.1px;
+  bottom: 0px;
   left: 0;
   width: 100%;
   height: 12px;
@@ -852,16 +911,16 @@ body[data-page="history"] {
   height: 47px;
 }
 .event.range.middle .leader {
-  height: 32px;
+  height: 39px;
 }
 .event.range.middle .label {
-  top: 32px;
+  top: 39px;
 }
 .event.range.bottom .leader {
-  height: 52px;
+  height: 68px;
 }
 .event.range.bottom .label {
-  top: 52px;
+  top: 68px;
 }
 
 /* TREE OF LIFE */

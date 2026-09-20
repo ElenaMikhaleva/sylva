@@ -38,6 +38,10 @@ document.querySelectorAll('.tl-segment').forEach(segment => {
   });
 });
 
+document.querySelectorAll('[data-accent]').forEach(el =>
+  el.style.setProperty('--accent-color', `var(--${el.dataset.accent})`)
+);
+
 /* ============================================================
    TREE OF LIFE — shared engine for two page types
    initFlowTree(TREE_DATA)  — vertical rows, optional groups
