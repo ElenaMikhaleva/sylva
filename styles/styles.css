@@ -107,22 +107,6 @@ a {
     text-decoration: none;
     color: inherit;
 }
-.card[data-accent="hadean"] { --accent-color: var(--hadean); }
-.card[data-accent="archean"] { --accent-color: var(--archean); }
-.card[data-accent="proterozoic"] { --accent-color: var(--proterozoic); }
-.card[data-accent="phanerozoic"] { --accent-color: var(--phanerozoic); }
-.card[data-accent="cambrian"] { --accent-color: var(--cambrian); }
-.card[data-accent="ordovician"] { --accent-color: var(--ordovician); }
-.card[data-accent="silurian"] { --accent-color: var(--silurian); }
-.card[data-accent="devonian"] { --accent-color: var(--devonian); }
-.card[data-accent="carboniferous"] { --accent-color: var(--carboniferous); }
-.card[data-accent="permian"] { --accent-color: var(--permian); }
-.card[data-accent="paleogene"] { --accent-color: var(--paleogene); }
-.card[data-accent="neogene"] { --accent-color: var(--neogene); }
-.card[data-accent="quaternary"] { --accent-color: var(--quaternary); }
-.card[data-accent="triassic"] { --accent-color: var(--triassic); }
-.card[data-accent="jurassic"] { --accent-color: var(--jurassic); }
-.card[data-accent="cretaceous"] { --accent-color: var(--cretaceous); }
 
 .card::before {
     content:"";
@@ -207,6 +191,9 @@ a {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
 }
+.card-grid.rows {
+  grid-template-columns: 1fr;
+}
 .card-link {
     display: block;
     text-decoration: none;
@@ -249,6 +236,50 @@ a {
     color:var(--text-soft);
 }
 .subcard li{
+    margin-bottom:3px;
+    }
+.subcard-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  margin-top: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+  height: 100%;
+  font-size: var(--fs-base);
+  border-radius: var(--border-rad);
+  background: var(--bg-dark);
+}
+.subcard-text {
+  flex: 1;
+  min-width: 0;
+  margin-top: 10px;
+  margin-left: 30px;
+}
+.subcard-row .img-box {
+  width: 100%;
+  max-width: 510px;
+  margin: 0;
+  align-self: center;
+  overflow: visible;
+}
+.subcard-row h3 {
+    font-family: var(--ff-title);;
+    font-weight:500;
+    font-size: var(--fs-l);
+    margin:0 0 4px;
+    color: var(--text);
+}
+.subcard-row p{
+    color:var(--text);
+    margin: 5px 0px;
+    }
+.subcard-row ul{
+    margin:0;
+    padding-left:2px;
+}
+.subcard-row li{
     margin-bottom:3px;
     }
 .highlight {
@@ -516,7 +547,6 @@ body[data-page="geological-time"] {
   --jurassic: #4F7A4A;
   --cretaceous: #C9836E;
 }
-}
 body[data-page="species"] {
   --c-bacteria: #227C70;
   --c-archaea: #C85A32;
@@ -528,7 +558,44 @@ body[data-page="species"] {
   --c-mollusca: #7A5AA6;
   --c-cnidaria: #2F7FCB;
 }
-
+body[data-page="history"] {
+  --bronzeage-gr: #DB6F3B;
+  --darkage-gr: #B4B96C;
+  --archaic-gr: #7C8B2F;
+  --classical-gr: #7DB1DD;
+  --hellenistic-gr: #3B78BA;
+  --roman-gr: #1F4E8C;
+  --byzantine-gr: #C9AEE0;
+  --latin-gr: #9A70C4;
+  --ottoman-gr: #6A3F94;
+  --modern-gr: #BE3B72;
+}
+.card[data-accent="modern-gr"] { --accent-color: var(--modern-gr); }
+.card[data-accent="ottoman-gr"] { --accent-color: var(--ottoman-gr); }
+.card[data-accent="latin-gr"] { --accent-color: var(--latin-gr); }
+.card[data-accent="hadean"] { --accent-color: var(--hadean); }
+.card[data-accent="archean"] { --accent-color: var(--archean); }
+.card[data-accent="proterozoic"] { --accent-color: var(--proterozoic); }
+.card[data-accent="phanerozoic"] { --accent-color: var(--phanerozoic); }
+.card[data-accent="cambrian"] { --accent-color: var(--cambrian); }
+.card[data-accent="ordovician"] { --accent-color: var(--ordovician); }
+.card[data-accent="silurian"] { --accent-color: var(--silurian); }
+.card[data-accent="devonian"] { --accent-color: var(--devonian); }
+.card[data-accent="carboniferous"] { --accent-color: var(--carboniferous); }
+.card[data-accent="permian"] { --accent-color: var(--permian); }
+.card[data-accent="paleogene"] { --accent-color: var(--paleogene); }
+.card[data-accent="neogene"] { --accent-color: var(--neogene); }
+.card[data-accent="quaternary"] { --accent-color: var(--quaternary); }
+.card[data-accent="triassic"] { --accent-color: var(--triassic); }
+.card[data-accent="jurassic"] { --accent-color: var(--jurassic); }
+.card[data-accent="cretaceous"] { --accent-color: var(--cretaceous); }
+.card[data-accent="bronzeage-gr"] { --accent-color: var(--bronzeage-gr); }
+.card[data-accent="darkage-gr"] { --accent-color: var(--darkage-gr); }
+.card[data-accent="archaic-gr"] { --accent-color: var(--archaic-gr); }
+.card[data-accent="classical-gr"] { --accent-color: var(--classical-gr); }
+.card[data-accent="hellenistic-gr"] { --accent-color: var(--hellenistic-gr); }
+.card[data-accent="roman-gr"] { --accent-color: var(--roman-gr); }
+.card[data-accent="byzantine-gr"] { --accent-color: var(--byzantine-gr); }
 
 /* STUDY NOTES */
 
@@ -783,6 +850,18 @@ body[data-page="species"] {
 }
 .event.middle .leader {
   height: 47px;
+}
+.event.range.middle .leader {
+  height: 32px;
+}
+.event.range.middle .label {
+  top: 32px;
+}
+.event.range.bottom .leader {
+  height: 52px;
+}
+.event.range.bottom .label {
+  top: 52px;
 }
 
 /* TREE OF LIFE */

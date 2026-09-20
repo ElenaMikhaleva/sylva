@@ -2,78 +2,409 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Geological Time</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/styles-old.css">
-    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <title>Sylva — Ancient Greece</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
 </head>
-<body>
-    <main class="container" data-topic="history">
-        <div class="top-meta">
-            <span>HISTORY</span>
-            <span class="tag-stamp">GREECE</span>
+<body data-page="history">
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
         </div>
-    <h1>Ancient Greece History</h1>
-    <h2>Крито-микенский период</h2>
-    <div class="period">
-        <div class="period-text">
-            <p class="period-name">
-                <span class="highlight-marker">Крито-микенский период</span>
-            </p>
-            <p>2100 – 1000 years BC</p>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Ancient Greece</h1>
+    <div class="crumbs">
+        <p><a href="studies.html">History</a></p>
+    </div>
+    <div class="layout-timeline">
+        <div class="tl-spine">
+            <div class="tl-segment" data-target="modern" style="--seg-color: var(--modern-gr); flex-grow: 4.47;"></div>
+            <div class="tl-segment" data-target="ottoman" style="--seg-color: var(--ottoman-gr); flex-grow: 9.2;">
+                <span class="tag">O</span>
+            </div>
+            <div class="tl-segment" data-target="latin" style="--seg-color: var(--latin-gr); flex-grow: 6.22;">
+                <span class="tag">L</span>
+            </div>
+            <div class="tl-segment" data-target="byzantine" style="--seg-color: var(--byzantine-gr); flex-grow: 21.85;">
+                <span class="tag">BYZ</span>
+            </div>
+            <div class="tl-segment" data-target="roman" style="--seg-color: var(--roman-gr); flex-grow: 11.9;">
+                <span class="tag">R</span>
+            </div>
+            <div class="tl-segment" data-target="hellenistic" style="--seg-color: var(--hellenistic-gr); flex-grow: 7.3;">
+                <span class="tag">H</span>
+            </div>
+            <div class="tl-segment" data-target="classical" style="--seg-color: var(--classical-gr); flex-grow: 4.17;"></div>
+            <div class="tl-segment" data-target="archaic" style="--seg-color: var(--archaic-gr); flex-grow: 7.75;">
+                <span class="tag">A</span>
+            </div>
+            <div class="tl-segment" data-target="darkage" style="--seg-color: var(--darkage-gr); flex-grow: 7.5;">
+                <span class="tag">D</span>
+            </div>
+            <div class="tl-segment" data-target="bronzeage" style="--seg-color: var(--bronzeage-gr); flex-grow: 22.5;">
+                <span class="tag">BA</span>
+            </div>
+        </div>
+        <div class="tl-content">
+            <section class="card" data-accent="modern-gr" id="modern">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Modern Greece</h2>
+                    </div>
+                    <span class="card-range">1821 – today</span>
+                </div>
+                <div class="card-body">
+                </div>
+            </section>
+            <section class="card" data-accent="ottoman-gr" id="ottoman">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Ottoman</h2>
+                    </div>
+                    <span class="card-range">1453 – 1821</span>
+                </div>
+                <div class="card-body">
+                </div>
+            </section>
+            <section class="card" data-accent="latin-gr" id="latin">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Latin & Palaiologan</h2>
+                    </div>
+                    <span class="card-range">1204 – 1453</span>
+                </div>
+                <div class="card-body">
+                </div>
+            </section>
+            <section class="card" data-accent="byzantine-gr" id="byzantine">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Byzantine</h2>
+                    </div>
+                    <span class="card-range">330 – 1204</span>
+                </div>
+                <div class="card-body">
+                </div>
+            </section>
+            <section class="card" data-accent="roman-gr" id="roman">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Roman Greece</h2>
+                    </div>
+                    <span class="card-range">146 BC – 330 CE</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li>Greece as part of the Roman Empire;</li>
+                            <li>Greek culture influences Rome.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="hellenistic-gr" id="hellenistic">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Hellenistic Period</h2>
+                        <span class="card-native">Эллинистический</span>
+                    </div>
+                    <span class="card-range">c.323 – 31 BC</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li>Greek culture spreads to Egypt (Alexandria’s Library), Persia, and India;</li>
+                            <li><span class="highlight">Rome</span> conquers Greece at 146 BCE, destruction of Corinth;</li>
+                            <li>Rome defeats Cleopatra at 31 BCE; end of Hellenistic era</li>
+                        </ul>
+                    </div>
+                    <div class="card-scale">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+                        <div class="event" style="left:50%;">
+                            <div class="label">Rome conquers Greece, 146 BC</div>
+                            <div class="leader"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="classical-gr" id="classical">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Classical Period</h2>
+                        <span class="card-native">Классический</span>
+                    </div>
+                    <span class="card-range">c.490 – 323 BC</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li><span class="highlight">Persian Wars</span> – Greeks defeat Persians at <span class="highlight">Marathon</span>;</li>
+                            <li><span class="highlight">Peloponnesian War</span> – Sparta defeats Athens. Spartan dominance;</li>
+                            <li><span class="term" tabindex="0" data-def="Фивы">Theban</span> rise after the Battle of Leuctra, 371 BCE;</li>
+                            <li>Philip II of Macedon conquers Greece (Battle of <span class="term" tabindex="0" data-def="Херонея">Chaeronea</span>, 338 BCE);</li>
+                            <li>Alexander the Great conquers Persia, Egypt, and beyond at 336–323 BCE. At 323 BCE Alexander dies; empire splits into Ptolemaic Egypt, Seleucid Asia, and Antigonid Macedon;</li>
+                            <li>Culture:
+                                <ul>
+                                    <li>Parthenon built at 447–432 BCE;</li>
+                                    <li>Greek drama (Aeschylus, Sophocles, Euripides, Aristophanes);</li>
+                                    <li>Philosophy (Socrates, Plato, Aristotle).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-scale" style="--scale-lead: 70px; --scale-lead-bottom: 60px;">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+                        <div class="event range" style="left:0.5%; width:0.1%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">First Persian War, 490 BC</div>
+                        </div>
+                        <div class="event range middle" style="left:5.98%; width:0.59%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Second Persian War, 480–479 BC</div>
+                        </div>
+                        <div class="event range" style="left:35.32%; width:16.16%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Peloponnesian War, 431–404 BC</div>
+                        </div>
+                        <div class="event middle" style="left:71.25%;">
+                            <div class="label">Theban rise, 371 BC</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="left:91.01%;">
+                            <div class="label">Battle of Chaeronea, 338 BC</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event range" style="left:92.21%; width:7.78%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Alexander the Great conquests, 336–323 BC</div>
+                        </div>
+                        <div class="event range bottom" style="left:8.98%; width:7.78%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Parthenon built, 447–432 BC</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="archaic-gr" id="archaic">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Archaic Period</h2>
+                        <span class="card-native">Архаика</span>
+                    </div>
+                    <span class="card-range">c.800 – 490 BC</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li>Colonization spreads Greeks across the Mediterranean and the Black Sea;</li>
+                            <li>Rise of the polis: Athens, Sparta, Corinth, Thebes;</li>
+                            <li>Greek alphabet develops from Phoenician script in c. 800 BCE;</li>
+                            <li>Hesiod writes <em>Theogony</em> and <em>Works and Days</em>;</li>
+                            <li>Athenian democracy established under Cleisthenes.</li>
+                        </ul>
+                    </div>
+                    <div class="card-scale" style="--scale-lead-bottom: 50px;">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+                        <div class="event" style="left:7.74%;">
+                            <div class="label">First Olympic Games, 776 BC</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event range" style="left:16.12%; width:32.25%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Hesiod, c.750-650 BC</div>
+                        </div>
+                        <div class="event range middle" style="left:48.38%; width:16.12%;">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label">Age of tyrants, c.650–500 BC</div>
+                        </div>
+                        <div class="event" style="left:94.19%;">
+                            <div class="label">Athenian democracy, 508 BC</div>
+                            <div class="leader"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="darkage-gr" id="darkage">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Dark Age</h2>
+                        <span class="card-native">Темные века, Гомеровский период</span>
+                    </div>
+                    <span class="card-range">c.1100 – c.800 BC</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <ul>
+                            <li>Decline of writing, monumental architecture, and centralized power;</li>
+                            <li>Slavery appeares;</li>
+                            <li><span class="highlight">Early Iron Age</span>. Iron replaces bronze;</li>
+                            <li>Migrations (Dorian, Ionian) reshape the Greek population;</li>
+                            <li>Epos appeares (Illiad, Odyssey).</li>
+                        </ul>
+                    </div>
+                    <div class="card-scale">
+                        <div class="scale-fill">
+                            <div style="flex-grow: 1;"></div>
+                        </div>
+                        <div class="event" style="left:95%;">
+                            <div class="label">Homer, c.800 BC</div>
+                            <div class="leader"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card" data-accent="bronzeage-gr" id="bronzeage">
+                <div class="card-head">
+                    <div class="card-title">
+                        <h2>Bronze Age</h2>
+                        <span class="card-native">Бронзовый век</span>
+                    </div>
+                    <span class="card-range">c.2000 – c.1100 BC</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        Крито-микенский период in Russian tradition.
+                    </div>
+                    <div class="card-grid rows">
+                        <div class="subcard-row">
+                            <div class="subcard-text">
+                                <h3>Minoan Civilization</h3>
+                                <span class="range">c.2000 – c.1450 BCE</span>
+                                <p>On <span class="highlight">Crete</span>.</p>
+                                <ul>
+                                    <li>Large palace complexes (Knossos, Phaistos);</li>
+                                    <li>Art (frescoes, pottery) and undeciphered scripts (Linear A);</li>
+                                    <li>Possible matriarchal influences.</li>
+                                </ul>
+                            </div>
+                            <div class="img-box bottom">
+                                <div class="carousel">
+                                    <div class="carousel-viewport">
+                                        <div class="carousel-track">
+                                            <figure class="carousel-slide" data-caption="Map">
+                                                <img src="https://cdn.kastatic.org/ka-perseus-images/241ea46e19786d0e2c6fb68629064b08b1496b0a.jpg">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Knossos Palace">
+                                                <img src="https://e498h76z5mp.exactdn.com/wp-content/uploads/2016/11/Knossos-Palace.jpg?quality=65">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Knossos Palace">
+                                                <img src="https://domesresorts.com/wp-content/uploads/2023/01/Knossos-Palace-in-Crete.webp">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Knossos Palace, reconstruction">
+                                                <img src="https://images.pixels.com/images/artworkimages/mediumlarge/2/reconstruction-of-knossos-palace-crete-20th-century-bc-italian-school.jpg">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Phaistos Palace">
+                                                <img src="https://deinn.rent/wp-content/uploads/2024/07/phaistos.jpg">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Minoan fresco">
+                                                <img src="https://cdn.britannica.com/74/81874-050-D8E373B9/Toreador-Fresco-Crete-bull-Minoan-Knossos-people-c-1550-bce.jpg">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Minoan fresco">
+                                                <img src="https://res.cloudinary.com/jerrick/image/upload/v1718899197/667451fd2d4c6b001d6834b1.jpg">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Minoan pottery">
+                                                <img src="https://www.worldhistory.org/img/r/p/500x600/367.jpg?v=1740147014">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Linear A Script">
+                                                <img src="https://study.com/cimages/multimages/16/640px-disque_de_phaistos_a1869974801839756511.jpg">
+                                            </figure>
+                                        </div>
+                                        <button class="carousel-arrow carousel-prev" aria-label="Previous image">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                                        </button>
+                                        <button class="carousel-arrow carousel-next" aria-label="Next image">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="carousel-foot">
+                                        <div class="carousel-caption"></div>
+                                        <div class="carousel-dots"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subcard-row">
+                            <div class="subcard-text">
+                                <h3>Mycenaean Civilization</h3>
+                                <span class="range">c.1700 – c.1100 BCE</span>
+                                <p>On <span class="highlight">mainland Greece</span>.</p>
+                                <ul>
+                                    <li>Centers in Mycenae, Tiryns, Pylos;</li>
+                                    <li>Linear B script – early Greek language;</li>
+                                    <li>Trojan War legends emerge.</li>
+                                </ul>
+                            </div>
+                            <div class="img-box bottom">
+                                <div class="carousel">
+                                    <div class="carousel-viewport">
+                                        <div class="carousel-track">
+                                            <figure class="carousel-slide" data-caption="Map">
+                                                <img src="https://dinromerohistory.wordpress.com/wp-content/uploads/2020/06/map4gree.jpg?w=640">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Mycenae">
+                                                <img src="https://e498h76z5mp.exactdn.com/wp-content/uploads/2017/03/Mycenae.jpg?quality=65">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Fresco in Pylos">
+                                                <img src="https://www.worldhistory.org/img/c/p/1600x900/12825.jpg">
+                                            </figure>
+                                            <figure class="carousel-slide" data-caption="Linear B Script">
+                                                <img src="https://www.worldhistory.org/uploads/images/3394.jpg">
+                                            </figure>
+                                        </div>
+                                        <button class="carousel-arrow carousel-prev" aria-label="Previous image">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                                        </button>
+                                        <button class="carousel-arrow carousel-next" aria-label="Next image">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="carousel-foot">
+                                        <div class="carousel-caption"></div>
+                                        <div class="carousel-dots"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-scale" style="--from:2000; --to:1100">
+                        <div class="event range" style="--from:1200; --to:1100">
+                            <div class="range-border"></div>
+                            <div class="leader"></div>
+                            <div class="label end">† Bronze Age Collapse, 1200–1100 BCE</div>
+                        </div>
+                        <div class="tl-lanes">
+                            <div class="tl-lane">
+                                <div class="card-scale" style="--start:2000; --end:1450; --c:var(--minoan)">Minoan, 2000–1450 BCE</div>
+                            </div>
+                            <div class="tl-lane">
+                                <div class="card-scale" style="--start:1700; --end:1100; --c:var(--mycenaean); --on:var(--mycenaean-ink)">Mycenaean, 1700–1100 BCE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </div>
         </div>
     </div>
-    <p>Зарождение ранних форм культуры. Влияние минойской и микенской цивилизаций.</p>
-    <h2>Полисный период</h2>
-    <div class="period">
-        <div class="period-text">
-            <p class="period-name">
-                <span class="highlight-marker">Полисный период</span>
-            </p>
-            <p>1000 – 400 years BC</p>
-        </div>
-    </div>
-    <h3>Гомеровский период</h3>
-    <div class="period">
-        <div class="period-text">
-            <p class="period-name">
-                <span class="highlight-marker">Гомероский период</span>
-            </p>
-            <p>1000 – 800 years BC</p>
-        </div>
-    </div>
-    <p>Распад родовой общины, зарождение рабовладельческих отношений. Появление эпоса и изобразительного искусства.</p>
-    <p>В это время жил Гомер.</p>
-    <h3>Архаика</h3>
-    <div class="period">
-        <div class="period-text">
-            <p class="period-name">
-                <span class="highlight-marker">Архаика</span>
-            </p>
-            <p>800 – 500 years BC</p>
-        </div>
-    </div>
-    <p>Возникновение рабовладельческих городов-государств. Развитие архитектуры, скульптуры, лирики..</p>
-    <h3>Классика</h3>
-    <div class="period">
-        <div class="period-text">
-            <p class="period-name">
-                <span class="highlight-marker">Классика</span>
-            </p>
-            <p>500 – 400 years BC</p>
-        </div>
-    </div>
-    <p>Расцвет рабовладельческого общества. Расцвет философии, поэзии, драмы. Развитие гражданского самосознания и реализма в искусстве.  </p>
-    <h3>Эллинистический период</h3>
-    <div class="period">
-        <div class="period-text">
-            <p class="period-name">
-                <span class="highlight-marker">Эллинистический период</span>
-            </p>
-            <p>400 – 1 years BC</p>
-        </div>
-    </div>
-    <p>Образование империй, благодаря им получается ненадолго выйти из кризиса. Консолидация рабовладельцев под властью монархий.  Усиление внутренних противоречий.</p>
-  </main>
 </body>
 </html>
