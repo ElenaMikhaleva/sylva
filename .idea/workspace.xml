@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="adding new">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/greek-history.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/greek-history.html" afterDir="false" />
-    </list>
+    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="fixing bugs" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,14 +124,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Corrected CSS">
-      <option name="closed" value="true" />
-      <created>1773000403735</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1773000403735</updated>
     </task>
     <task id="LOCAL-00006" summary="Corrected CSS">
       <option name="closed" value="true" />
@@ -522,7 +509,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789916152150</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="fixing bugs">
+      <option name="closed" value="true" />
+      <created>1789938197741</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1789938197741</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -542,9 +537,9 @@
     <MESSAGE value="debugging" />
     <MESSAGE value="editing" />
     <MESSAGE value="adding tree of life" />
-    <MESSAGE value="fixing bugs" />
     <MESSAGE value="changing layout" />
     <MESSAGE value="adding new" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding new" />
+    <MESSAGE value="fixing bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing bugs" />
   </component>
 </project>
