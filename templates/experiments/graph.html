@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connection graph — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Tokens: every colour lives here, nothing is computed in JS ---------- */
+  :root {
+    --paper: #eaeae3;
+    --paper-deep: #dfe0d7;
+    --ink: #1b2140;
+    --ink-soft: #5a6078;
+
+    /* One ink per subject. Its items inherit it. */
+    --evolution: #5f8f3a;
+    --philosophy: #1f5fd0;
+    --memory: #e0508f;
+    --myth: #ee7a2b;
+    --deeptime: #2a9d9b;
+    --empire: #ee4a3b;
+
+    --ff-head: "Space Grotesk", system-ui, sans-serif;
+    --ff-label: "Golos Text", system-ui, sans-serif;
+
+    --ghost-dx: 4px;
+    --ghost-dy: 3px;
+    --ghost-opacity: .38;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--ff-label);
+    line-height: 1.5;
+  }
+
+  /* Paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .28;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .11  0 0 0 0 .13  0 0 0 0 .25  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .wrap {
+    position: relative;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  h2 {
+    margin: 0 0 .35rem;
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    letter-spacing: -.02em;
+    line-height: 1.1;
+  }
+
+  .intro {
+    margin: 0 0 1.5rem;
+    max-width: 52ch;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- The figure ---------- */
+  figure { margin: 0; }
+
+  .plate {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  #graph {
+    display: block;
+    width: 100%;
+    height: auto;
+    touch-action: none;
+  }
+
+  /* Edges */
+  .edge {
+    stroke: var(--ink);
+    stroke-opacity: .32;
+    stroke-width: 1.2;
+    transition: stroke-opacity .18s;
+  }
+  .edge--dotted {
+    stroke-width: 2.2;
+    stroke-dasharray: .1 6;
+    stroke-linecap: round;
+  }
+  .edge.is-hot { stroke-opacity: .9; }
+
+  /* Nodes */
+  .node {
+    cursor: grab;
+    outline: none;
+    transition: opacity .18s;
+  }
+  .node:active { cursor: grabbing; }
+
+  .disc, .ghost { mix-blend-mode: multiply; }
+
+  .ghost {
+    opacity: var(--ghost-opacity);
+    transform: translate(var(--ghost-dx), var(--ghost-dy));
+  }
+
+  /* A node's subject sets --c; items and their theme share it */
+  .subject--evolution  { --c: var(--evolution); }
+  .subject--philosophy { --c: var(--philosophy); }
+  .subject--memory     { --c: var(--memory); }
+  .subject--myth       { --c: var(--myth); }
+  .subject--deeptime   { --c: var(--deeptime); }
+  .subject--empire     { --c: var(--empire); }
+
+  .node--item .disc,
+  .node--item .ghost,
+  .node--theme .disc,
+  .node--theme .ghost { fill: var(--c); }
+
+  .node--period .disc {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .node--period .ghost { display: none; }
+
+  .node--item.is-progress .disc {
+    fill: var(--paper);
+    stroke: var(--c);
+    stroke-width: 2;
+    stroke-dasharray: 3 3;
+  }
+  .node--item.is-progress .ghost { display: none; }
+
+  /* Labels */
+  .label {
+    fill: var(--ink);
+    font-family: var(--ff-label);
+    font-size: 12.5px;
+    font-weight: 500;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+  .node--theme .label {
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .node--period .label {
+    fill: var(--ink-soft);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* Focus: fade what isn't connected */
+  #graph.has-focus .node:not(.is-hot) { opacity: .16; }
+  #graph.has-focus .edge:not(.is-hot) { stroke-opacity: .05; }
+
+  .node:focus-visible .disc {
+    stroke: var(--ink);
+    stroke-width: 3;
+    stroke-dasharray: none;
+  }
+  .node.is-pinned .label { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- Caption: legend + detail ---------- */
+  figcaption {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: 1.5rem 2.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .legend {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: .6rem;
+    font-size: .9rem;
+  }
+  .legend li { display: flex; align-items: center; gap: .65rem; }
+
+  .swatch {
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .swatch--subject { background: var(--c); }
+  .swatch--progress { border: 2px dashed var(--ink); }
+  .swatch--period { border: 2px solid var(--ink); }
+  .legend__group {
+    margin: .4rem 0 0;
+    padding-top: .7rem;
+    border-top: 1px solid var(--paper-deep);
+  }
+
+  .detail { min-height: 8.5rem; }
+
+  .detail__kind {
+    margin: 0;
+    font-size: .85rem;
+    color: var(--ink-soft);
+  }
+  .detail__title {
+    margin: .1rem 0 .5rem;
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -.01em;
+    line-height: 1.2;
+  }
+  .detail__links {
+    margin: 0 0 .6rem;
+    font-size: .92rem;
+  }
+  .detail__open {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .detail__open:hover { color: var(--c, var(--ink)); }
+  .detail__hint { margin: 0; color: var(--ink-soft); max-width: 44ch; }
+
+  @media (max-width: 700px) {
+    figcaption { grid-template-columns: 1fr; }
+    .label { font-size: 15px; }
+    .node--theme .label { font-size: 18px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .node, .edge { transition: none; }
+  }
+</style>
+</head>
+
+<body>
+<main class="wrap">
+  <h2>How everything connects</h2>
+  <p class="intro">Books, films and music on the outside, the themes and periods that tie them together in between. Drag things around; hover or tab to follow a thread.</p>
+
+  <figure>
+    <div class="plate">
+      <svg id="graph" viewBox="0 0 900 580" role="group" aria-label="Connection graph of media items, themes and historical periods">
+        <g class="edges"></g>
+        <g class="nodes"></g>
+      </svg>
+    </div>
+
+    <figcaption>
+      <ul class="legend" id="legend" aria-label="Legend"></ul>
+      <div class="detail" id="detail" aria-live="polite"></div>
+    </figcaption>
+  </figure>
+</main>
+
+<script>
+/* ============================================================
+   PLACEHOLDER DATA — replace with your own.
+   type: 'item' | 'theme' | 'period'
+   items also take: kind ('book' | 'film' | 'music' | 'podcast'),
+                    status ('done' | 'progress'),
+                    subject (id of the ONE theme whose colour it wears;
+                             it can still link to several themes)
+   Each theme needs a matching --<id> colour token and a
+   .subject--<id> rule in the CSS.
+   href: page to open from the caption (defaults to '#')
+   links: [idA, idB, dotted?]  — dotted = weaker, structural link
+   ============================================================ */
+const DATA = {
+  nodes: [
+    { id: 'evolution',  type: 'theme',  label: 'Evolution' },
+    { id: 'philosophy', type: 'theme',  label: 'Philosophy' },
+    { id: 'memory',     type: 'theme',  label: 'Memory' },
+    { id: 'myth',       type: 'theme',  label: 'Myth' },
+    { id: 'deeptime',   type: 'theme',  label: 'Deep time' },
+    { id: 'empire',     type: 'theme',  label: 'Empire' },
+
+    { id: 'paleozoic',  type: 'period', label: 'Paleozoic' },
+    { id: 'mesozoic',   type: 'period', label: 'Mesozoic' },
+    { id: 'antique',    type: 'period', label: 'Antiquity' },
+    { id: 'byzantine',  type: 'period', label: 'Byzantine era' },
+
+    { id: 'origin',     type: 'item', subject: 'evolution',  kind: 'book',    status: 'done',     label: 'Origin of Species' },
+    { id: 'wonderful',  type: 'item', subject: 'deeptime',   kind: 'book',    status: 'done',     label: 'Wonderful Life' },
+    { id: 'odyssey',    type: 'item', subject: 'myth',       kind: 'book',    status: 'done',     label: 'The Odyssey' },
+    { id: 'republic',   type: 'item', subject: 'philosophy', kind: 'book',    status: 'progress', label: 'The Republic' },
+    { id: 'proust',     type: 'item', subject: 'memory',     kind: 'book',    status: 'progress', label: 'Swann’s Way' },
+    { id: 'meditations',type: 'item', subject: 'philosophy', kind: 'book',    status: 'done',     label: 'Meditations' },
+    { id: 'memento',    type: 'item', subject: 'memory',     kind: 'film',    status: 'done',     label: 'Memento' },
+    { id: 'bladerunner',type: 'item', subject: 'memory',     kind: 'film',    status: 'done',     label: 'Blade Runner' },
+    { id: 'jurassic',   type: 'item', subject: 'evolution',  kind: 'film',    status: 'done',     label: 'Jurassic Park' },
+    { id: 'planet',     type: 'item', subject: 'deeptime',   kind: 'film',    status: 'done',     label: 'Life on Our Planet' },
+    { id: 'gladiator',  type: 'item', subject: 'empire',     kind: 'film',    status: 'done',     label: 'Gladiator' },
+    { id: 'rite',       type: 'item', subject: 'myth',       kind: 'music',   status: 'done',     label: 'Rite of Spring' },
+    { id: 'inourtime',  type: 'item', subject: 'philosophy', kind: 'podcast', status: 'progress', label: 'In Our Time' },
+    { id: 'byzpod',     type: 'item', subject: 'empire',     kind: 'podcast', status: 'progress', label: 'History of Byzantium' }
+  ],
+  links: [
+    ['origin', 'evolution'], ['origin', 'deeptime'],
+    ['wonderful', 'evolution'], ['wonderful', 'paleozoic'], ['wonderful', 'deeptime'],
+    ['planet', 'evolution'], ['planet', 'deeptime'], ['planet', 'paleozoic'],
+    ['jurassic', 'mesozoic'], ['jurassic', 'evolution'],
+    ['odyssey', 'myth'], ['odyssey', 'antique'],
+    ['republic', 'philosophy'], ['republic', 'antique'],
+    ['meditations', 'philosophy'], ['meditations', 'empire'],
+    ['proust', 'memory'],
+    ['memento', 'memory'],
+    ['bladerunner', 'memory'], ['bladerunner', 'philosophy'],
+    ['gladiator', 'empire'], ['gladiator', 'antique'],
+    ['rite', 'myth'],
+    ['inourtime', 'philosophy'], ['inourtime', 'empire'],
+    ['byzpod', 'byzantine'], ['byzpod', 'empire'],
+
+    ['deeptime', 'paleozoic', true], ['deeptime', 'mesozoic', true],
+    ['myth', 'antique', true], ['empire', 'byzantine', true]
+  ]
+};
+
+/* ============================================================
+   Layout + rendering (no dependencies)
+   ============================================================ */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('graph');
+  const gEdges = svg.querySelector('.edges');
+  const gNodes = svg.querySelector('.nodes');
+  const detail = document.getElementById('detail');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const W = 900, H = 580, CX = W / 2, CY = H / 2;
+  const BASE_R = { item: 7, theme: 17, period: 12 };
+  const KIND = { book: 'Book', film: 'Film', music: 'Music', podcast: 'Podcast' };
+
+  /* ----- build the graph ----- */
+  const nodes = DATA.nodes.map((n, i) => ({
+    ...n,
+    x: CX + Math.cos(i * 2.399) * (90 + i * 10),
+    y: CY + Math.sin(i * 2.399) * (60 + i * 6),
+    vx: 0, vy: 0, fx: 0, fy: 0,
+    deg: 0, nbrs: new Set(), fixed: false
+  }));
+  const byId = new Map(nodes.map(n => [n.id, n]));
+
+  const links = DATA.links.map(([a, b, dotted]) => {
+    const s = byId.get(a), t = byId.get(b);
+    s.deg++; t.deg++;
+    s.nbrs.add(t.id); t.nbrs.add(s.id);
+    const themePeriod = (s.type === 'period' || t.type === 'period') &&
+                        (s.type === 'theme'  || t.type === 'theme');
+    return { s, t, dotted: !!dotted, len: themePeriod ? 130 : 95 };
+  });
+
+  nodes.forEach(n => { n.r = BASE_R[n.type] + 2.2 * Math.sqrt(n.deg); });
+
+  /* ----- DOM ----- */
+  const make = (tag, attrs = {}, cls = '') => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (cls) e.setAttribute('class', cls);
+    return e;
+  };
+
+  links.forEach(l => {
+    l.el = make('line', {}, 'edge' + (l.dotted ? ' edge--dotted' : ''));
+    gEdges.appendChild(l.el);
+  });
+
+  // A theme is its own subject; an item wears its primary subject's colour.
+  const subjectOf = n => n.type === 'theme' ? n.id : n.subject;
+  const subjectClass = n => { const s = subjectOf(n); return s ? ` subject--${s}` : ''; };
+
+  nodes.forEach(n => {
+    const cls = `node node--${n.type}` + subjectClass(n) + (n.status === 'progress' ? ' is-progress' : '');
+    const g = make('g', { tabindex: 0, role: 'button', 'aria-label': describe(n) }, cls);
+    g.appendChild(make('circle', { r: n.r }, 'ghost'));
+    g.appendChild(make('circle', { r: n.r }, 'disc'));
+    const t = make('text', { y: n.r + 16 }, 'label');
+    t.textContent = n.label;
+    g.appendChild(t);
+    gNodes.appendChild(g);
+    n.el = g;
+  });
+
+  function describe(n) {
+    if (n.type === 'theme') return `Theme: ${n.label}`;
+    if (n.type === 'period') return `Period: ${n.label}`;
+    return `${KIND[n.kind] || 'Item'}: ${n.label}, ${n.status === 'progress' ? 'in progress' : 'finished'}`;
+  }
+
+  /* ----- legend: one row per subject, then the shape keys ----- */
+  const legend = document.getElementById('legend');
+  const legendRow = (swatchClass, text, group) => {
+    const li = document.createElement('li');
+    if (group) li.className = 'legend__group';
+    const sw = document.createElement('span');
+    sw.className = 'swatch ' + swatchClass;
+    li.append(sw, text);
+    legend.appendChild(li);
+  };
+  nodes.filter(n => n.type === 'theme')
+       .forEach(n => legendRow(`swatch--subject subject--${n.id}`, n.label));
+  legendRow('swatch--progress', 'In progress', true);
+  legendRow('swatch--period', 'Period');
+
+  /* ----- force simulation ----- */
+  const REPEL = 9000, SPRING = 0.06, GRAVITY = 0.014, DAMP = 0.82, PAD = 30;
+  let alpha = 1, raf = 0, drag = null;
+
+  function step(a) {
+    for (const n of nodes) { n.fx = 0; n.fy = 0; }
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const p = nodes[i], q = nodes[j];
+        let dx = q.x - p.x, dy = q.y - p.y;
+        let d2 = dx * dx + dy * dy;
+        if (d2 < 1) { dx = Math.random() - .5; dy = Math.random() - .5; d2 = 1; }
+        const d = Math.sqrt(d2);
+        const f = REPEL / d2;
+        const ux = dx / d, uy = dy / d;
+        p.fx -= ux * f; p.fy -= uy * f;
+        q.fx += ux * f; q.fy += uy * f;
+
+        const min = p.r + q.r + PAD;
+        if (d < min) {
+          const push = (min - d) * .5;
+          p.fx -= ux * push; p.fy -= uy * push;
+          q.fx += ux * push; q.fy += uy * push;
+        }
+      }
+    }
+
+    for (const l of links) {
+      const dx = l.t.x - l.s.x, dy = l.t.y - l.s.y;
+      const d = Math.sqrt(dx * dx + dy * dy) || 1;
+      const f = (d - l.len) * SPRING;
+      const ux = dx / d, uy = dy / d;
+      l.s.fx += ux * f; l.s.fy += uy * f;
+      l.t.fx -= ux * f; l.t.fy -= uy * f;
+    }
+
+    for (const n of nodes) {
+      n.fx += (CX - n.x) * GRAVITY;
+      n.fy += (CY - n.y) * GRAVITY * 1.5;
+      if (n.fixed) { n.vx = n.vy = 0; continue; }
+      n.vx = (n.vx + n.fx * a) * DAMP;
+      n.vy = (n.vy + n.fy * a) * DAMP;
+      n.x += n.vx; n.y += n.vy;
+      const mx = n.r + 24;
+      n.x = Math.min(W - mx, Math.max(mx, n.x));
+      n.y = Math.min(H - n.r - 30, Math.max(n.r + 16, n.y));
+    }
+  }
+
+  function draw() {
+    for (const l of links) {
+      l.el.setAttribute('x1', l.s.x.toFixed(1));
+      l.el.setAttribute('y1', l.s.y.toFixed(1));
+      l.el.setAttribute('x2', l.t.x.toFixed(1));
+      l.el.setAttribute('y2', l.t.y.toFixed(1));
+    }
+    for (const n of nodes) {
+      n.el.setAttribute('transform', `translate(${n.x.toFixed(1)} ${n.y.toFixed(1)})`);
+    }
+  }
+
+  function frame() {
+    raf = 0;
+    step(alpha);
+    if (!drag) alpha *= 0.985;
+    draw();
+    if (alpha > 0.004 || drag) run();
+  }
+  function run() { if (!raf) raf = requestAnimationFrame(frame); }
+
+  // Pre-settle: fully for reduced motion, partly otherwise so the rest animates in.
+  const pre = reduceMotion ? 600 : 120;
+  for (let k = 0; k < pre; k++) { step(alpha); alpha *= 0.985; }
+  draw();
+  if (!reduceMotion) run();
+
+  /* ----- focus, pinning, caption ----- */
+  let hoverId = null, pinId = null;
+
+  function render() {
+    const id = hoverId || pinId;
+    const focus = id ? byId.get(id) : null;
+    svg.classList.toggle('has-focus', !!focus);
+    for (const n of nodes) {
+      n.el.classList.toggle('is-hot', !!focus && (n === focus || focus.nbrs.has(n.id)));
+      n.el.classList.toggle('is-pinned', n.id === pinId);
+    }
+    for (const l of links) {
+      l.el.classList.toggle('is-hot', !!focus && (l.s === focus || l.t === focus));
+    }
+    renderCaption(focus);
+  }
+
+  function renderCaption(n) {
+    detail.replaceChildren();
+    detail.className = 'detail' + (n ? subjectClass(n) : '');
+    const add = (tag, cls, text) => {
+      const e = document.createElement(tag);
+      e.className = cls;
+      if (text) e.textContent = text;
+      detail.appendChild(e);
+      return e;
+    };
+
+    if (!n) {
+      add('p', 'detail__hint', 'Hover a node to follow its connections. Click to pin it, drag to rearrange.');
+      return;
+    }
+
+    let kind;
+    if (n.type === 'theme') kind = 'Theme';
+    else if (n.type === 'period') kind = 'Period';
+    else kind = `${KIND[n.kind] || 'Item'}, ${n.status === 'progress' ? 'in progress' : 'finished'}`;
+
+    add('p', 'detail__kind', kind);
+    add('h3', 'detail__title', n.label);
+
+    const names = [...n.nbrs].map(id => byId.get(id).label);
+    add('p', 'detail__links', names.length ? `Connected to ${names.join(', ')}.` : 'No connections yet.');
+
+    const a = add('a', 'detail__open', 'Open page');
+    a.href = n.href || '#';
+  }
+
+  /* ----- interaction ----- */
+  function toSvg(e) {
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  nodes.forEach(n => {
+    const g = n.el;
+
+    g.addEventListener('pointerenter', () => { hoverId = n.id; render(); });
+    g.addEventListener('pointerleave', () => { if (hoverId === n.id) { hoverId = null; render(); } });
+    g.addEventListener('focus', () => { hoverId = n.id; render(); });
+    g.addEventListener('blur',  () => { if (hoverId === n.id) { hoverId = null; render(); } });
+
+    g.addEventListener('pointerdown', e => {
+      drag = { n, moved: false, x: e.clientX, y: e.clientY };
+      g.setPointerCapture(e.pointerId);
+    });
+    g.addEventListener('pointermove', e => {
+      if (!drag || drag.n !== n) return;
+      if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 4) return;
+      drag.moved = true;
+      const p = toSvg(e);
+      n.x = p.x; n.y = p.y; n.fixed = true;
+      alpha = Math.max(alpha, 0.25);
+      run();
+    });
+    const release = () => {
+      if (!drag || drag.n !== n) return;
+      if (!drag.moved) { pinId = (pinId === n.id) ? null : n.id; render(); }
+      n.fixed = false;
+      drag = null;
+      run();
+    };
+    g.addEventListener('pointerup', release);
+    g.addEventListener('pointercancel', release);
+
+    g.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        pinId = (pinId === n.id) ? null : n.id;
+        render();
+      }
+    });
+  });
+
+  // Click on empty plate clears the pin
+  svg.addEventListener('pointerdown', e => {
+    if (e.target === svg && pinId) { pinId = null; render(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

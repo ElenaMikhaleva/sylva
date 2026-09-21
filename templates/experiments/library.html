@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Tokens: every colour lives here ---------- */
+  :root {
+    --paper: #eaeae3;
+    --paper-deep: #dfe0d7;
+    --card: #f5f5ef;
+    --ink: #1b2140;
+    --ink-soft: #5a6078;
+
+    /* One ink per subject (same as the home graph) */
+    --evolution: #5f8f3a;
+    --philosophy: #1f5fd0;
+    --memory: #e0508f;
+    --myth: #ee7a2b;
+    --deeptime: #2a9d9b;
+    --empire: #ee4a3b;
+
+    --ff-head: "Space Grotesk", system-ui, sans-serif;
+    --ff-label: "Golos Text", system-ui, sans-serif;
+  }
+
+  .subject--evolution  { --c: var(--evolution); }
+  .subject--philosophy { --c: var(--philosophy); }
+  .subject--memory     { --c: var(--memory); }
+  .subject--myth       { --c: var(--myth); }
+  .subject--deeptime   { --c: var(--deeptime); }
+  .subject--empire     { --c: var(--empire); }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--ff-label);
+    line-height: 1.5;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .28;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .11  0 0 0 0 .13  0 0 0 0 .25  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .sr {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  .icon {
+    width: 1.05em; height: 1.05em; flex: none;
+    fill: none; stroke: currentColor; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ---------- Page ---------- */
+  .app {
+    position: relative;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 2.5rem 1.1rem 4rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3rem);
+    letter-spacing: -.025em;
+    line-height: 1.05;
+  }
+  /* The page's dominant ink: neutral by default, the subject's colour once filtered */
+  h1::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: .4rem;
+    margin-top: .7rem;
+    border-radius: 999px;
+    background: var(--c, var(--ink));
+    transition: background .2s;
+  }
+
+  .key {
+    display: flex; flex-wrap: wrap; gap: .4rem 1.2rem;
+    margin: 1rem 0 0;
+    color: var(--ink-soft);
+    font-size: .85rem;
+  }
+  .key span { display: inline-flex; align-items: center; gap: .45rem; }
+
+  /* Status marker: solid = finished, dashed ring = in progress (same as the graph) */
+  .marker {
+    flex: none;
+    display: inline-block;
+    width: .95rem; height: .95rem;
+    border-radius: 50%;
+    background: var(--c, var(--ink));
+  }
+  .is-progress .marker,
+  .marker--progress {
+    background: transparent;
+    border: 2px dashed var(--c, var(--ink));
+  }
+
+  .dot {
+    flex: none;
+    display: inline-block;
+    width: .7rem; height: .7rem;
+    border-radius: 50%;
+    background: var(--c, var(--ink));
+  }
+
+  /* ---------- Controls ---------- */
+  .controls { margin: 1.6rem 0 1.4rem; display: grid; gap: .9rem; }
+
+  .row-controls { display: flex; flex-wrap: wrap; gap: .7rem 1rem; align-items: center; }
+
+  .seg {
+    display: inline-flex;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 2px;
+    background: var(--paper);
+  }
+  .seg button {
+    font: 500 .88rem var(--ff-label);
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    padding: .38rem .95rem;
+    cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] {
+    background: var(--c, var(--ink));
+    color: var(--paper);
+  }
+
+  .chips {
+    display: flex; gap: .5rem;
+    overflow-x: auto;
+    padding: .15rem .1rem .5rem;
+    margin: 0 -.1rem;
+    scrollbar-width: thin;
+  }
+  .chip {
+    flex: none;
+    display: inline-flex; align-items: center; gap: .5rem;
+    font: 500 .88rem var(--ff-label);
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid color-mix(in srgb, var(--ink) 35%, transparent);
+    border-radius: 999px;
+    padding: .35rem .85rem;
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"] {
+    border-color: var(--ink);
+    font-weight: 600;
+    background: color-mix(in srgb, var(--c, var(--ink)) 22%, var(--paper));
+  }
+
+  .field { display: inline-flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--ink-soft); }
+  .field select {
+    font: 500 .88rem var(--ff-label);
+    color: var(--ink);
+    background: var(--card);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    padding: .35rem .6rem;
+  }
+
+  .count { margin-left: auto; color: var(--ink-soft); font-size: .85rem; }
+
+  /* ---------- Cards ---------- */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.2rem), 1fr));
+    gap: 1rem;
+  }
+  @media (min-width: 720px) {
+    .cards { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 1.25rem; }
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    min-height: 14rem;
+    padding: .95rem .95rem .85rem;
+    background: color-mix(in srgb, var(--c) 10%, var(--card));
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card__top {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: .8rem; color: var(--ink-soft);
+  }
+  .kind { display: inline-flex; align-items: center; gap: .4rem; color: var(--ink); font-weight: 500; }
+
+  .card__title {
+    margin: .35rem 0 0;
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: 1.12rem;
+    letter-spacing: -.01em;
+    line-height: 1.2;
+  }
+  .card__title a { color: inherit; text-decoration: none; }
+  .card__title a:hover { text-decoration: underline; text-decoration-color: var(--c); text-decoration-thickness: 3px; text-underline-offset: 3px; }
+
+  .card__creator { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+
+  .card__note {
+    margin: .4rem 0 0;
+    font-size: .85rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card__foot {
+    margin-top: auto;
+    padding-top: .7rem;
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    gap: .3rem .6rem;
+    font-size: .8rem;
+  }
+  .status, .tag { display: inline-flex; align-items: center; gap: .4rem; }
+  .tag { font-weight: 500; }
+  .state { display: inline-flex; align-items: center; gap: .65rem; }
+
+  /* Rating as ink density: a small halftone swatch, denser = liked more.
+     Finished items only. Subject ink comes from --c. */
+  .rating {
+    --dot: var(--c, var(--ink));
+    flex: none;
+    display: inline-block;
+    width: 1.35rem; height: 1.35rem;
+    border: 1.5px solid var(--dot);
+    border-radius: 4px;
+    background-size: 4px 4px;
+  }
+  .rating--1 {
+    background-image:
+      radial-gradient(circle at 25% 25%, var(--dot) 0 .55px, transparent .8px),
+      radial-gradient(circle at 75% 75%, var(--dot) 0 .55px, transparent .8px);
+  }
+  .rating--2 {
+    background-image:
+      radial-gradient(circle at 25% 25%, var(--dot) 0 1px, transparent 1.25px),
+      radial-gradient(circle at 75% 75%, var(--dot) 0 1px, transparent 1.25px);
+  }
+  .rating--3 {
+    background-image:
+      radial-gradient(circle at 25% 25%, var(--dot) 0 1.6px, transparent 1.85px),
+      radial-gradient(circle at 75% 75%, var(--dot) 0 1.6px, transparent 1.85px);
+  }
+
+  .wave { display: none; width: 100%; height: 1.6rem; margin: .5rem 0 .1rem; }
+  .wave rect { fill: var(--c); }
+
+  /* Shapes by medium — only when the grid has .cards--shapes */
+  .cards--shapes .card--book { padding-left: 1.7rem; }
+  .cards--shapes .card--book::before {
+    content: "";
+    position: absolute; inset: 0 auto 0 0; z-index: 0;
+    width: .7rem;
+    background: var(--c);
+    border-right: 1.5px solid var(--ink);
+  }
+
+  .cards--shapes .card--film { padding-top: 1.5rem; }
+  .cards--shapes .card--film::before {
+    content: "";
+    position: absolute; left: 0; right: 0; top: .5rem; z-index: 0;
+    height: .5rem;
+    background: repeating-linear-gradient(90deg, var(--c) 0 .55rem, transparent .55rem 1.1rem);
+  }
+
+  .cards--shapes .card--play { border-radius: 6px; }
+  .cards--shapes .card--play .card__foot {
+    position: relative;
+    margin-top: auto;
+    border-top: 1.5px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+  }
+  .cards--shapes .card--play .card__foot::before,
+  .cards--shapes .card--play .card__foot::after {
+    content: "";
+    position: absolute; top: -.6rem;
+    width: 1.2rem; height: 1.2rem;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+  }
+  .cards--shapes .card--play .card__foot::before { left: calc(-.95rem - .6rem); }
+  .cards--shapes .card--play .card__foot::after  { right: calc(-.95rem - .6rem); }
+
+  .cards--shapes .card--podcast { border-radius: 28px; padding-left: 1.15rem; padding-right: 1.15rem; }
+  .cards--shapes .card--podcast .wave { display: block; }
+
+  .cards--shapes .card--music::after {
+    content: "";
+    position: absolute; z-index: 0;
+    right: -2.6rem; top: 2.4rem;
+    width: 6rem; height: 6rem;
+    border-radius: 50%;
+    opacity: .5;
+    background:
+      radial-gradient(circle, var(--paper) 0 7%, var(--c) 7% 22%, transparent 22%),
+      repeating-radial-gradient(circle, var(--ink) 0 1px, transparent 1px 5px);
+  }
+
+  /* ---------- List ---------- */
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
+  .item { border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); }
+
+  .item__main {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1rem minmax(0, 2fr) minmax(0, 1.4fr) 6.5rem 5.5rem 3.4rem 8.5rem;
+    align-items: center;
+    gap: .2rem 1rem;
+    padding: .8rem .2rem;
+    text-align: left;
+    font: 400 .92rem var(--ff-label);
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .item__main:hover { background: color-mix(in srgb, var(--c) 8%, transparent); }
+  .item__title { font-family: var(--ff-head); font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; }
+  .item__creator { color: var(--ink-soft); }
+  .item__kind { display: inline-flex; align-items: center; gap: .4rem; }
+  .item__year { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .item__rating { display: inline-flex; align-items: center; min-height: 1rem; }
+  .item__subject { display: inline-flex; align-items: center; gap: .45rem; font-weight: 500; }
+
+  .item__more {
+    padding: .2rem .2rem 1rem calc(1.1rem + 1rem + .2rem);
+    max-width: 62ch;
+  }
+  .item__more p { margin: 0 0 .5rem; }
+  .item__more a { color: var(--ink); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .item__more a:hover { color: var(--c); }
+  .also { color: var(--ink-soft); font-size: .88rem; }
+  .verdict { font-weight: 600; }
+
+  @media (max-width: 719px) {
+    .item__main {
+      grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+      grid-template-areas:
+        "m title year"
+        ".  creator rating"
+        ".  kind subject";
+      padding: .85rem .1rem;
+    }
+    .item__main > .marker { grid-area: m; }
+    .item__title { grid-area: title; }
+    .item__year { grid-area: year; }
+    .item__creator { grid-area: creator; }
+    .item__rating { grid-area: rating; justify-self: end; }
+    .item__kind { grid-area: kind; font-size: .85rem; }
+    .item__subject { grid-area: subject; justify-self: end; font-size: .85rem; }
+    .item__more { padding-left: calc(1.1rem + .2rem + .1rem); }
+  }
+
+  .empty { color: var(--ink-soft); padding: 2rem 0; }
+</style>
+</head>
+
+<body>
+<!-- Icon set -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5h6a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H3z M21 5h-6a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H21z"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+  <symbol id="i-podcast" viewBox="0 0 24 24"><circle cx="12" cy="10.5" r="2"/><path d="M7.6 6.1a6.2 6.2 0 0 0 0 8.8M16.4 6.1a6.2 6.2 0 0 1 0 8.8M12 13v7"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M3.5 7.5h17v3a1.8 1.8 0 0 0 0 3.6v3h-17v-3a1.8 1.8 0 0 0 0-3.6z"/></symbol>
+</svg>
+
+<main class="app" id="app">
+  <h1>Library</h1>
+  <p class="key">
+    <span><i class="marker"></i> Finished</span>
+    <span><i class="marker marker--progress"></i> In progress</span>
+    <span><i class="rating rating--1"></i><i class="rating rating--2"></i><i class="rating rating--3"></i> Mixed to loved</span>
+  </p>
+
+  <section class="controls" aria-label="View and filters">
+    <div class="row-controls">
+      <div class="seg" role="group" aria-label="Layout">
+        <button type="button" data-view="cards">Cards</button>
+        <button type="button" data-view="list">List</button>
+      </div>
+      <div class="seg" id="shapeSeg" role="group" aria-label="Card shape">
+        <button type="button" data-shapes="medium">By medium</button>
+        <button type="button" data-shapes="uniform">Uniform</button>
+      </div>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+
+    <div class="chips" id="subjectChips" role="group" aria-label="Subject"></div>
+
+    <div class="row-controls">
+      <label class="field">Kind <select id="kindSel"></select></label>
+      <label class="field">Status
+        <select id="statusSel">
+          <option value="all">All</option>
+          <option value="done">Finished</option>
+          <option value="progress">In progress</option>
+        </select>
+      </label>
+      <label class="field">Rating
+        <select id="ratingSel">
+          <option value="all">Any</option>
+          <option value="3">Loved</option>
+          <option value="2">Liked</option>
+          <option value="1">Mixed</option>
+        </select>
+      </label>
+      <label class="field">Sort
+        <select id="sortSel">
+          <option value="added">Recently added</option>
+          <option value="title">Title A–Z</option>
+          <option value="newest">Year, newest</option>
+          <option value="oldest">Year, oldest</option>
+          <option value="rating">Rating</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <div id="out"></div>
+</main>
+
+<script>
+/* ============================================================
+   PLACEHOLDER DATA — the same shape the home graph uses.
+   rating: 1–3, finished items only (3 = loved it, 2 = liked it, 1 = mixed).
+   year: number (negative = BCE). subject: the ONE theme whose
+   colour the item wears. also: other themes it links to.
+   ============================================================ */
+const SUBJECTS = {
+  evolution:  'Evolution',
+  philosophy: 'Philosophy',
+  memory:     'Memory',
+  myth:       'Myth',
+  deeptime:   'Deep time',
+  empire:     'Empire'
+};
+const RATINGS = { 3: 'Loved', 2: 'Liked', 1: 'Mixed' };
+const KINDS = { book: 'Book', film: 'Film', music: 'Music', podcast: 'Podcast', play: 'Play' };
+
+const ITEMS = [
+  { id: 'origin',     title: 'On the Origin of Species', creator: 'Charles Darwin',        year: 1859, kind: 'book',    status: 'done', rating: 3,     subject: 'evolution',  also: ['deeptime'],
+    note: 'Slower than expected, then the pigeon chapters made the whole argument click.' },
+  { id: 'wonderful',  title: 'Wonderful Life',           creator: 'Stephen Jay Gould',     year: 1989, kind: 'book',    status: 'done', rating: 3,     subject: 'deeptime',   also: ['evolution'],
+    note: 'The Burgess Shale as a lesson in contingency. Rewind the tape and you get a different world.' },
+  { id: 'odyssey',    title: 'The Odyssey',              creator: 'Homer',                 year: -700, kind: 'book',    status: 'done', rating: 2,     subject: 'myth',
+    note: 'Read the Emily Wilson translation; the pace is a surprise.' },
+  { id: 'republic',   title: 'The Republic',             creator: 'Plato',                 year: -375, kind: 'book',    status: 'progress', subject: 'philosophy',
+    note: 'Halfway through book V. The cave is shorter than its reputation.' },
+  { id: 'proust',     title: 'Swann’s Way',              creator: 'Marcel Proust',         year: 1913, kind: 'book',    status: 'progress', subject: 'memory',
+    note: 'Taking it a few pages at a time. The madeleine is not even the best part.' },
+  { id: 'meditations',title: 'Meditations',              creator: 'Marcus Aurelius',       year: 180,  kind: 'book',    status: 'done', rating: 2,     subject: 'philosophy', also: ['empire'],
+    note: 'Notes to himself, written mid-campaign. Reads best in small doses.' },
+  { id: 'dune',       title: 'Dune',                     creator: 'Frank Herbert',         year: 1965, kind: 'book',    status: 'progress', subject: 'empire',     also: ['evolution'],
+    note: 'Ecology and empire braided together. Slow start, worth it.' },
+  { id: 'memento',    title: 'Memento',                  creator: 'Christopher Nolan',     year: 2000, kind: 'film',    status: 'done', rating: 3,     subject: 'memory',
+    note: 'The reversed structure makes you share the condition.' },
+  { id: 'bladerunner',title: 'Blade Runner',             creator: 'Ridley Scott',          year: 1982, kind: 'film',    status: 'done', rating: 3,     subject: 'memory',     also: ['philosophy'],
+    note: 'Implanted memories and what makes a self. The rain scene still lands.' },
+  { id: 'matrix',     title: 'The Matrix',               creator: 'The Wachowskis',        year: 1999, kind: 'film',    status: 'done', rating: 2,     subject: 'philosophy',
+    note: 'Plato’s cave with better sunglasses.' },
+  { id: 'jurassic',   title: 'Jurassic Park',            creator: 'Steven Spielberg',      year: 1993, kind: 'film',    status: 'done', rating: 2,     subject: 'evolution',
+    note: 'Life finds a way is basically an evolution talk in disguise.' },
+  { id: 'planet',     title: 'Life on Our Planet',       creator: 'Netflix',               year: 2023, kind: 'film',    status: 'done', rating: 2,     subject: 'deeptime',   also: ['evolution'],
+    note: 'A tour of the great extinctions told as one long story.' },
+  { id: 'gladiator',  title: 'Gladiator',                creator: 'Ridley Scott',          year: 2000, kind: 'film',    status: 'done', rating: 1,     subject: 'empire',
+    note: 'Rome as spectacle. Mostly here for the soundtrack.' },
+  { id: 'rite',       title: 'The Rite of Spring',       creator: 'Igor Stravinsky',       year: 1913, kind: 'music',   status: 'done', rating: 3,     subject: 'myth',
+    note: 'A ritual sacrifice scored for orchestra. Still sounds dangerous.' },
+  { id: 'airports',   title: 'Music for Airports',       creator: 'Brian Eno',             year: 1978, kind: 'music',   status: 'done', rating: 2,     subject: 'memory',
+    note: 'Ambient loops that never quite repeat. Good for reading.' },
+  { id: 'inourtime',  title: 'In Our Time',              creator: 'BBC Radio 4',           year: 1998, kind: 'podcast', status: 'progress', subject: 'philosophy', also: ['empire'],
+    note: 'Working through the back catalogue, one episode at a time.' },
+  { id: 'byzpod',     title: 'The History of Byzantium', creator: 'Robin Pierson',         year: 2013, kind: 'podcast', status: 'progress', subject: 'empire',
+    note: 'Episode by episode, the empire that outlived Rome.' },
+  { id: 'godot',      title: 'Waiting for Godot',        creator: 'Samuel Beckett',        year: 1953, kind: 'play',    status: 'done', rating: 3,     subject: 'philosophy',
+    note: 'Nothing happens, twice. Funnier than its reputation.' },
+  { id: 'hamlet',     title: 'Hamlet',                   creator: 'William Shakespeare',   year: 1603, kind: 'play',    status: 'done', rating: 2,     subject: 'memory',
+    note: 'The ghost says “remember me” and the whole play follows from it.' }
+];
+
+/* ============================================================
+   App
+   ============================================================ */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const app = document.getElementById('app');
+  const out = document.getElementById('out');
+
+  const state = { view: 'cards', shapes: 'medium', subject: 'all', kind: 'all', status: 'all', rating: 'all', sort: 'added' };
+
+  /* ----- persistence (guarded: storage / history can be unavailable) ----- */
+  try {
+    const saved = JSON.parse(localStorage.getItem('library-prefs') || '{}');
+    if (saved.view) state.view = saved.view;
+    if (saved.shapes) state.shapes = saved.shapes;
+  } catch (e) {}
+  try {
+    const q = new URLSearchParams(location.search);
+    ['view', 'subject', 'kind', 'status', 'rating', 'sort'].forEach(k => { if (q.get(k)) state[k] = q.get(k); });
+  } catch (e) {}
+
+  function persist() {
+    try { localStorage.setItem('library-prefs', JSON.stringify({ view: state.view, shapes: state.shapes })); } catch (e) {}
+    try {
+      const q = new URLSearchParams();
+      ['subject', 'kind', 'status', 'rating'].forEach(k => { if (state[k] !== 'all') q.set(k, state[k]); });
+      history.replaceState(null, '', q.toString() ? '?' + q : location.pathname);
+    } catch (e) {}
+  }
+
+  /* ----- helpers ----- */
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  const icon = id => {
+    const s = document.createElementNS(NS, 'svg');
+    s.setAttribute('class', 'icon');
+    s.setAttribute('aria-hidden', 'true');
+    const u = document.createElementNS(NS, 'use');
+    u.setAttribute('href', '#i-' + id);
+    s.appendChild(u);
+    return s;
+  };
+  const fmtYear = y => (y < 0 ? `${-y} BCE` : String(y));
+
+  // Deterministic little waveform for podcast cards (shape only; colour comes from CSS)
+  function wave(id) {
+    const s = document.createElementNS(NS, 'svg');
+    s.setAttribute('class', 'wave');
+    s.setAttribute('viewBox', '0 0 120 26');
+    s.setAttribute('preserveAspectRatio', 'none');
+    s.setAttribute('aria-hidden', 'true');
+    let h = 7;
+    for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    for (let i = 0; i < 28; i++) {
+      h = (h * 1664525 + 1013904223) >>> 0;
+      const v = 5 + (h >>> 24) % 20;
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', (i * 4.3).toFixed(1));
+      r.setAttribute('y', ((26 - v) / 2).toFixed(1));
+      r.setAttribute('width', '2.4');
+      r.setAttribute('height', v);
+      r.setAttribute('rx', '1.2');
+      s.appendChild(r);
+    }
+    return s;
+  }
+
+  /* ----- static controls ----- */
+  const chips = document.getElementById('subjectChips');
+  const kindSel = document.getElementById('kindSel');
+  const statusSel = document.getElementById('statusSel');
+  const sortSel = document.getElementById('sortSel');
+  const ratingSel = document.getElementById('ratingSel');
+
+  function chip(value, label) {
+    const b = el('button', 'chip' + (value === 'all' ? '' : ` subject--${value}`));
+    b.type = 'button';
+    b.dataset.subject = value;
+    if (value !== 'all') b.appendChild(el('i', 'dot'));
+    b.appendChild(document.createTextNode(label));
+    chips.appendChild(b);
+  }
+  chip('all', 'All subjects');
+  Object.entries(SUBJECTS).forEach(([id, label]) => chip(id, label));
+
+  kindSel.appendChild(new Option('All', 'all'));
+  Object.entries(KINDS).forEach(([id, label]) => kindSel.appendChild(new Option(label, id)));
+
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    state.subject = b.dataset.subject; render();
+  });
+  document.querySelectorAll('[data-view]').forEach(b =>
+    b.addEventListener('click', () => { state.view = b.dataset.view; render(); }));
+  document.querySelectorAll('[data-shapes]').forEach(b =>
+    b.addEventListener('click', () => { state.shapes = b.dataset.shapes; render(); }));
+  kindSel.addEventListener('change', () => { state.kind = kindSel.value; render(); });
+  statusSel.addEventListener('change', () => { state.status = statusSel.value; render(); });
+  ratingSel.addEventListener('change', () => { state.rating = ratingSel.value; render(); });
+  sortSel.addEventListener('change', () => { state.sort = sortSel.value; render(); });
+
+  /* ----- building views ----- */
+  // One halftone swatch; density = rating. Colour comes from the item's subject class.
+  function ratingEl(it) {
+    if (!it.rating) return null;
+    const r = el('span', `rating rating--${it.rating}`);
+    r.setAttribute('role', 'img');
+    r.setAttribute('aria-label', `${RATINGS[it.rating]} (${it.rating} of 3)`);
+    r.title = RATINGS[it.rating];
+    return r;
+  }
+
+  function statusLabel(it) { return it.status === 'progress' ? 'In progress' : 'Finished'; }
+
+  function card(it) {
+    const c = el('article', `card card--${it.kind} subject--${it.subject}` + (it.status === 'progress' ? ' is-progress' : ''));
+
+    const top = el('div', 'card__top');
+    const kind = el('span', 'kind');
+    kind.append(icon(it.kind), KINDS[it.kind]);
+    top.append(kind, el('span', 'year', fmtYear(it.year)));
+
+    const h = el('h3', 'card__title');
+    const a = el('a', '', it.title);
+    a.href = '#' + it.id;              // → item page
+    a.addEventListener('click', e => e.preventDefault());
+    h.appendChild(a);
+
+    c.append(top, h, el('p', 'card__creator', it.creator));
+    if (it.kind === 'podcast') c.appendChild(wave(it.id));
+    c.appendChild(el('p', 'card__note', it.note));
+
+    const foot = el('div', 'card__foot');
+    const st = el('span', 'status');
+    st.append(el('i', 'marker'), statusLabel(it));
+    const state = el('span', 'state');
+    state.appendChild(st);
+    const rt = ratingEl(it);
+    if (rt) state.appendChild(rt);
+    const tag = el('span', 'tag');
+    tag.append(el('i', 'dot'), SUBJECTS[it.subject]);
+    foot.append(state, tag);
+    c.appendChild(foot);
+    return c;
+  }
+
+  function row(it, i) {
+    const li = el('li', `item subject--${it.subject}` + (it.status === 'progress' ? ' is-progress' : ''));
+    const b = el('button', 'item__main');
+    b.type = 'button';
+    b.setAttribute('aria-expanded', 'false');
+    b.setAttribute('aria-controls', 'more-' + i);
+
+    const marker = el('i', 'marker');
+    marker.title = statusLabel(it);
+    const sr = el('span', 'sr', statusLabel(it) + ': ');
+    const title = el('span', 'item__title'); title.append(sr, it.title);
+    const kind = el('span', 'item__kind'); kind.append(icon(it.kind), KINDS[it.kind]);
+    const subj = el('span', 'item__subject'); subj.append(el('i', 'dot'), SUBJECTS[it.subject]);
+
+    const rate = el('span', 'item__rating');
+    const rt = ratingEl(it);
+    if (rt) rate.appendChild(rt);
+
+    b.append(marker, title, el('span', 'item__creator', it.creator), kind, el('span', 'item__year', fmtYear(it.year)), rate, subj);
+
+    const more = el('div', 'item__more');
+    more.id = 'more-' + i;
+    more.hidden = true;
+    if (it.rating) more.appendChild(el('p', 'verdict', RATINGS[it.rating]));
+    more.appendChild(el('p', '', it.note));
+    if (it.also && it.also.length) {
+      more.appendChild(el('p', 'also', 'Also linked to ' + it.also.map(s => SUBJECTS[s]).join(', ') + '.'));
+    }
+    const open = el('a', '', 'Open page');
+    open.href = '#' + it.id;
+    open.addEventListener('click', e => e.preventDefault());
+    more.appendChild(open);
+
+    b.addEventListener('click', () => {
+      const show = more.hidden;
+      more.hidden = !show;
+      b.setAttribute('aria-expanded', String(show));
+    });
+
+    li.append(b, more);
+    return li;
+  }
+
+  /* ----- render ----- */
+  function visibleItems() {
+    const list = ITEMS.map((it, idx) => ({ ...it, idx })).filter(it =>
+      (state.subject === 'all' || it.subject === state.subject) &&
+      (state.kind === 'all' || it.kind === state.kind) &&
+      (state.status === 'all' || it.status === state.status) &&
+      (state.rating === 'all' || it.rating === Number(state.rating)));
+    const sorts = {
+      added:  (a, b) => b.idx - a.idx,
+      title:  (a, b) => a.title.localeCompare(b.title),
+      newest: (a, b) => b.year - a.year,
+      oldest: (a, b) => a.year - b.year,
+      rating: (a, b) => (b.rating || 0) - (a.rating || 0) || a.title.localeCompare(b.title)
+    };
+    return list.sort(sorts[state.sort] || sorts.added);
+  }
+
+  function render() {
+    // The page's dominant ink follows the subject filter
+    app.className = 'app' + (state.subject !== 'all' ? ` subject--${state.subject}` : '');
+
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === state.view)));
+    document.querySelectorAll('[data-shapes]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.shapes === state.shapes)));
+    chips.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.subject === state.subject)));
+    document.getElementById('shapeSeg').hidden = state.view !== 'cards';
+    kindSel.value = state.kind; statusSel.value = state.status; ratingSel.value = state.rating; sortSel.value = state.sort;
+
+    const items = visibleItems();
+    document.getElementById('count').textContent = `${items.length} of ${ITEMS.length}`;
+
+    out.replaceChildren();
+    if (!items.length) {
+      out.appendChild(el('p', 'empty', 'Nothing matches these filters yet.'));
+    } else if (state.view === 'cards') {
+      const grid = el('div', 'cards' + (state.shapes === 'medium' ? ' cards--shapes' : ''));
+      items.forEach(it => grid.appendChild(card(it)));
+      out.appendChild(grid);
+    } else {
+      const ul = el('ul', 'list');
+      items.forEach((it, i) => ul.appendChild(row(it, i)));
+      out.appendChild(ul);
+    }
+    persist();
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

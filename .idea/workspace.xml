@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="fixing bugs" />
+    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="fixing bugs">
+      <change afterPath="$PROJECT_DIR$/templates/experiments/graph.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/styles-neo.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/styles-old.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/experiments/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/experiments/test2.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,11 +85,11 @@
       <recent name="C:\Users\elena\Study\Apps\timelines\timeLines\src\templates" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\elena\Study\Apps\timelines\Sylva\templates\experiments" />
       <recent name="C:\Users\elena\Study\Apps\timelines\timeLines\src" />
       <recent name="C:\Users\elena\Study\Apps\timelines\timeLines\styles" />
       <recent name="C:\Users\elena\Study\Apps\timelines\timeLines" />
       <recent name="C:\Users\elena\Study\Apps\timelines\timeLines\templates" />
-      <recent name="C:\Users\elena\Study\Apps\timelines\timeLines\src\styles" />
     </key>
   </component>
   <component name="RunManager">
@@ -124,14 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Corrected CSS">
-      <option name="closed" value="true" />
-      <created>1784839138409</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1784839138410</updated>
     </task>
     <task id="LOCAL-00007" summary="added index.html">
       <option name="closed" value="true" />
@@ -517,7 +516,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789938197741</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="fixing bugs">
+      <option name="closed" value="true" />
+      <created>1789938374782</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1789938374783</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
