@@ -103,18 +103,34 @@
   }
   .key span { display: inline-flex; align-items: center; gap: .45rem; }
 
-  /* Status marker: solid = finished, dashed ring = in progress (same as the graph) */
+  /* Status marker. Finished = a circle whose ink density is the rating:
+     sparse dots = mixed, medium = liked, solid = loved.
+     In progress = dashed ring (same as the graph). */
   .marker {
+    --dot: var(--c, var(--ink));
     flex: none;
     display: inline-block;
-    width: .95rem; height: .95rem;
+    width: 1.25rem; height: 1.25rem;
     border-radius: 50%;
-    background: var(--c, var(--ink));
+    border: 1.5px solid var(--dot);
+    background-color: var(--dot);
+    background-size: 4px 4px;
+  }
+  .marker--r1, .marker--r2 { background-color: transparent; }
+  .marker--r1 {
+    background-image:
+      radial-gradient(circle at 25% 25%, var(--dot) 0 .7px, transparent .95px),
+      radial-gradient(circle at 75% 75%, var(--dot) 0 .7px, transparent .95px);
+  }
+  .marker--r2 {
+    background-image:
+      radial-gradient(circle at 25% 25%, var(--dot) 0 1.2px, transparent 1.45px),
+      radial-gradient(circle at 75% 75%, var(--dot) 0 1.2px, transparent 1.45px);
   }
   .is-progress .marker,
   .marker--progress {
     background: transparent;
-    border: 2px dashed var(--c, var(--ink));
+    border: 2px dashed var(--dot);
   }
 
   .dot {
@@ -249,34 +265,7 @@
   }
   .status, .tag { display: inline-flex; align-items: center; gap: .4rem; }
   .tag { font-weight: 500; }
-  .state { display: inline-flex; align-items: center; gap: .65rem; }
 
-  /* Rating as ink density: a small halftone swatch, denser = liked more.
-     Finished items only. Subject ink comes from --c. */
-  .rating {
-    --dot: var(--c, var(--ink));
-    flex: none;
-    display: inline-block;
-    width: 1.35rem; height: 1.35rem;
-    border: 1.5px solid var(--dot);
-    border-radius: 4px;
-    background-size: 4px 4px;
-  }
-  .rating--1 {
-    background-image:
-      radial-gradient(circle at 25% 25%, var(--dot) 0 .55px, transparent .8px),
-      radial-gradient(circle at 75% 75%, var(--dot) 0 .55px, transparent .8px);
-  }
-  .rating--2 {
-    background-image:
-      radial-gradient(circle at 25% 25%, var(--dot) 0 1px, transparent 1.25px),
-      radial-gradient(circle at 75% 75%, var(--dot) 0 1px, transparent 1.25px);
-  }
-  .rating--3 {
-    background-image:
-      radial-gradient(circle at 25% 25%, var(--dot) 0 1.6px, transparent 1.85px),
-      radial-gradient(circle at 75% 75%, var(--dot) 0 1.6px, transparent 1.85px);
-  }
 
   .wave { display: none; width: 100%; height: 1.6rem; margin: .5rem 0 .1rem; }
   .wave rect { fill: var(--c); }
@@ -339,7 +328,7 @@
   .item__main {
     width: 100%;
     display: grid;
-    grid-template-columns: 1.1rem minmax(0, 2fr) minmax(0, 1.4fr) 6.5rem 5.5rem 3.4rem 8.5rem;
+    grid-template-columns: 1.25rem minmax(0, 2fr) minmax(0, 1.4fr) 6.5rem 5.5rem 8.5rem;
     align-items: center;
     gap: .2rem 1rem;
     padding: .8rem .2rem;
@@ -355,11 +344,10 @@
   .item__creator { color: var(--ink-soft); }
   .item__kind { display: inline-flex; align-items: center; gap: .4rem; }
   .item__year { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-  .item__rating { display: inline-flex; align-items: center; min-height: 1rem; }
   .item__subject { display: inline-flex; align-items: center; gap: .45rem; font-weight: 500; }
 
   .item__more {
-    padding: .2rem .2rem 1rem calc(1.1rem + 1rem + .2rem);
+    padding: .2rem .2rem 1rem calc(1.25rem + 1rem + .2rem);
     max-width: 62ch;
   }
   .item__more p { margin: 0 0 .5rem; }
@@ -370,10 +358,10 @@
 
   @media (max-width: 719px) {
     .item__main {
-      grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+      grid-template-columns: 1.25rem minmax(0, 1fr) auto;
       grid-template-areas:
         "m title year"
-        ".  creator rating"
+        ".  creator creator"
         ".  kind subject";
       padding: .85rem .1rem;
     }
@@ -381,10 +369,9 @@
     .item__title { grid-area: title; }
     .item__year { grid-area: year; }
     .item__creator { grid-area: creator; }
-    .item__rating { grid-area: rating; justify-self: end; }
     .item__kind { grid-area: kind; font-size: .85rem; }
     .item__subject { grid-area: subject; justify-self: end; font-size: .85rem; }
-    .item__more { padding-left: calc(1.1rem + .2rem + .1rem); }
+    .item__more { padding-left: calc(1.25rem + .2rem + .1rem); }
   }
 
   .empty { color: var(--ink-soft); padding: 2rem 0; }
@@ -404,9 +391,8 @@
 <main class="app" id="app">
   <h1>Library</h1>
   <p class="key">
-    <span><i class="marker"></i> Finished</span>
+    <span><i class="marker marker--r1"></i><i class="marker marker--r2"></i><i class="marker"></i> Finished: the denser, the more I liked it</span>
     <span><i class="marker marker--progress"></i> In progress</span>
-    <span><i class="rating rating--1"></i><i class="rating rating--2"></i><i class="rating rating--3"></i> Mixed to loved</span>
   </p>
 
   <section class="controls" aria-label="View and filters">
@@ -621,17 +607,21 @@ const ITEMS = [
   sortSel.addEventListener('change', () => { state.sort = sortSel.value; render(); });
 
   /* ----- building views ----- */
-  // One halftone swatch; density = rating. Colour comes from the item's subject class.
-  function ratingEl(it) {
-    if (!it.rating) return null;
-    const r = el('span', `rating rating--${it.rating}`);
-    r.setAttribute('role', 'img');
-    r.setAttribute('aria-label', `${RATINGS[it.rating]} (${it.rating} of 3)`);
-    r.title = RATINGS[it.rating];
-    return r;
+  // The status circle carries the rating: density of its dots (CSS does the drawing).
+  function markerEl(it) {
+    const lvl = it.status === 'done' && it.rating ? ` marker--r${it.rating}` : '';
+    return el('i', 'marker' + lvl);
   }
 
-  function statusLabel(it) { return it.status === 'progress' ? 'In progress' : 'Finished'; }
+  function statusLabel(it) {
+    if (it.status === 'progress') return 'In progress';
+    return it.rating ? `Finished, ${RATINGS[it.rating].toLowerCase()}` : 'Finished';
+  }
+  // Short text for the card footer: a rated finished item just says how it landed
+  function statusText(it) {
+    if (it.status === 'progress') return 'In progress';
+    return it.rating ? RATINGS[it.rating] : 'Finished';
+  }
 
   function card(it) {
     const c = el('article', `card card--${it.kind} subject--${it.subject}` + (it.status === 'progress' ? ' is-progress' : ''));
@@ -653,14 +643,10 @@ const ITEMS = [
 
     const foot = el('div', 'card__foot');
     const st = el('span', 'status');
-    st.append(el('i', 'marker'), statusLabel(it));
-    const state = el('span', 'state');
-    state.appendChild(st);
-    const rt = ratingEl(it);
-    if (rt) state.appendChild(rt);
+    st.append(markerEl(it), statusText(it));
     const tag = el('span', 'tag');
     tag.append(el('i', 'dot'), SUBJECTS[it.subject]);
-    foot.append(state, tag);
+    foot.append(st, tag);
     c.appendChild(foot);
     return c;
   }
@@ -672,18 +658,14 @@ const ITEMS = [
     b.setAttribute('aria-expanded', 'false');
     b.setAttribute('aria-controls', 'more-' + i);
 
-    const marker = el('i', 'marker');
+    const marker = markerEl(it);
     marker.title = statusLabel(it);
     const sr = el('span', 'sr', statusLabel(it) + ': ');
     const title = el('span', 'item__title'); title.append(sr, it.title);
     const kind = el('span', 'item__kind'); kind.append(icon(it.kind), KINDS[it.kind]);
     const subj = el('span', 'item__subject'); subj.append(el('i', 'dot'), SUBJECTS[it.subject]);
 
-    const rate = el('span', 'item__rating');
-    const rt = ratingEl(it);
-    if (rt) rate.appendChild(rt);
-
-    b.append(marker, title, el('span', 'item__creator', it.creator), kind, el('span', 'item__year', fmtYear(it.year)), rate, subj);
+    b.append(marker, title, el('span', 'item__creator', it.creator), kind, el('span', 'item__year', fmtYear(it.year)), subj);
 
     const more = el('div', 'item__more');
     more.id = 'more-' + i;

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sylva — Species</title>
+    <title>Sylva — Prokaryotes</title>
     <link rel="stylesheet" href="../styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
     </nav>
 </header>
 <div class="frame">
-    <h1>Species</h1>
+    <h1>Prokaryotes</h1>
     <div class="crumbs"><p><a href="studies.html">Biology</a> · Phylogeny</p></div>
     <p>A reference map for biological classification, organizing organisms across formal taxonomic ranks.</p>
     <div class="layout-split">
@@ -39,7 +39,7 @@ nodes: [
       images:[{src:'https://www.pharmapproach.com/wp-content/uploads/2021/01/Diagram-of-a-bacterial-cell-showing-structural-parts-750x640.jpg', caption:'Bacteria cell structure.'}]
       },
     { id:'archaea', name:'Archaea', rankLabel:'domain', kind:'rank', color:'c-archaea', from:'luca',
-      html:`<p>One of the two primary <span class="term" data-def="cells with no nucleus">prokaryote</span> <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.<p>Consists of <span class="highlight">one biological cell</span>. Their cell membranes, enzymes, and genetic processes resemble those of eukaryotes more closely than bacteria.</p>`,
+      html:`<p>One of the two primary <span class="term" data-def="cells with no nucleus">prokaryote</span> <span class="term" data-def="a group of related organisms sharing a common ancestor">lineages</span>.</p><p>Consists of <span class="highlight">one biological cell</span>.</p><p>Their cell membranes, enzymes, and genetic processes resemble those of eukaryotes more closely than bacteria.</p>`,
       images:[{src:'https://xbio-live.s3.amazonaws.com/bio-dictionary/ARCHAEAIII.DP.RGB.png', caption:'Archaea cell structure'}]
       },
     { id:'pseudomonadati', name:'Pseudomonadati', rankLabel:'kingdom', kind:'rank', color:'c-bacteria', from:'bacteria',
@@ -78,7 +78,7 @@ nodes: [
     { id:'staphylococcus', name:'Staphylococcus', kind:'rank', rankLabel:'genus', from:'bacilli', color:'c-bacteria',
       taxonPath: 'Bacteria → Bacillati → Bacillota → Bacilli → Bacillales → Staphylococcaceae',
       etymology:'from the Ancient Greek words σταφυλή (staphylē), meaning \'bunch of grapes\', and κόκκος (kokkos), meaning \'berry\' or \'grain\'',
-      html:`<p></p><p>The genus contains <span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">commensal</span> organisms of the skin and mucous membranes of humans and other animals, as well as opportunistic <span class="term" data-def="a microorganism, that can infect a host and cause disease">pathogens</span>.</p>`,
+      html:`<p>The genus contains <span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">commensal</span> organisms of the skin and <span class="term" data-def="слизистые оболочки">mucous membranes</span> of humans and other animals, as well as opportunistic <span class="term" data-def="a microorganism, that can infect a host and cause disease">pathogens</span>.</p>`,
       images:[
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Staphylococcus_aureus_01.jpg/500px-Staphylococcus_aureus_01.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
       ]
@@ -102,11 +102,11 @@ nodes: [
     },
     { id:'enterobacteriaceae', name:'Enterobacteriaceae', kind:'rank', rankLabel:'family', from:'pseudomonadati', color:'c-bacteria',
       taxonPath: 'Bacteria → Proteobacteria → Gammaproteobacteria → Enterobacteriales',
-      html:`<span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">Commensal</span> organisms.`,
+      html:`The family includes bacteria found in the gastrointestinal tracts of humans and other animals, as well as species associated with soil, water, plants, and insects.</p><p>It contains <span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">commensal</span> organisms.</p>`,
     },
     { id:'escherichiacoli', name:'Escherichia coli', native:'Кишечная палочка', kind:'rank', rankLabel:'species', from:'enterobacteriaceae', color:'c-bacteria',
       taxonPath: 'Bacteria → Proteobacteria → Gammaproteobacteria → Enterobacteriales → Enterobacteriaceae → Escherichia',
-      html:`Common gut <span class="term" data-def="the smaller partner in a symbiotic relationship">symbiont</span>, specific <span class="term" data-def="штамм">strains</span> cause <span class="term" data-def="пищевое отправление">foodborne illness</span>.`,
+      html:`Common gut <span class="term" data-def="the smaller partner in a symbiotic relationship">symbiont</span></p><p>Specific <span class="term" data-def="штамм">strains</span> cause <span class="term" data-def="пищевое отправление">foodborne illness</span>.`,
       images:[
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/E_coli_at_10000x%2C_original.jpg/500px-E_coli_at_10000x%2C_original.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
       ]

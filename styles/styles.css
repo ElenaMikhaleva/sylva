@@ -379,9 +379,9 @@ li::before {
 .img-slot::after {
   content: "";
   position: absolute; inset: 0; pointer-events: none; z-index: 2;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  mix-blend-mode: multiply;
-  opacity: .3;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='.66 .66 .66 0 -.5  .66 .66 .66 0 -.5  .66 .66 .66 0 -.5  0 0 0 0 1'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: soft-light;
+  opacity: var(--grain, .6);
 }
 .carousel-arrow { z-index: 3; }
 
