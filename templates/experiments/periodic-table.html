@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Periodic table — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Tokens: every colour lives here ---------- */
+  :root {
+    --paper: #eaeae3;
+    --paper-deep: #dfe0d7;
+    --card: #f5f5ef;
+    --ink: #1b2140;
+    --ink-soft: #5a6078;
+
+    --red: #ee4a3b;
+    --orange: #ee7a2b;
+    --blue: #1f5fd0;
+    --teal: #2a9d9b;
+    --green: #5f8f3a;
+    --pink: #e0508f;
+
+    --ff-head: "Space Grotesk", system-ui, sans-serif;
+    --ff-label: "Golos Text", system-ui, sans-serif;
+  }
+
+  /* Each category sets its ink (--c). The f-block rows reuse the transition blue
+     with a halftone screen (--pattern), echoing the ink-density marks elsewhere. */
+  .cat--alkali     { --c: var(--red); }
+  .cat--alkaline   { --c: var(--orange); }
+  .cat--transition { --c: var(--blue); }
+  .cat--post       { --c: var(--teal); }
+  .cat--metalloid  { --c: var(--green); }
+  .cat--nonmetal   { --c: var(--pink); }
+  .cat--noble      { --c: var(--ink); }
+  .cat--unknown    { --c: var(--ink-soft); }
+  .cat--lanthanide {
+    --c: var(--blue);
+    --fill: transparent;
+    --pattern:
+      radial-gradient(circle at 25% 25%, var(--c) 0 .95px, transparent 1.2px),
+      radial-gradient(circle at 75% 75%, var(--c) 0 .95px, transparent 1.2px);
+  }
+  .cat--actinide {
+    --c: var(--blue);
+    --fill: transparent;
+    --pattern:
+      radial-gradient(circle at 25% 25%, var(--c) 0 .55px, transparent .8px),
+      radial-gradient(circle at 75% 75%, var(--c) 0 .55px, transparent .8px);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--ff-label);
+    line-height: 1.5;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .28;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .11  0 0 0 0 .13  0 0 0 0 .25  0 0 0 .9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .app {
+    position: relative;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 2.5rem 1.1rem 4rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3rem);
+    letter-spacing: -.025em;
+    line-height: 1.05;
+  }
+  h1::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: .4rem;
+    margin-top: .7rem;
+    border-radius: 999px;
+    background: var(--c, var(--ink));
+    transition: background .2s;
+  }
+  .lede { margin: 1rem 0 0; max-width: 56ch; color: var(--ink-soft); }
+
+  /* ---------- Controls ---------- */
+  .controls { margin: 1.5rem 0 1.1rem; display: grid; gap: .8rem; }
+
+  .search {
+    width: min(100%, 18rem);
+    font: 500 .92rem var(--ff-label);
+    color: var(--ink);
+    background: var(--card);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    padding: .45rem .75rem;
+  }
+  .search::placeholder { color: var(--ink-soft); font-weight: 400; }
+
+  .chips {
+    display: flex; gap: .5rem;
+    overflow-x: auto;
+    padding: .15rem .1rem .5rem;
+    margin: 0 -.1rem;
+    scrollbar-width: thin;
+  }
+  .chip {
+    flex: none;
+    display: inline-flex; align-items: center; gap: .5rem;
+    font: 500 .86rem var(--ff-label);
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid color-mix(in srgb, var(--ink) 35%, transparent);
+    border-radius: 999px;
+    padding: .33rem .8rem;
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"] {
+    border-color: var(--ink);
+    font-weight: 600;
+    background: color-mix(in srgb, var(--c, var(--ink)) 22%, var(--paper));
+  }
+  .chip__n { color: var(--ink-soft); font-weight: 400; }
+
+  .dot {
+    flex: none;
+    width: .85rem; height: .85rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--c, var(--ink));
+    background-color: var(--fill, var(--c, var(--ink)));
+    background-image: var(--pattern, none);
+    background-size: 4px 4px;
+  }
+  .dot--dashed { border-style: dashed; background-color: transparent; }
+
+  /* ---------- Table ---------- */
+  .scroll { overflow-x: auto; padding-bottom: .5rem; }
+
+  .table {
+    min-width: 760px;
+    display: grid;
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    grid-template-rows: repeat(7, auto) .9rem repeat(2, auto);
+    gap: 4px;
+  }
+
+  .el {
+    position: relative;
+    aspect-ratio: 1 / 1.08;
+    min-width: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: .1rem;
+    font: inherit;
+    color: var(--ink);
+    background-color: color-mix(in srgb, var(--c) 14%, var(--card));
+    background-image: var(--pattern, none);
+    background-size: 4px 4px;
+    border: 1.5px solid var(--c);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity .18s, background-color .12s, transform .12s;
+  }
+  .el:hover, .el:focus-visible {
+    background-color: color-mix(in srgb, var(--c) 38%, var(--card));
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .el.is-pinned { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .el.cat--unknown { border-style: dashed; }
+
+  .el__num {
+    position: absolute; top: .2rem; left: .3rem;
+    font-size: .6rem; line-height: 1;
+    color: var(--ink-soft);
+  }
+  .el__sym {
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: clamp(.95rem, 1.9vw, 1.4rem);
+    letter-spacing: -.02em;
+    line-height: 1;
+  }
+  .el__name {
+    display: none;
+    max-width: 100%;
+    margin-top: .2rem;
+    font-size: .55rem;
+    color: var(--ink-soft);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* Placeholders that point down to the f-block rows */
+  .ph {
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+    border-radius: 8px;
+    font-size: .66rem;
+    color: var(--ink-soft);
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  /* Focus: fade what doesn't match */
+  .table.has-filter .el:not(.is-match) { opacity: .14; }
+
+  /* ---------- Detail card ---------- */
+  .detail-slot {
+    grid-column: 3 / 13;
+    grid-row: 1 / 4;
+    align-self: stretch;
+    display: none;
+  }
+  .detail-below { margin-top: 1.1rem; }
+
+  .detail {
+    height: 100%;
+    display: flex; align-items: center; gap: 1.1rem;
+    padding: .9rem 1.1rem;
+    background: var(--card);
+    border: 1.5px solid var(--ink);
+    border-radius: 16px;
+  }
+  .detail--hint { display: block; padding: 1rem 1.2rem; }
+  .detail--hint h2 { margin: 0 0 .3rem; }
+
+  .tile {
+    flex: none;
+    width: 6.2rem; height: 6.6rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative;
+    background-color: color-mix(in srgb, var(--c) 18%, var(--card));
+    background-image: var(--pattern, none);
+    background-size: 4px 4px;
+    border: 1.5px solid var(--c);
+    border-radius: 14px;
+  }
+  .cat--unknown .tile { border-style: dashed; }
+  .tile__num { position: absolute; top: .4rem; left: .55rem; font-size: .78rem; color: var(--ink-soft); }
+  .tile__sym {
+    font-family: var(--ff-head); font-weight: 700;
+    font-size: 2.6rem; letter-spacing: -.03em; line-height: 1;
+  }
+  .tile__mass { margin-top: .25rem; font-size: .72rem; color: var(--ink-soft); }
+
+  .detail__body { min-width: 0; }
+  h2 {
+    margin: 0;
+    font-family: var(--ff-head);
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+  }
+  .detail__cat {
+    display: inline-flex; align-items: center; gap: .5rem;
+    margin: .3rem 0 .15rem;
+    font-size: .88rem; font-weight: 500;
+  }
+  .detail__desc { margin: 0 0 .5rem; font-size: .85rem; color: var(--ink-soft); }
+
+  .meta {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, auto));
+    gap: .3rem 1.4rem;
+    justify-content: start;
+  }
+  .meta div { min-width: 0; }
+  .meta dt { font-size: .72rem; color: var(--ink-soft); }
+  .meta dd { margin: 0; font-size: .9rem; font-weight: 500; }
+
+  @media (min-width: 900px) {
+    .detail-slot { display: block; }
+    .detail-below { display: none; }
+    .el__name { display: block; }
+  }
+  @media (max-width: 520px) {
+    .detail { flex-direction: column; align-items: flex-start; }
+    .tile { width: 100%; height: 5rem; flex-direction: row; gap: 1rem; }
+    .meta { grid-template-columns: repeat(2, minmax(0, auto)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .el { transition: none; }
+  }
+</style>
+</head>
+
+<body>
+<main class="app" id="app">
+  <h1>Periodic table</h1>
+  <p class="lede">All 118 elements, grouped by family. Hover or tap an element for its card, or pick a family to bring it forward.</p>
+
+  <section class="controls" aria-label="Filters">
+    <input class="search" id="search" type="search" placeholder="Search name, symbol or number" aria-label="Search elements">
+    <div class="chips" id="chips" role="group" aria-label="Family"></div>
+  </section>
+
+  <div class="scroll">
+    <div class="table" id="table">
+      <div class="detail-slot" id="detailGrid" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="detail-below" id="detailBelow" aria-live="polite"></div>
+</main>
+
+<script>
+/* ============================================================
+   Data: [symbol, name, atomic mass, state at room temperature]
+   state: s solid · l liquid · g gas · u unknown / not established
+   Bracketed masses are the most stable isotope (no standard weight).
+   ============================================================ */
+const E = [
+  ['H','Hydrogen','1.008','g'], ['He','Helium','4.0026','g'],
+  ['Li','Lithium','6.94','s'], ['Be','Beryllium','9.0122','s'], ['B','Boron','10.81','s'], ['C','Carbon','12.011','s'],
+  ['N','Nitrogen','14.007','g'], ['O','Oxygen','15.999','g'], ['F','Fluorine','18.998','g'], ['Ne','Neon','20.180','g'],
+  ['Na','Sodium','22.990','s'], ['Mg','Magnesium','24.305','s'], ['Al','Aluminium','26.982','s'], ['Si','Silicon','28.085','s'],
+  ['P','Phosphorus','30.974','s'], ['S','Sulfur','32.06','s'], ['Cl','Chlorine','35.45','g'], ['Ar','Argon','39.948','g'],
+  ['K','Potassium','39.098','s'], ['Ca','Calcium','40.078','s'], ['Sc','Scandium','44.956','s'], ['Ti','Titanium','47.867','s'],
+  ['V','Vanadium','50.942','s'], ['Cr','Chromium','51.996','s'], ['Mn','Manganese','54.938','s'], ['Fe','Iron','55.845','s'],
+  ['Co','Cobalt','58.933','s'], ['Ni','Nickel','58.693','s'], ['Cu','Copper','63.546','s'], ['Zn','Zinc','65.38','s'],
+  ['Ga','Gallium','69.723','s'], ['Ge','Germanium','72.630','s'], ['As','Arsenic','74.922','s'], ['Se','Selenium','78.971','s'],
+  ['Br','Bromine','79.904','l'], ['Kr','Krypton','83.798','g'], ['Rb','Rubidium','85.468','s'], ['Sr','Strontium','87.62','s'],
+  ['Y','Yttrium','88.906','s'], ['Zr','Zirconium','91.224','s'], ['Nb','Niobium','92.906','s'], ['Mo','Molybdenum','95.95','s'],
+  ['Tc','Technetium','[98]','s'], ['Ru','Ruthenium','101.07','s'], ['Rh','Rhodium','102.91','s'], ['Pd','Palladium','106.42','s'],
+  ['Ag','Silver','107.87','s'], ['Cd','Cadmium','112.41','s'], ['In','Indium','114.82','s'], ['Sn','Tin','118.71','s'],
+  ['Sb','Antimony','121.76','s'], ['Te','Tellurium','127.60','s'], ['I','Iodine','126.90','s'], ['Xe','Xenon','131.29','g'],
+  ['Cs','Caesium','132.91','s'], ['Ba','Barium','137.33','s'],
+  ['La','Lanthanum','138.91','s'], ['Ce','Cerium','140.12','s'], ['Pr','Praseodymium','140.91','s'], ['Nd','Neodymium','144.24','s'],
+  ['Pm','Promethium','[145]','s'], ['Sm','Samarium','150.36','s'], ['Eu','Europium','151.96','s'], ['Gd','Gadolinium','157.25','s'],
+  ['Tb','Terbium','158.93','s'], ['Dy','Dysprosium','162.50','s'], ['Ho','Holmium','164.93','s'], ['Er','Erbium','167.26','s'],
+  ['Tm','Thulium','168.93','s'], ['Yb','Ytterbium','173.05','s'], ['Lu','Lutetium','174.97','s'],
+  ['Hf','Hafnium','178.49','s'], ['Ta','Tantalum','180.95','s'], ['W','Tungsten','183.84','s'], ['Re','Rhenium','186.21','s'],
+  ['Os','Osmium','190.23','s'], ['Ir','Iridium','192.22','s'], ['Pt','Platinum','195.08','s'], ['Au','Gold','196.97','s'],
+  ['Hg','Mercury','200.59','l'], ['Tl','Thallium','204.38','s'], ['Pb','Lead','207.2','s'], ['Bi','Bismuth','208.98','s'],
+  ['Po','Polonium','[209]','s'], ['At','Astatine','[210]','u'], ['Rn','Radon','[222]','g'],
+  ['Fr','Francium','[223]','u'], ['Ra','Radium','[226]','s'],
+  ['Ac','Actinium','[227]','s'], ['Th','Thorium','232.04','s'], ['Pa','Protactinium','231.04','s'], ['U','Uranium','238.03','s'],
+  ['Np','Neptunium','[237]','s'], ['Pu','Plutonium','[244]','s'], ['Am','Americium','[243]','s'], ['Cm','Curium','[247]','s'],
+  ['Bk','Berkelium','[247]','s'], ['Cf','Californium','[251]','s'], ['Es','Einsteinium','[252]','s'], ['Fm','Fermium','[257]','u'],
+  ['Md','Mendelevium','[258]','u'], ['No','Nobelium','[259]','u'], ['Lr','Lawrencium','[266]','u'],
+  ['Rf','Rutherfordium','[267]','u'], ['Db','Dubnium','[268]','u'], ['Sg','Seaborgium','[269]','u'], ['Bh','Bohrium','[270]','u'],
+  ['Hs','Hassium','[269]','u'], ['Mt','Meitnerium','[278]','u'], ['Ds','Darmstadtium','[281]','u'], ['Rg','Roentgenium','[282]','u'],
+  ['Cn','Copernicium','[285]','u'], ['Nh','Nihonium','[286]','u'], ['Fl','Flerovium','[289]','u'], ['Mc','Moscovium','[290]','u'],
+  ['Lv','Livermorium','[293]','u'], ['Ts','Tennessine','[294]','u'], ['Og','Oganesson','[294]','u']
+];
+
+const CATS = {
+  alkali:     { label: 'Alkali metals',          desc: 'Soft, highly reactive metals with a single outer electron.' },
+  alkaline:   { label: 'Alkaline earth metals',  desc: 'Reactive metals with two outer electrons, a little calmer than the alkali metals.' },
+  transition: { label: 'Transition metals',      desc: 'Hard, dense metals that form colourful compounds and several kinds of ion.' },
+  post:       { label: 'Post-transition metals', desc: 'Softer, lower-melting metals to the right of the transition block.' },
+  metalloid:  { label: 'Metalloids',             desc: 'On the border between metals and nonmetals; several are semiconductors.' },
+  nonmetal:   { label: 'Reactive nonmetals',     desc: 'Elements that gain or share electrons; the halogens are grouped here.' },
+  noble:      { label: 'Noble gases',            desc: 'Almost completely unreactive gases with full outer shells.' },
+  lanthanide: { label: 'Lanthanides',            desc: 'The first f-block row: silvery, very similar rare-earth metals.' },
+  actinide:   { label: 'Actinides',              desc: 'The second f-block row; every one of them is radioactive.' },
+  unknown:    { label: 'Unknown properties',     desc: 'Made in tiny amounts and too short-lived for their properties to be well known.' }
+};
+
+const STATE = { s: 'Solid', l: 'Liquid', g: 'Gas', u: 'Not established' };
+
+/* ============================================================
+   App
+   ============================================================ */
+(() => {
+  const CAT = {};
+  const setCat = (cat, list) => list.forEach(z => { CAT[z] = cat; });
+  const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+
+  setCat('alkali',     [3, 11, 19, 37, 55, 87]);
+  setCat('alkaline',   [4, 12, 20, 38, 56, 88]);
+  setCat('transition', [...range(21, 30), ...range(39, 48), ...range(72, 80), ...range(104, 108)]);
+  setCat('post',       [13, 31, 49, 50, 81, 82, 83, 84]);
+  setCat('metalloid',  [5, 14, 32, 33, 51, 52]);
+  setCat('nonmetal',   [1, 6, 7, 8, 9, 15, 16, 17, 34, 35, 53, 85]);
+  setCat('noble',      [2, 10, 18, 36, 54, 86]);
+  setCat('lanthanide', range(57, 71));
+  setCat('actinide',   range(89, 103));
+  setCat('unknown',    range(109, 118));
+
+  // Grid position [row, column]. Rows 9–10 hold the f-block, row 8 is a spacer.
+  function place(z) {
+    if (z === 1) return [1, 1];
+    if (z === 2) return [1, 18];
+    if (z <= 4) return [2, z - 2];
+    if (z <= 10) return [2, z + 8];
+    if (z <= 12) return [3, z - 10];
+    if (z <= 18) return [3, z];
+    if (z <= 36) return [4, z - 18];
+    if (z <= 54) return [5, z - 36];
+    if (z <= 56) return [6, z - 54];
+    if (z <= 71) return [9, z - 54];
+    if (z <= 86) return [6, z - 68];
+    if (z <= 88) return [7, z - 86];
+    if (z <= 103) return [10, z - 86];
+    return [7, z - 100];
+  }
+
+  const elements = E.map(([sym, name, mass, st], i) => {
+    const z = i + 1;
+    const [row, col] = place(z);
+    const fblock = row >= 9;
+    let block;
+    if (fblock) block = 'f';
+    else if (z === 2 || col <= 2) block = 's';
+    else if (col >= 13) block = 'p';
+    else block = 'd';
+    return {
+      z, sym, name, mass, st, row, col, block,
+      cat: CAT[z],
+      period: fblock ? (row === 9 ? 6 : 7) : row,
+      group: fblock ? '—' : String(col),
+      radioactive: z === 43 || z === 61 || z >= 84
+    };
+  });
+
+  const table = document.getElementById('table');
+  const chips = document.getElementById('chips');
+  const search = document.getElementById('search');
+  const detailGrid = document.getElementById('detailGrid');
+  const detailBelow = document.getElementById('detailBelow');
+  const app = document.getElementById('app');
+
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+
+  /* ----- table cells ----- */
+  elements.forEach(d => {
+    const b = el('button', `el cat--${d.cat}`);
+    b.type = 'button';
+    b.style.gridRow = d.row;
+    b.style.gridColumn = d.col;
+    b.setAttribute('aria-label', `${d.name}, atomic number ${d.z}`);
+    b.append(el('span', 'el__num', d.z), el('span', 'el__sym', d.sym), el('span', 'el__name', d.name));
+    b.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { hoverZ = d.z; renderDetail(); } });
+    b.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && hoverZ === d.z) { hoverZ = null; renderDetail(); } });
+    b.addEventListener('focus', () => { hoverZ = d.z; renderDetail(); });
+    b.addEventListener('blur', () => { if (hoverZ === d.z) { hoverZ = null; renderDetail(); } });
+    b.addEventListener('click', () => { pinZ = pinZ === d.z ? null : d.z; renderDetail(); });
+    d.node = b;
+    table.appendChild(b);
+  });
+
+  [[6, '57–71'], [7, '89–103']].forEach(([row, label]) => {
+    const p = el('div', 'ph', label);
+    p.style.gridRow = row;
+    p.style.gridColumn = 3;
+    p.setAttribute('aria-hidden', 'true');
+    table.appendChild(p);
+  });
+
+  /* ----- family chips ----- */
+  const counts = {};
+  elements.forEach(d => { counts[d.cat] = (counts[d.cat] || 0) + 1; });
+
+  const chipEls = {};
+  function chip(value, label, count) {
+    const b = el('button', 'chip' + (value === 'all' ? '' : ` cat--${value}`));
+    b.type = 'button';
+    b.dataset.cat = value;
+    if (value !== 'all') b.appendChild(el('i', 'dot' + (value === 'unknown' ? ' dot--dashed' : '')));
+    b.appendChild(document.createTextNode(label));
+    if (count) b.appendChild(el('span', 'chip__n', count));
+    b.addEventListener('click', () => {
+      filterCat = filterCat === value ? 'all' : value;
+      applyFilter();
+    });
+    chips.appendChild(b);
+    chipEls[value] = b;
+  }
+  chip('all', 'All');
+  Object.keys(CATS).forEach(k => chip(k, CATS[k].label, counts[k]));
+
+  /* ----- state ----- */
+  let filterCat = 'all', hoverZ = null, pinZ = null;
+
+  function applyFilter() {
+    const q = search.value.trim().toLowerCase();
+    const has = filterCat !== 'all' || q !== '';
+    table.classList.toggle('has-filter', has);
+
+    elements.forEach(d => {
+      const catOk = filterCat === 'all' || d.cat === filterCat;
+      const textOk = !q || d.name.toLowerCase().includes(q) ||
+                     d.sym.toLowerCase() === q || String(d.z) === q;
+      d.node.classList.toggle('is-match', catOk && textOk);
+    });
+
+    Object.entries(chipEls).forEach(([k, b]) => b.setAttribute('aria-pressed', String(k === filterCat)));
+    // The page's dominant ink follows the chosen family
+    app.className = 'app' + (filterCat !== 'all' ? ` cat--${filterCat}` : '');
+  }
+  search.addEventListener('input', applyFilter);
+
+  /* ----- detail card ----- */
+  function buildDetail(d) {
+    if (!d) {
+      const w = el('div', 'detail detail--hint');
+      w.append(
+        el('h2', '', 'Pick an element'),
+        el('p', 'detail__desc', 'Hover or tap any element to see its card here. Tap again to pin it, or filter by family with the chips above.')
+      );
+      return w;
+    }
+    const w = el('div', `detail cat--${d.cat}`);
+
+    const tile = el('div', 'tile');
+    tile.append(el('span', 'tile__num', d.z), el('span', 'tile__sym', d.sym), el('span', 'tile__mass', d.mass));
+
+    const body = el('div', 'detail__body');
+    body.appendChild(el('h2', '', d.name));
+
+    const cat = el('p', 'detail__cat');
+    cat.append(el('i', 'dot' + (d.cat === 'unknown' ? ' dot--dashed' : '')), CATS[d.cat].label);
+    body.append(cat, el('p', 'detail__desc', CATS[d.cat].desc));
+
+    const meta = el('dl', 'meta');
+    const item = (k, v) => {
+      const box = el('div');
+      box.append(el('dt', '', k), el('dd', '', v));
+      meta.appendChild(box);
+    };
+    item('Group', d.group);
+    item('Period', d.period);
+    item('Block', d.block);
+    item('State (room temp.)', STATE[d.st]);
+    item('Atomic mass', d.mass.startsWith('[') ? `${d.mass.slice(1, -1)} (longest-lived isotope)` : d.mass);
+    item('Radioactive', d.radioactive ? 'Yes, no stable isotope' : 'No');
+    body.appendChild(meta);
+
+    w.append(tile, body);
+    return w;
+  }
+
+  function renderDetail() {
+    const z = hoverZ || pinZ;
+    const d = z ? elements[z - 1] : null;
+    detailGrid.replaceChildren(buildDetail(d));
+    detailBelow.replaceChildren(buildDetail(d));
+    elements.forEach(x => x.node.classList.toggle('is-pinned', x.z === pinZ));
+  }
+
+  applyFilter();
+  renderDetail();
+})();
+</script>
+</body>
+</html>

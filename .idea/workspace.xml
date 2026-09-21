@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="experimenting">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/experiments/library.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/experiments/library.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/studies.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/studies.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-animalia.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-animalia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-eukaryotes.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-eukaryotes.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-of-life.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-prokaryotes.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-plantae.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-plantae.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/tree-vertebrata.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/tree-vertebrata.html" afterDir="false" />
-    </list>
+    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="fixing bugs" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -134,14 +124,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00008" summary="corrected index.html">
-      <option name="closed" value="true" />
-      <created>1784881334030</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1784881334030</updated>
     </task>
     <task id="LOCAL-00009" summary="restructure">
       <option name="closed" value="true" />
@@ -527,7 +509,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789994294049</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="fixing bugs">
+      <option name="closed" value="true" />
+      <created>1789997179678</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1789997179678</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -548,8 +538,8 @@
     <MESSAGE value="adding tree of life" />
     <MESSAGE value="changing layout" />
     <MESSAGE value="adding new" />
-    <MESSAGE value="fixing bugs" />
     <MESSAGE value="experimenting" />
-    <option name="LAST_COMMIT_MESSAGE" value="experimenting" />
+    <MESSAGE value="fixing bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing bugs" />
   </component>
 </project>
