@@ -72,7 +72,7 @@ nodes: [
       etymology:'from Ancient Greek στρεπτός (streptós) \'twisted\' and κόκκος (kókkos) \'grain\')',
       html:`Most are <span class="term" data-def="an organism that lives closely with another species and gets food, shelter, or transport, while the host is neither helped nor harmed">commensal organisms</span> as parts of the human <span class="term" data-def="the community of microorganisms that live together in a specific habitat, such as the human body or soil">microbiome</span>, for example in the mouth, skin, intestine, and upper respiratory tract. Some exist as <span class="term" data-def="a microorganism, that can infect a host and cause disease">pathogens</span> and cause infections collectively known as <span class="highlight">streptococcosis</span>.`,
       images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Streptococci.jpg/500px-Streptococci.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Streptococci.jpg/500px-Streptococci.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover', focus:'center left'}
       ]
     },
     { id:'staphylococcus', name:'Staphylococcus', kind:'rank', rankLabel:'genus', from:'bacilli', color:'c-bacteria',
@@ -87,18 +87,19 @@ nodes: [
       taxonPath: 'Bacteria → Proteobacteria → Gammaproteobacteria → Enterobacteriales → Enterobacteriaceae',
       html:`<span class="term" data-def="a microorganism, that can infect a host and cause disease">Pathogens</span>, of which certain serotypes cause illness such as <span class="highlight">salmonellosis</span>. Most infections are due to the ingestion of food contaminated by feces.`,
       images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/SalmonellaNIAID.jpg/500px-SalmonellaNIAID.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Salmonella Typhimurium (red) invading cultured human cells'}
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/SalmonellaNIAID.jpg/500px-SalmonellaNIAID.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Salmonella Typhimurium (red) invading cultured human cells', fit:'cover', focus:'top'}
       ]
     },
     { id:'treponemapallidum', name:'Treponema pallidum', kind:'rank', rankLabel:'species', from:'pseudomonadati', color:'c-bacteria',
       taxonPath: 'Bacteria → Spirochaetae → Spirochaetes → Spirochaetales → Spirochaetaceae → Treponema',
       html:`Bacterium that can cause <span class="highlight">syphilis</span>.`,
       images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Treponema_pallidum.jpg/500px-Treponema_pallidum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Treponema_pallidum.jpg/500px-Treponema_pallidum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover'}
       ]
     },
-    { id:'methanobacteriota', name:'Methanobacteriota', kind:'rank', rankLabel:'phylum', from:'archaea', color:'c-archaea',
-      html:`Primarily known for producing methane as a byproduct of their energy metabolism.`,
+    { id:'methanobacteria', name:'Methanobacteria', kind:'rank', rankLabel:'class', from:'methanobacteriati', color:'c-archaea',
+      taxonPath: 'Archaea → k.Methanobacteriati → p.Methanobacteriota',
+      html:`Methanogens, anaerobic archaea that produces methane as a byproduct of their energy metabolism.`,
     },
     { id:'enterobacteriaceae', name:'Enterobacteriaceae', kind:'rank', rankLabel:'family', from:'pseudomonadati', color:'c-bacteria',
       taxonPath: 'Bacteria → Proteobacteria → Gammaproteobacteria → Enterobacteriales',
@@ -110,7 +111,23 @@ nodes: [
       images:[
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/E_coli_at_10000x%2C_original.jpg/500px-E_coli_at_10000x%2C_original.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
       ]
-    }
+    },
+    { id:'methanobacterium', name:'Methanobacterium', native:'Метанобактерии', kind:'rank', rankLabel:'genus', from:'methanobacteria', color:'c-archaea',
+      taxonPath: 'Archaea → k.Methanobacteriati → p.Methanobacteriota → c.Methanobacteria → o.Methanobacteriales → f.Methanobacteriaceae',
+      html:`<ul><li>Methanogen;</li><li>Typically thrive in environments with optimal growth temperatures ranging from 28 to 40 °C, and in versatile ecological ranges.</li>`,
+      images:[
+        {src:'https://www.researchgate.net/profile/K-H-Blotevogel-2/publication/226968776/figure/fig2/AS:670702558523409@1536919359876/figure-fig2_Q320.jpg', fit:'cover'}
+      ]
+    },
+    { id:'methanobacteriati', name:'Methanobacteriati', kind:'rank', rankLabel:'kingdom', from:'archaea', color:'c-archaea',
+      taxonPath: 'Archaea',
+      html:`Methanobacteriati are highly diverse and include<ul><li>methanogens, which produce methane and are often found in intestines;</li><li>halobacteria, which survive extreme concentrations of salt;</li><li>some extremely thermophilic aerobes and anaerobes, which generally live at temperatures between 41 and 122 °C.</li>`
+    },
+    { id:'asgardarchaea', name:'Asgard archaea', from: 'archaea', kind:'rank', rankLabel:'kingdom', color:'c-archaea',
+      html:`<p>Another name Promethearchaeati.</p><p>Appeared 3.3 Bya in <a href="geological-time.html#archean">Archean</a><p>Contain eukaryotic signature proteins. It appears that the eukaryotes emerged within the Promethearchaeati.</p>`,
+      images:[
+        {src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Promethearchaeum_syntrophicum.jpg/500px-Promethearchaeum_syntrophicum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail' }
+      ] }
 ] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
 </script>

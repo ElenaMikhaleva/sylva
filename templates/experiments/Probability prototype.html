@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Probability — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eaeae3; --card:#f5f5ef; --ink:#1b2140; --ink-soft:#5a6078;
+  --c: #c2542a;
+  --good:#2a9d9b; --bad:#e0508f;
+  --ff-head:"Space Grotesk",system-ui,sans-serif; --ff-label:"Golos Text",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ff-label);line-height:1.6;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.app{max-width:780px;margin:0 auto;padding:2.5rem 1.1rem 5rem}
+h1{margin:0;font-family:var(--ff-head);font-weight:700;font-size:clamp(2rem,6vw,2.75rem);letter-spacing:-.02em;line-height:1.05}
+h1::after{content:"";display:block;width:4.5rem;height:.4rem;margin-top:.7rem;border-radius:999px;background:var(--c)}
+.lede{margin:1rem 0 0;max-width:56ch;color:var(--ink-soft);font-size:1.02rem}
+section{margin-top:3.2rem;padding-top:2.6rem;border-top:1.5px solid color-mix(in srgb, var(--ink) 20%, transparent)}
+h2{font-family:var(--ff-head);font-weight:700;font-size:1.4rem;letter-spacing:-.01em;margin:0 0 .5rem}
+.sub{color:var(--ink-soft);margin:0 0 1.4rem;max-width:56ch}
+.box{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:1.3rem 1.4rem}
+.row{display:flex;flex-wrap:wrap;gap:1rem 1.6rem;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:.3rem;font-size:.85rem;color:var(--ink-soft)}
+.field input[type=number]{width:5.5rem;font:500 1rem var(--ff-label);color:var(--ink);background:var(--paper);
+  border:1.5px solid var(--ink);border-radius:8px;padding:.35rem .5rem}
+.toggle{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:2px}
+.toggle button{font:500 .85rem var(--ff-label);color:var(--ink);background:transparent;border:0;border-radius:999px;
+  padding:.35rem .8rem;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+input[type=range]{width:100%;accent-color:var(--c)}
+.result{margin-top:1.2rem;padding-top:1.1rem;border-top:1px dashed color-mix(in srgb, var(--ink) 35%, transparent)}
+.big{font-family:var(--ff-head);font-weight:700;font-size:2rem;letter-spacing:-.01em}
+.formula{font-family:var(--ff-head);font-size:.95rem;color:var(--ink-soft);margin:.3rem 0 0}
+.note{font-size:.85rem;color:var(--ink-soft);margin-top:.6rem}
+.two-col{display:grid;grid-template-columns:1fr;gap:1.4rem}
+@media(min-width:640px){.two-col{grid-template-columns:1fr 1fr}}
+
+/* tree diagram */
+.tree-svg{width:100%;height:auto;margin-top:1.2rem}
+.tree-svg text{font-family:var(--ff-label);fill:var(--ink)}
+.tree-svg .edge-label{font-size:11px;fill:var(--ink-soft)}
+.tree-svg .leaf-label{font-family:var(--ff-head);font-weight:700;font-size:13px}
+.tree-svg .leaf-sub{font-size:11px;fill:var(--ink-soft)}
+.tree-svg line{stroke:var(--ink);stroke-width:1.5}
+.tree-svg circle.node{fill:var(--card);stroke:var(--ink);stroke-width:1.5}
+
+/* contingency table */
+table.contingency{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.88rem}
+table.contingency th,table.contingency td{border:1.5px solid var(--ink);padding:.5rem .6rem;text-align:right}
+table.contingency th{font-family:var(--ff-head);font-weight:700;text-align:center;background:color-mix(in srgb, var(--c) 12%, var(--card))}
+table.contingency td:first-child,table.contingency th:first-child{text-align:left}
+table.contingency tr:last-child td,table.contingency td.total{font-weight:600;background:color-mix(in srgb, var(--ink) 6%, transparent)}
+
+/* venn */
+.venn-svg{width:100%;height:auto}
+.venn-svg .setA{fill:color-mix(in srgb, var(--c) 35%, transparent)}
+.venn-svg .setB{fill:color-mix(in srgb, var(--good) 35%, transparent)}
+.venn-svg circle{stroke:var(--ink);stroke-width:1.5}
+.venn-svg text{font-family:var(--ff-label);fill:var(--ink);font-size:12px}
+.venn-legend{display:flex;gap:1.4rem;margin-top:.8rem;font-size:.85rem;color:var(--ink-soft)}
+.venn-legend span{display:inline-flex;align-items:center;gap:.4rem}
+.swatch{width:.7rem;height:.7rem;border-radius:3px;display:inline-block}
+
+button.run{font:500 .92rem var(--ff-label);color:var(--paper);background:var(--ink);border:0;border-radius:10px;
+  padding:.55rem 1.1rem;cursor:pointer}
+button.run:hover{background:var(--c)}
+canvas{width:100%;height:180px;display:block;margin-top:1rem}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="app">
+  <h1>Making sense of probability</h1>
+  <p class="lede">Four tools for the moments where "just calculate it" stops being obvious: counting arrangements, tracing a sequence of events, updating a belief after new evidence, and seeing two events overlap.</p>
+
+  <!-- ============ 1. COMBINATORICS ============ -->
+  <section>
+    <h2>How many ways can this happen?</h2>
+    <p class="sub">Pick a group size and how many you're choosing from it. The calculator shows the count and, for small numbers, every single arrangement.</p>
+    <div class="box">
+      <div class="row">
+        <label class="field">Choosing from (n)
+          <input type="number" id="nInput" value="5" min="0" max="12">
+        </label>
+        <label class="field">How many (k)
+          <input type="number" id="kInput" value="2" min="0" max="12">
+        </label>
+        <label class="field">Order
+          <div class="toggle" id="orderToggle" role="group" aria-label="Does order matter">
+            <button type="button" data-order="no" aria-pressed="true">Doesn't matter</button>
+            <button type="button" data-order="yes" aria-pressed="false">Matters</button>
+          </div>
+        </label>
+        <label class="field">Repeats
+          <div class="toggle" id="repeatToggle" role="group" aria-label="Can items repeat">
+            <button type="button" data-repeat="no" aria-pressed="true">Not allowed</button>
+            <button type="button" data-repeat="yes" aria-pressed="false">Allowed</button>
+          </div>
+        </label>
+      </div>
+      <div class="result">
+        <div class="big" id="comboResult">10</div>
+        <p class="formula" id="comboFormula">C(5, 2) = 5! / (2! · 3!)</p>
+        <p class="note" id="comboExamples"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. BAYES: TREE + TABLE ============ -->
+  <section>
+    <h2>What does a positive result actually mean?</h2>
+    <p class="sub">A test for a rare condition is rarely as certain as it sounds. Adjust how rare the condition is and how accurate the test is — the tree traces every path, the table shows the same numbers as raw counts out of 10,000 people.</p>
+    <div class="box">
+      <div class="two-col">
+        <label class="field">How common is the condition — <span id="priorOut">1%</span> of people
+          <input type="range" id="priorRange" min="0.1" max="30" step="0.1" value="1">
+        </label>
+        <label class="field">Test sensitivity (catches true cases) — <span id="sensOut">95%</span>
+          <input type="range" id="sensRange" min="50" max="100" step="1" value="95">
+        </label>
+        <label class="field">Test specificity (correctly clears healthy people) — <span id="specOut">90%</span>
+          <input type="range" id="specRange" min="50" max="100" step="1" value="90">
+        </label>
+      </div>
+
+      <svg class="tree-svg" id="bayesTree" viewBox="0 0 640 230" role="img" aria-label="Branching probability tree from condition status to test result"></svg>
+
+      <table class="contingency" id="bayesTable">
+        <thead><tr><th></th><th>Tests positive</th><th>Tests negative</th><th>Total</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="result">
+        <div class="big" id="bayesResult">8.8%</div>
+        <p class="formula">chance the person actually has the condition, given a positive test</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. VENN ============ -->
+  <section>
+    <h2>Two events, side by side</h2>
+    <p class="sub">Set how likely each event is on its own, then how much they overlap. The diagram and the table update together — try dragging the overlap to zero to see mutually exclusive events.</p>
+    <div class="box">
+      <div class="two-col">
+        <label class="field">P(A) — <span id="pAOut">40%</span>
+          <input type="range" id="pARange" min="0" max="100" step="1" value="40">
+        </label>
+        <label class="field">P(B) — <span id="pBOut">30%</span>
+          <input type="range" id="pBRange" min="0" max="100" step="1" value="30">
+        </label>
+      </div>
+      <label class="field" style="margin-top:1rem">P(A and B) — <span id="pABOut">10%</span>
+        <input type="range" id="pABRange" min="0" max="30" step="1" value="10">
+      </label>
+
+      <svg class="venn-svg" id="vennSvg" viewBox="0 0 400 220" role="img" aria-label="Venn diagram of two overlapping events"></svg>
+      <div class="venn-legend">
+        <span><i class="swatch" style="background:var(--c)"></i>only A</span>
+        <span><i class="swatch" style="background:var(--good)"></i>only B</span>
+        <span><i class="swatch" style="background:color-mix(in srgb, var(--c) 50%, var(--good))"></i>both</span>
+      </div>
+
+      <table class="contingency" style="margin-top:1.4rem">
+        <thead><tr><th></th><th>B happens</th><th>B doesn't</th><th>Total</th></tr></thead>
+        <tbody id="vennTable"></tbody>
+      </table>
+
+      <div class="result">
+        <p class="note" id="vennNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. BIRTHDAY PARADOX ============ -->
+  <section>
+    <h2>The birthday paradox</h2>
+    <p class="sub">How many people need to be in a room before it's more likely than not that two share a birthday? Move the slider, then run a simulation to see the calculated answer play out.</p>
+    <div class="box">
+      <label class="field">People in the room — <span id="peopleOut">23</span>
+        <input type="range" id="peopleRange" min="2" max="80" step="1" value="23">
+      </label>
+      <div class="result">
+        <div class="big" id="birthdayResult">50.7%</div>
+        <p class="formula">calculated chance at least two people share a birthday</p>
+      </div>
+      <div class="row" style="margin-top:1rem;align-items:center;gap:.8rem">
+        <button class="run" id="simRun">Run 200 simulated rooms</button>
+        <span class="note" id="simOut"></span>
+      </div>
+      <canvas id="simCanvas" width="600" height="180"></canvas>
+    </div>
+  </section>
+</main>
+
+<script>
+const round = (v, d=1) => { const m = 10 ** d; return Math.round(v * m) / m; };
+const fmtPct = (v, d=1) => `${round(v * 100, d)}%`;
+function factorial(n){ let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+function nPk(n, k){ if (k > n) return 0; let r = 1; for (let i = 0; i < k; i++) r *= (n - i); return r; }
+function nCk(n, k){ if (k > n) return 0; return nPk(n, k) / factorial(k); }
+
+/* ============ 1. COMBINATORICS ============ */
+const nInput = document.getElementById('nInput');
+const kInput = document.getElementById('kInput');
+const orderToggle = document.getElementById('orderToggle');
+const repeatToggle = document.getElementById('repeatToggle');
+const comboResult = document.getElementById('comboResult');
+const comboFormula = document.getElementById('comboFormula');
+const comboExamples = document.getElementById('comboExamples');
+let order = 'no', repeat = 'no';
+
+function setToggle(group, val, attr){
+  [...group.children].forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === val)));
+}
+orderToggle.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  order = b.dataset.order; setToggle(orderToggle, order, 'order'); renderCombo();
+});
+repeatToggle.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  repeat = b.dataset.repeat; setToggle(repeatToggle, repeat, 'repeat'); renderCombo();
+});
+
+function renderCombo(){
+  let n = Math.max(0, Math.min(12, Math.floor(Number(nInput.value) || 0)));
+  let k = Math.max(0, Math.min(12, Math.floor(Number(kInput.value) || 0)));
+  nInput.value = n; kInput.value = k;
+
+  let count, formula;
+  if (order === 'no' && repeat === 'no') {
+    count = nCk(n, k);
+    formula = `C(${n}, ${k}) = ${n}! / (${k}! · ${n - k >= 0 ? n - k : 0}!)`;
+  } else if (order === 'yes' && repeat === 'no') {
+    count = nPk(n, k);
+    formula = `P(${n}, ${k}) = ${n}! / ${n - k >= 0 ? n - k : 0}!`;
+  } else if (order === 'yes' && repeat === 'yes') {
+    count = Math.pow(n, k);
+    formula = `${n}^${k} — each of ${k} picks has ${n} options`;
+  } else {
+    count = nCk(n + k - 1, k);
+    formula = `C(${n} + ${k} − 1, ${k}) — combinations with repetition`;
+  }
+
+  comboResult.textContent = Number.isFinite(count) ? count.toLocaleString() : '—';
+  comboFormula.textContent = formula;
+
+  if (n <= 6 && k <= 4 && count <= 40 && count > 0) {
+    const items = Array.from({length:n}, (_,i) => String.fromCharCode(65+i));
+    const combos = [];
+    function build(start, chosen){
+      if (chosen.length === k) { combos.push(chosen.join('')); return; }
+      const from = (order === 'yes' && repeat !== 'yes') ? 0 : start;
+      for (let i = from; i < n; i++){
+        if (repeat !== 'yes' && order !== 'yes' && chosen.length && items[i] <= chosen[chosen.length-1]) continue;
+        if (repeat !== 'yes' && chosen.includes(items[i])) continue;
+        build(order === 'yes' ? 0 : i + 1, [...chosen, items[i]]);
+      }
+    }
+    build(0, []);
+    const shown = [...new Set(combos)].slice(0, 40);
+    comboExamples.textContent = shown.length ? `e.g. ${shown.join(', ')}` : '';
+  } else {
+    comboExamples.textContent = 'too many to list — try smaller numbers to see every arrangement';
+  }
+}
+[nInput, kInput].forEach(el => el.addEventListener('input', renderCombo));
+renderCombo();
+
+/* ============ 2. BAYES: TREE + TABLE ============ */
+const priorRange = document.getElementById('priorRange');
+const sensRange = document.getElementById('sensRange');
+const specRange = document.getElementById('specRange');
+const priorOut = document.getElementById('priorOut');
+const sensOut = document.getElementById('sensOut');
+const specOut = document.getElementById('specOut');
+const bayesResult = document.getElementById('bayesResult');
+const bayesTree = document.getElementById('bayesTree');
+const bayesTableBody = document.querySelector('#bayesTable tbody');
+
+function treeSVG(prior, sens, spec){
+  const w = 640, h = 230;
+  const rootX = 40, rootY = h/2;
+  const midX = 260;
+  const leafX = 560;
+  const yesY = 55, noY = h - 55;
+  const yy1 = 30, yy2 = 90, ny1 = h - 90, ny2 = h - 30;
+
+  const pPos = prior * sens, pNeg = prior * (1 - sens);
+  const nPos = (1-prior) * (1 - spec), nNeg = (1-prior) * spec;
+
+  const good = 'var(--good)', bad = 'var(--bad)', ink = 'var(--ink)';
+
+  function edge(x1,y1,x2,y2){ return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; }
+  function label(x,y,t,anchor='middle'){ return `<text class="edge-label" x="${x}" y="${y}" text-anchor="${anchor}">${t}</text>`; }
+  function leaf(x,y,title,sub,color){
+    return `<circle class="node" cx="${x}" cy="${y}" r="5"/>
+      <text class="leaf-label" x="${x+12}" y="${y-3}" fill="${color}">${title}</text>
+      <text class="leaf-sub" x="${x+12}" y="${y+13}">${sub}</text>`;
+  }
+
+  return `
+    <circle class="node" cx="${rootX}" cy="${rootY}" r="5"/>
+    ${edge(rootX,rootY,midX,yesY)}
+    ${edge(rootX,rootY,midX,noY)}
+    ${label((rootX+midX)/2, (rootY+yesY)/2 - 8, 'has it '+fmtPct(prior,1))}
+    ${label((rootX+midX)/2, (rootY+noY)/2 + 16, "doesn't "+fmtPct(1-prior,1))}
+
+    <circle class="node" cx="${midX}" cy="${yesY}" r="5"/>
+    ${edge(midX,yesY,leafX,yy1)}
+    ${edge(midX,yesY,leafX,yy2)}
+    ${label((midX+leafX)/2, (yesY+yy1)/2 - 6, 'test + '+fmtPct(sens,0))}
+    ${label((midX+leafX)/2, (yesY+yy2)/2 + 14, 'test − '+fmtPct(1-sens,0))}
+    ${leaf(leafX, yy1, 'True positive', fmtPct(pPos,2)+' of everyone', good)}
+    ${leaf(leafX, yy2, 'False negative', fmtPct(pNeg,2)+' of everyone', bad)}
+
+    <circle class="node" cx="${midX}" cy="${noY}" r="5"/>
+    ${edge(midX,noY,leafX,ny1)}
+    ${edge(midX,noY,leafX,ny2)}
+    ${label((midX+leafX)/2, (noY+ny1)/2 - 6, 'test + '+fmtPct(1-spec,0))}
+    ${label((midX+leafX)/2, (noY+ny2)/2 + 14, 'test − '+fmtPct(spec,0))}
+    ${leaf(leafX, ny1, 'False positive', fmtPct(nPos,2)+' of everyone', bad)}
+    ${leaf(leafX, ny2, 'True negative', fmtPct(nNeg,2)+' of everyone', good)}
+  `;
+}
+
+function renderBayes(){
+  const prior = Number(priorRange.value) / 100;
+  const sens = Number(sensRange.value) / 100;
+  const spec = Number(specRange.value) / 100;
+  priorOut.textContent = fmtPct(prior, 1);
+  sensOut.textContent = fmtPct(sens, 0);
+  specOut.textContent = fmtPct(spec, 0);
+
+  const truePos = prior * sens;
+  const falseNeg = prior * (1 - sens);
+  const falsePos = (1 - prior) * (1 - spec);
+  const trueNeg = (1 - prior) * spec;
+  const posterior = truePos / (truePos + falsePos);
+
+  bayesResult.textContent = fmtPct(posterior, 1);
+  bayesTree.innerHTML = treeSVG(prior, sens, spec);
+
+  const per = 10000;
+  const r = x => Math.round(x * per).toLocaleString();
+  bayesTableBody.innerHTML = `
+    <tr><th>Has condition</th><td>${r(truePos)}</td><td>${r(falseNeg)}</td><td class="total">${r(prior)}</td></tr>
+    <tr><th>Doesn't have it</th><td>${r(falsePos)}</td><td>${r(trueNeg)}</td><td class="total">${r(1-prior)}</td></tr>
+    <tr><th>Total</th><td class="total">${r(truePos+falsePos)}</td><td class="total">${r(falseNeg+trueNeg)}</td><td class="total">${per.toLocaleString()}</td></tr>
+  `;
+}
+[priorRange, sensRange, specRange].forEach(el => el.addEventListener('input', renderBayes));
+renderBayes();
+
+/* ============ 3. VENN ============ */
+const pARange = document.getElementById('pARange');
+const pBRange = document.getElementById('pBRange');
+const pABRange = document.getElementById('pABRange');
+const pAOut = document.getElementById('pAOut');
+const pBOut = document.getElementById('pBOut');
+const pABOut = document.getElementById('pABOut');
+const vennSvg = document.getElementById('vennSvg');
+const vennTable = document.getElementById('vennTable');
+const vennNote = document.getElementById('vennNote');
+
+function vennSVG(pA, pB, overlapFrac){
+  // overlapFrac: 0 = no overlap, 1 = fully nested (smaller circle inside larger)
+  const w = 400, h = 220, cy = 110;
+  const rA = 40 + pA * 90, rB = 40 + pB * 90;
+  const maxSep = rA + rB, minSep = Math.abs(rA - rB);
+  const sep = maxSep - overlapFrac * (maxSep - minSep);
+  const cxA = w/2 - sep/2, cxB = w/2 + sep/2;
+  return `
+    <circle class="setA" cx="${cxA}" cy="${cy}" r="${rA}"/>
+    <circle class="setB" cx="${cxB}" cy="${cy}" r="${rB}"/>
+    <circle cx="${cxA}" cy="${cy}" r="${rA}" fill="none"/>
+    <circle cx="${cxB}" cy="${cy}" r="${rB}" fill="none"/>
+    <text x="${cxA - rA*0.55}" y="${cy}" text-anchor="middle">A</text>
+    <text x="${cxB + rB*0.55}" y="${cy}" text-anchor="middle">B</text>
+  `;
+}
+
+function renderVenn(){
+  let pA = Number(pARange.value) / 100;
+  let pB = Number(pBRange.value) / 100;
+  const maxAB = Math.min(pA, pB) * 100;
+  if (Number(pABRange.value) > maxAB) pABRange.value = maxAB;
+  pABRange.max = round(maxAB, 0);
+  let pAB = Number(pABRange.value) / 100;
+
+  pAOut.textContent = fmtPct(pA, 0);
+  pBOut.textContent = fmtPct(pB, 0);
+  pABOut.textContent = fmtPct(pAB, 0);
+
+  const onlyA = pA - pAB, onlyB = pB - pAB, neither = 1 - (onlyA + onlyB + pAB);
+  const union = pA + pB - pAB;
+  const overlapFrac = pAB / Math.min(pA, pB || 1);
+
+  vennSvg.innerHTML = vennSVG(pA, pB, isFinite(overlapFrac) ? overlapFrac : 0);
+
+  const fmt = v => fmtPct(v, 0);
+  vennTable.innerHTML = `
+    <tr><th>A happens</th><td>${fmt(pAB)}</td><td>${fmt(onlyA)}</td><td class="total">${fmt(pA)}</td></tr>
+    <tr><th>A doesn't</th><td>${fmt(onlyB)}</td><td>${fmt(neither)}</td><td class="total">${fmt(1-pA)}</td></tr>
+    <tr><th>Total</th><td class="total">${fmt(pB)}</td><td class="total">${fmt(1-pB)}</td><td class="total">100%</td></tr>
+  `;
+  vennNote.textContent = `P(A or B) = ${fmt(union)}. If B happens, the chance A also happened — P(A given B) — is ${fmt(pB > 0 ? pAB/pB : 0)}.`;
+}
+[pARange, pBRange, pABRange].forEach(el => el.addEventListener('input', renderVenn));
+renderVenn();
+
+/* ============ 4. BIRTHDAY PARADOX ============ */
+const peopleRange = document.getElementById('peopleRange');
+const peopleOut = document.getElementById('peopleOut');
+const birthdayResult = document.getElementById('birthdayResult');
+const simRun = document.getElementById('simRun');
+const simOut = document.getElementById('simOut');
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+function birthdayProb(n){
+  let pNone = 1;
+  for (let i = 0; i < n; i++) pNone *= (365 - i) / 365;
+  return 1 - pNone;
+}
+
+function drawEmptyChart(){
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--ink-soft').trim();
+  ctx.font = '13px Golos Text, sans-serif';
+  ctx.fillText('Run the simulation to see results across 200 rooms', 8, h/2);
+}
+
+function renderBirthday(){
+  const n = Number(peopleRange.value);
+  peopleOut.textContent = n;
+  birthdayResult.textContent = fmtPct(birthdayProb(n), 1);
+  simOut.textContent = '';
+  drawEmptyChart();
+}
+peopleRange.addEventListener('input', renderBirthday);
+renderBirthday();
+
+simRun.addEventListener('click', () => {
+  const n = Number(peopleRange.value);
+  const trials = 200;
+  let matches = 0;
+  const bucketCounts = new Array(11).fill(0);
+
+  for (let t = 0; t < trials; t++){
+    let sharedPairs = 0;
+    const seen = {};
+    for (let p = 0; p < n; p++){
+      const day = Math.floor(Math.random() * 365);
+      seen[day] = (seen[day] || 0) + 1;
+    }
+    Object.values(seen).forEach(count => { if (count > 1) sharedPairs += count - 1; });
+    if (sharedPairs > 0) matches++;
+    bucketCounts[Math.min(10, sharedPairs)]++;
+  }
+
+  const observed = matches / trials;
+  simOut.textContent = `${matches} of ${trials} simulated rooms (${fmtPct(observed,1)}) had a shared birthday — calculated value was ${fmtPct(birthdayProb(n),1)}.`;
+
+  const w = canvas.width, h = canvas.height, pad = 24;
+  ctx.clearRect(0, 0, w, h);
+  const maxCount = Math.max(...bucketCounts, 1);
+  const barW = (w - pad*2) / bucketCounts.length;
+  const accent = getComputedStyle(document.body).getPropertyValue('--c').trim();
+  const soft = getComputedStyle(document.body).getPropertyValue('--ink-soft').trim();
+  bucketCounts.forEach((c, i) => {
+    const barH = (c / maxCount) * (h - pad*2);
+    ctx.fillStyle = i === 0 ? soft : accent;
+    ctx.globalAlpha = i === 0 ? 0.3 : 1;
+    ctx.fillRect(pad + i*barW + 2, h - pad - barH, barW - 4, barH);
+    ctx.globalAlpha = 1;
+  });
+  ctx.fillStyle = soft;
+  ctx.font = '11px Golos Text, sans-serif';
+  ctx.fillText('0 shared', pad, h - 6);
+  ctx.fillText('10+ shared', w - pad - 62, h - 6);
+});
+</script>
+</body>
+</html>

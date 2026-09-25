@@ -23,7 +23,7 @@
     <div class="crumbs">
         <p><a href="studies.html">History</a> · Paleontology</p>
     </div>
-    <p>The Cenozoic Era is the third of the three major eras of the <a href="geological-time.html#phanerozoic">Phanerozoic Eon</a>. Lasting nearly 66 million years from 66 to today, it represents The Age of Mammals. Below are Periods of Cenozoic.</p>
+    <p>The Cenozoic Era is the third of the three major eras of the <a href="eons.html#phanerozoic">Phanerozoic Eon</a>. Lasting nearly 66 million years from 66 to today, it represents The Age of Mammals. Below are Periods of Cenozoic.</p>
     <div class="layout-timeline">
         <div class="tl-spine">
             <div class="tl-segment" data-target="quaternary" style="--seg-color: var(--quaternary); flex-grow: 3.93;">
@@ -46,10 +46,10 @@
                     <span class="card-range">2.6 Mya – today</span>
                 </div>
                 <div class="card-body">
-                    <div class="card-scale">
+                    <div class="card-scale" style="--from:2600; --to:0; --scale-lead: 30px;">
                         <div class="scale-fill">
-                            <div style="flex-grow: 98.78;"></div>
-                            <div style="flex-grow: 00.45;"></div>
+                            <div style="--start:2600; --end:11.7;"></div>
+                            <div style="--start:11.7; --end:0;"></div>
                         </div>
                         <div class="event" style="left:95.38%;">
                             <div class="label">drought in Africa ended, 100 Kya</div>
@@ -63,8 +63,8 @@
                             <ul>
                                 <li>The cooling trend that started Mid-Eocene caused <span class="highlight">Ice ages</span>. There were at least four separate glaciation periods;</li>
                                 <li>Desiccation in Africa, the Sahara, Namib, and Kalahari deserts appeared;</li>
-                                <li>100,000 years ago ended one of the worst droughts in Africa, which led to the expansion of primitive humans;</li>
-                                <li>Animals evovled (mammoths, giant ground sloths, dire wolves, sabre-toothed cats, Homo sapiens);</li>
+                                <li>100,000 years ago ended one of the worst droughts in Africa, which led to <span class="highlight">the expansion of primitive humans</span>;</li>
+                                <li>Animals evolved (<a href="tree-vertebrata.html#mammuthus">mammoths</a>, giant ground sloths, dire wolves, sabre-toothed cats, Homo sapiens);</li>
                                 <li>At the end of Pleistocene, a major extinction wiped out much of the world's megafauna, including some of the hominid species (Neanderthals). All the continents were affected, but Africa to a lesser extent. It still retains many large animals (hippos).</li>
                             </ul>
                         </div>
@@ -87,10 +87,10 @@
                     <span class="card-range">23 – 2.6 Mya</span>
                 </div>
                 <div class="card-body">
-                    <div class="card-scale">
+                    <div class="card-scale" style="--from:66; --to:23; --scale-lead: 30px;">
                         <div class="scale-fill">
-                            <div style="flex-grow: 86.76;"></div>
-                            <div style="flex-grow: 13.23;"></div>
+                            <div style="--start:23; --end:5.3;"></div>
+                            <div style="--start:5.3; --end:2.6;"></div>
                         </div>
                     </div>
                     <div class="card-grid">
@@ -99,9 +99,9 @@
                             <span class="range">23 – 5.3 Mya</span>
                             <ul>
                                 <li>The Tethys Sea closed with the creation of the Arabian Peninsula, leaving only remnants as the Black, Red, Mediterranean and Caspian Seas. This increased aridity;</li>
-                                <li>Grasses spread further, dominating a large portion of the world, at the expense of forests.95% of modern seed plants families were present by the end of the Miocene;</li>
-                                <li>Kelp forests evolved, encouraging the evolution of new species (sea otters);</li>
-                                <li>Apes evolved into 30 species.</li>
+                                <li>Grasses spread further, dominating a large portion of the world, at the expense of forests. 95% of modern seed plants families were present by the end of the Miocene;</li>
+                                <li><a href="tree-eukaryotes.html#laminariales">Kelp</a> forests evolved, encouraging the evolution of new species;</li>
+                                <li><a href="tree-vertebrata.html#hominoidea">Apes</a> evolved into 30 species.</li>
                             </ul>
                         </div>
                         <div class="subcard">
@@ -109,7 +109,7 @@
                             <span class="range">5.3 – 2.6 Mya</span>
                             <ul>
                                 <li>Climate: savannas were continuing to spread across the world, Indian monsoons, deserts in central Asia, the beginnings of the Sahara desert. The world map has not changed much since;</li>
-                                <li><span class="highlight">Australopithecus</span> evolved in Africa, beginning the human branch;</li>
+                                <li><a href="tree-vertebrata.html#australopithecus">Australopithecus</a> evolved in Africa, beginning <span class="highlight">the human branch</span>;</li>
                                 <li>The Isthmus of Panama formed, and animals migrated between North and South America during <span class="highlight">the Great American interchange</span>;</li>
                             </ul>
                         </div>
@@ -128,17 +128,21 @@
                     <div class="card-text">
                         <p>Starts with extinction of non-avian dinosaurs.</p>
                     </div>
-                    <div class="card-scale" style="--scale-lead: 50px;">
+                    <div class="card-scale" style="--from:66; --to:23; --scale-lead: 70px;">
                         <div class="scale-fill">
-                            <div style="flex-grow: 23.25;"></div>
-                            <div style="flex-grow: 51.16;"></div>
-                            <div style="flex-grow: 25.58;"></div>
+                            <div style="--start:66; --end:56;"></div>
+                            <div style="--start:56; --end:34;"></div>
+                            <div style="--start:34; --end:23;"></div>
                         </div>
-                        <div class="event" style="left:6.98%;">
+                        <div class="event middle" style="--start:65.9;">
+                            <div class="label">primates, 65.9 Mya</div>
+                            <div class="leader"></div>
+                        </div>
+                        <div class="event" style="--start:63;">
                             <div class="label">creodonts, 63 Mya</div>
                             <div class="leader"></div>
                         </div>
-                        <div class="event" style="left:74.41%;">
+                        <div class="event" style="--start:34;">
                             <div class="label">Eocene–Oligocene extinction event, 34 Mya</div>
                             <div class="leader"></div>
                         </div>
@@ -151,7 +155,8 @@
                                 <li>The continents began to take their modern shape;</li>
                                 <li>Climate: warming trend, with jungles reaching the poles;</li>
                                 <li>After <a href="mesozoic.html#cretaceous">The Cretaceous–Paleogene extinction event</a> large <span class="term" tabindex="0" data-def="травоядные">herbivores</span> became extinct, which permitted the spread of dense but usually species-poor forests;</li>
-                                <li>The oceans were dominated by sharks as the large reptiles that had once predominated were extinct. Archaic mammals filled the world (<a href="tree-vertebrata#node-creodonta">creodonts</a>).</li>
+                                <li>The oceans were dominated by sharks as the large reptiles that had once predominated were extinct;</li>
+                                <li>Archaic mammals filled the world (<a href="tree-vertebrata.html#creodonta">creodonts</a>).</li>
                             </ul>
                         </div>
                         <div class="subcard">
@@ -160,8 +165,8 @@
                             <ul>
                                 <li>Climate: warming trend, with jungles reaching the poles;</li>
                                 <li>In the Mid-Eocene, the Antarctic Circumpolar Current between Australia and Antarctica formed. It caused a global cooling effect;</li>
-                                <li>Early primates, whales and horses evolved. At the top of the food chains were huge birds (Paracrax);</li>
-                                <li>Mammals grow to mammoth proportions (whales, fully aquatic by that time);</li>
+                                <li>Early <a href="tree-vertebrata.html#primates">primates</a>, <a href="tree-vertebrata.html#basilosaurus">whales</a> and <a href="tree-vertebrata.html#eohippusangustidens">horses</a> evolved;</li>
+                                <li>Mammals grow to <span class="highlight">mammoth</span> proportions (whales, fully aquatic by that time);</li>
                                 <li>Ended with <span class="highlight">Eocene–Oligocene extinction event</span>.</li>
                             </ul>
                         </div>
@@ -169,7 +174,7 @@
                             <h3>Oligocene</h3>
                             <span class="range">34 – 23 Mya</span>
                             <ul>
-                                <li>Expansion of grasslands which had led to many new species to evolve (the first elephants, cats, dogs);</li>
+                                <li>Expansion of grasslands which had led to many new species to evolve (the first <a href="tree-vertebrata.html#palaeomastodon">elephants</a>, <a href="tree-vertebrata.html#felidae">cats</a>, <a href="tree-vertebrata.html#canidae">dogs</a>);</li>
                                 <li>Mammals continued to grow larger.</li>
                             </ul>
                         </div>

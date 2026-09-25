@@ -55,6 +55,14 @@ nodes: [
       images:[
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe71G29yx0pa-_O_0cP-yS27Wh2w-wus_CKW7nXqDykBtSra1jNtt_MMdT&s=10'}
         ]
+      },
+    { id:'pinopsida', name:'Pinopsida', from:'plantae', kind:'rank', rankLabel:'class', color:'c-plantae',
+      taxonPath: 'k.Plantae → Tracheophytes → Gymnosperms → p.Pinophyta',
+      lived: ['Carboniferous'],
+      html:'Conifers are woody trees and shrubs, mostly evergreen with a regular branching pattern, reproducing with male and female cones, usually on the same tree. They are wind-pollinated and the seeds are usually dispersed by the wind..',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj-RgJky-ZQZvTD3YwsrsphyXNBiQRjIotwVXOcjAyiLuxDXFfd6Hioz0a&s=10', fit:'cover'}
+        ]
       }
 ] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));

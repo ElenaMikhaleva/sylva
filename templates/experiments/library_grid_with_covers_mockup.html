@@ -1,0 +1,94 @@
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Golos+Text:wght@400;500&display=swap" rel="stylesheet">
+<style>
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.lib{--paper:#F5F2EA;--ink:#22201C;--muted:#6B655B;--rule:#D9D3C4;background:var(--paper);color:var(--ink);padding:20px;border-radius:12px;font-family:'Space Grotesk',var(--font-sans);font-size:14px}
+.lib *{box-sizing:border-box}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.tabs{display:flex;gap:6px;font-family:'Golos Text',var(--font-sans);font-size:12px}
+.tab{padding:5px 10px;border:1.5px solid var(--ink);border-radius:20px;color:var(--muted)}
+.tab.on{background:var(--ink);color:var(--paper)}
+.view{display:flex;gap:6px;color:var(--muted)}
+.view svg{width:18px;height:18px}
+.view .on{color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:18px 14px}
+.item{cursor:pointer}
+.cover{position:relative;aspect-ratio:2/3;border:1.5px solid var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cover svg.icon{width:30px;height:30px;opacity:.55}
+.cover .dot{position:absolute;bottom:6px;right:6px;width:16px;height:16px}
+.stackwrap{position:relative;margin:0 6px 6px 0}
+.stackwrap::before,.stackwrap::after{content:"";position:absolute;inset:0;border:1.5px solid var(--ink);border-radius:6px;background:var(--paper);z-index:-1}
+.stackwrap::before{transform:translate(3px,3px)}
+.stackwrap::after{transform:translate(6px,6px);z-index:-2}
+.meta{margin-top:8px}
+.meta .label{font-family:'Golos Text',var(--font-sans);font-size:11px;color:var(--muted)}
+.meta .t{font-size:14px;font-weight:500;line-height:1.25;margin:2px 0 1px}
+.meta .a{font-family:'Golos Text',var(--font-sans);font-size:12px;color:var(--muted)}
+/* cover fills — flat riso tints, one hue per item just for variety here; a real site would pick per subject */
+.c1{background:#E4DCC8}
+.c2{background:#EFD9C9}
+.c3{background:#DEE3D3}
+.c4{background:#E9D6DD}
+.c5{background:#DCE1E6}
+.c6{background:#EAE2CB}
+.c7{background:#E4DCC8}
+.c8{background:#EFD9C9}
+svg.s{color:var(--ink)}
+</style>
+<h2 class="sr-only">Library grid mockup showing eight materials as cards with flat illustrated covers, type icon, status dot, title and author</h2>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4.5c2-1 5-1 8 0v15c-3-1-6-1-8 0V4.5Z"/><path d="M20 4.5c-2-1-5-1-8 0v15c3-1 6-1 8 0V4.5Z"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M7 5v14M17 5v14M3 9h4M3 15h4M17 9h4M17 15h4"/></symbol>
+<symbol id="i-music" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="17" r="2.5"/><circle cx="17" cy="15" r="2.5"/><path d="M9.5 17V5.5L19.5 4v10.5"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/></symbol>
+<symbol id="d-none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3"/></symbol>
+<symbol id="d-reading" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+<symbol id="d-d1" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="7" r="1.3" fill="currentColor"/><circle cx="7.4" cy="11.5" r="1.3" fill="currentColor"/><circle cx="12.6" cy="11.5" r="1.3" fill="currentColor"/></symbol>
+<symbol id="d-d2" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="1.2" fill="currentColor"/><circle cx="13.3" cy="10" r="1.2" fill="currentColor"/><circle cx="6.7" cy="10" r="1.2" fill="currentColor"/><circle cx="11.65" cy="12.86" r="1.2" fill="currentColor"/><circle cx="8.35" cy="12.86" r="1.2" fill="currentColor"/><circle cx="11.65" cy="7.14" r="1.2" fill="currentColor"/><circle cx="8.35" cy="7.14" r="1.2" fill="currentColor"/></symbol>
+<symbol id="d-d3" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="5.6" fill="currentColor"/></symbol>
+</defs></svg>
+
+<div class="lib">
+  <div class="toolbar">
+    <div class="tabs">
+      <div class="tab on">all</div><div class="tab">books</div><div class="tab">films</div><div class="tab">music</div><div class="tab">podcasts</div>
+    </div>
+    <div class="view">
+      <svg class="s on"><use href="#i-book" x="-3" y="-3" width="26" height="26"/></svg>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="item">
+      <div class="cover c1"><svg class="s icon"><use href="#i-book"/></svg><svg class="dot"><use href="#d-d3"/></svg></div>
+      <div class="meta"><div class="label">book · 2019</div><div class="t">The long title of a book</div><div class="a">Author name</div></div>
+    </div>
+    <div class="item">
+      <div class="cover c2"><svg class="s icon"><use href="#i-film"/></svg><svg class="dot"><use href="#d-d1"/></svg></div>
+      <div class="meta"><div class="label">film · 1975</div><div class="t">A film title</div><div class="a">Director name</div></div>
+    </div>
+    <div class="item">
+      <div class="cover c3"><svg class="s icon"><use href="#i-music"/></svg><svg class="dot"><use href="#d-d2"/></svg></div>
+      <div class="meta"><div class="label">album · 2003</div><div class="t">Album name</div><div class="a">Artist name</div></div>
+    </div>
+    <div class="item">
+      <div class="cover c4"><svg class="s icon"><use href="#i-mic"/></svg><svg class="dot"><use href="#d-reading"/></svg></div>
+      <div class="meta"><div class="label">podcast · ongoing</div><div class="t">Podcast title</div><div class="a">Host name</div></div>
+    </div>
+    <div class="item">
+      <div class="stackwrap"><div class="cover c5"><svg class="s icon"><use href="#i-book"/></svg><svg class="dot"><use href="#d-d3"/></svg></div></div>
+      <div class="meta"><div class="label">book · 2011</div><div class="t">Some trilogy</div><div class="a">Author name</div></div>
+    </div>
+    <div class="item">
+      <div class="cover c6"><svg class="s icon"><use href="#i-book"/></svg><svg class="dot"><use href="#d-none"/></svg></div>
+      <div class="meta"><div class="label">book · 1998</div><div class="t">Not started yet</div><div class="a">Author name</div></div>
+    </div>
+    <div class="item">
+      <div class="cover c7"><svg class="s icon"><use href="#i-film"/></svg><svg class="dot"><use href="#d-d1"/></svg></div>
+      <div class="meta"><div class="label">film · 2016</div><div class="t">Another film</div><div class="a">Director name</div></div>
+    </div>
+    <div class="item">
+      <div class="stackwrap"><div class="cover c8"><svg class="s icon"><use href="#i-book"/></svg><svg class="dot"><use href="#d-d2"/></svg></div></div>
+      <div class="meta"><div class="label">poetry · collection</div><div class="t">Poems</div><div class="a">Author X</div></div>
+    </div>
+  </div>
+</div>

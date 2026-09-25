@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ancient world — lanes prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eee9de; --card:#f7f3e9; --ink:#211d17; --ink-soft:#665e50;
+  --egypt:#c8862b; --meso:#3f7d5c; --persia:#a3433a; --greece:#2a6ea8;
+  --macedon:#7a5aa8; --rome:#b6402f; --carthage:#2f8f8a; --phoenicia:#c65a8e;
+  --ff-head:"Space Grotesk",system-ui,sans-serif;
+  --ff-label:"Golos Text",system-ui,sans-serif;
+  --ff-mono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ff-label);line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.app{max-width:980px;margin:0 auto;padding:2.4rem 1.1rem 4rem}
+h1{margin:0;font-family:var(--ff-head);font-weight:700;font-size:clamp(1.8rem,5vw,2.5rem);letter-spacing:-.02em}
+h1::after{content:"";display:block;width:4.5rem;height:.4rem;margin-top:.6rem;border-radius:999px;background:var(--ink)}
+.lede{margin:.9rem 0 0;max-width:60ch;color:var(--ink-soft)}
+
+.controls{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center;margin:1.6rem 0 1.2rem}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:2px}
+.seg button{font:500 .82rem var(--ff-label);color:var(--ink);background:transparent;border:0;border-radius:999px;
+  padding:.32rem .78rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem .9rem;margin-left:auto;font-size:.78rem;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:.35rem}
+.legend .ln{width:1.1rem;height:0;border-top:2px solid var(--ink)}
+.legend .ln.dashed{border-top-style:dashed}
+.legend .ln.arrow{border-top-style:solid;position:relative}
+
+.chart-wrap{overflow-x:auto;border:1.5px solid var(--ink);border-radius:12px;background:var(--card)}
+svg.timeline{display:block;font-family:var(--ff-label)}
+.axis text{font-family:var(--ff-mono);font-size:10.5px;fill:var(--ink-soft)}
+.axis line{stroke:color-mix(in srgb, var(--ink) 25%, transparent);stroke-width:1}
+.lane-label{font-family:var(--ff-head);font-weight:700;font-size:12.5px;fill:var(--ink)}
+.seg-rect{cursor:pointer;stroke:var(--ink);stroke-width:1}
+.seg-label{font-size:10.5px;fill:#fff;pointer-events:none;font-weight:600}
+.seg-rect.dim{opacity:.25}
+.rel-line{fill:none;stroke:var(--ink);stroke-width:1.6;opacity:.85}
+.rel-line.dashed{stroke-dasharray:3 3}
+.rel-line.dim{opacity:.08}
+.rel-hit{fill:none;stroke:transparent;stroke-width:10;cursor:pointer}
+
+.detail{margin-top:1.1rem;padding:1rem 1.2rem;background:var(--card);border:1.5px solid var(--ink);border-radius:12px;
+  min-height:3.4rem}
+.detail .kicker{font-family:var(--ff-mono);font-size:.78rem;color:var(--ink-soft)}
+.detail .title{font-family:var(--ff-head);font-weight:700;font-size:1.05rem;margin:.15rem 0 .25rem}
+.detail .body{font-size:.9rem;color:var(--ink-soft)}
+.placeholder{color:var(--ink-soft);font-size:.88rem}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="app">
+  <h1>How the ancient states relate</h1>
+  <p class="lede">Each lane is one state or people; each block is a period of its history. The lines between lanes mark conquests, successions, and alliances — click a block or a line for what it means.</p>
+
+  <div class="controls">
+    <div class="seg" id="rangeSeg" role="group" aria-label="Time window">
+      <button type="button" data-range="all" aria-pressed="true">Full span</button>
+      <button type="button" data-range="bronze">Bronze age</button>
+      <button type="button" data-range="classical">Classical–Hellenistic</button>
+      <button type="button" data-range="roman">Roman era</button>
+    </div>
+    <div class="legend">
+      <span><i class="ln arrow"></i>conquest</span>
+      <span><i class="ln dashed"></i>alliance / rivalry</span>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <svg class="timeline" id="tl"></svg>
+  </div>
+
+  <div class="detail" id="detail">
+    <p class="placeholder">Click any block or connecting line above to read about it here.</p>
+  </div>
+</main>
+
+<script>
+/* ---------- data ---------- */
+const LANES = [
+  { id:'egypt',     label:'Egypt',            color:'var(--egypt)' },
+  { id:'meso',       label:'Mesopotamia',      color:'var(--meso)' },
+  { id:'phoenicia', label:'Phoenicia',        color:'var(--phoenicia)' },
+  { id:'persia',    label:'Persia',           color:'var(--persia)' },
+  { id:'greece',    label:'Greek states',     color:'var(--greece)' },
+  { id:'macedon',   label:'Macedon',          color:'var(--macedon)' },
+  { id:'carthage',  label:'Carthage',         color:'var(--carthage)' },
+  { id:'rome',      label:'Rome',             color:'var(--rome)' }
+];
+
+const SEGMENTS = [
+  { lane:'egypt', from:-3100, to:-2686, label:'Early Dynastic', note:'Unification of Upper and Lower Egypt under the first pharaohs.' },
+  { lane:'egypt', from:-2686, to:-2181, label:'Old Kingdom', note:'The age of pyramid-building at Giza and Saqqara.' },
+  { lane:'egypt', from:-2055, to:-1650, label:'Middle Kingdom', note:'Reunification and expansion after the First Intermediate Period.' },
+  { lane:'egypt', from:-1550, to:-1077, label:'New Kingdom', note:'Egypt at its most powerful — Thutmose III, Akhenaten, Ramesses II.' },
+  { lane:'egypt', from:-664, to:-332, label:'Late Period', note:'Cycles of foreign rule (Assyrian, Persian) before Alexander.' },
+  { lane:'egypt', from:-332, to:-30, label:'Ptolemaic', note:'Greek Macedonian dynasty founded by one of Alexander\u2019s generals.' },
+
+  { lane:'meso', from:-2900, to:-2334, label:'Sumerian city-states', note:'Ur, Uruk, Lagash — rival cities, shared writing and religion.' },
+  { lane:'meso', from:-2334, to:-2154, label:'Akkadian Empire', note:'Sargon of Akkad unites the Sumerian cities into one empire.' },
+  { lane:'meso', from:-1894, to:-1595, label:'Old Babylonian', note:'Hammurabi\u2019s Babylon and its famous law code.' },
+  { lane:'meso', from:-911, to:-609, label:'Neo-Assyrian Empire', note:'Militarized empire stretching from Egypt to the Persian Gulf.' },
+  { lane:'meso', from:-626, to:-539, label:'Neo-Babylonian', note:'Nebuchadnezzar II and the fall of Assyria.' },
+
+  { lane:'phoenicia', from:-1200, to:-539, label:'Phoenician city-states', note:'Tyre, Sidon, Byblos — trade network across the Mediterranean.' },
+
+  { lane:'persia', from:-550, to:-330, label:'Achaemenid Empire', note:'Cyrus the Great to Darius III — largest empire the ancient world had seen.' },
+
+  { lane:'greece', from:-800, to:-500, label:'Archaic Greece', note:'Rise of the polis; colonization across the Mediterranean and Black Sea.' },
+  { lane:'greece', from:-500, to:-323, label:'Classical Greece', note:'Athens, Sparta, and the wars against Persia and each other.' },
+  { lane:'greece', from:-323, to:-146, label:'Hellenistic Greece', note:'Greek city-states under Macedonian, then Roman, influence.' },
+
+  { lane:'macedon', from:-808, to:-336, label:'Kingdom of Macedon', note:'A northern Greek kingdom, long seen as peripheral by the southern poleis.' },
+  { lane:'macedon', from:-336, to:-323, label:'Alexander\u2019s empire', note:'Conquest from Greece to the Indus valley in just over a decade.' },
+  { lane:'macedon', from:-323, to:-168, label:'Successor kingdoms', note:'Alexander\u2019s generals divide the empire — Antigonids in Macedon itself.' },
+
+  { lane:'carthage', from:-814, to:-146, label:'Carthaginian Republic', note:'Phoenician colony turned dominant naval power in the western Mediterranean.' },
+
+  { lane:'rome', from:-753, to:-509, label:'Roman Kingdom', note:'Legendary founding by Romulus through the last of seven kings.' },
+  { lane:'rome', from:-509, to:-27, label:'Roman Republic', note:'Senate and elected magistrates; expansion across Italy and beyond.' },
+  { lane:'rome', from:-27, to:400, label:'Roman Empire', note:'From Augustus onward — the span this timeline stops tracking at.' }
+];
+
+const RELATIONS = [
+  { from:'meso', to:'persia', at:-539, type:'conquest', note:'Cyrus the Great takes Babylon, ending Neo-Babylonian rule.' },
+  { from:'egypt', to:'persia', at:-525, type:'conquest', note:'Cambyses II conquers Egypt, making it a Persian satrapy.' },
+  { from:'phoenicia', to:'persia', at:-539, type:'conquest', note:'The Phoenician cities become Persian vassals after Babylon falls.' },
+  { from:'persia', to:'greece', at:-490, type:'rivalry', note:'The Persian Wars — Marathon, Thermopylae, Salamis.' },
+  { from:'persia', to:'macedon', at:-330, type:'conquest', note:'Alexander defeats Darius III and takes the whole Achaemenid empire.' },
+  { from:'greece', to:'macedon', at:-338, type:'conquest', note:'Philip II defeats the Greek city-states at Chaeronea.' },
+  { from:'egypt', to:'macedon', at:-332, type:'conquest', note:'Alexander takes Egypt without a fight; the Ptolemies later rule it.' },
+  { from:'carthage', to:'rome', at:-146, type:'conquest', note:'The Third Punic War ends with Carthage destroyed.' },
+  { from:'greece', to:'rome', at:-146, type:'conquest', note:'Rome sacks Corinth the same year, absorbing Greece.' },
+  { from:'phoenicia', to:'carthage', at:-814, type:'rivalry', note:'Carthage is founded as a Phoenician colony, later eclipsing Tyre.' },
+  { from:'macedon', to:'rome', at:-168, type:'conquest', note:'Rome defeats the Antigonid kingdom at Pydna.' },
+  { from:'egypt', to:'rome', at:-30, type:'conquest', note:'Cleopatra\u2019s death ends Ptolemaic Egypt; it becomes a Roman province.' }
+];
+
+const RANGES = {
+  all:      [-3100, 400],
+  bronze:   [-3100, -1077],
+  classical:[-800, -146],
+  roman:    [-753, 400]
+};
+
+/* ---------- layout ---------- */
+const svg = document.getElementById('tl');
+const laneH = 44, laneGap = 6, leftPad = 132, rightPad = 24, topPad = 34, axisH = 26;
+const pxPerYear = 0.46;
+let range = RANGES.all;
+let activeFilter = null; // {kind:'lane'|'rel', id}
+
+function yearLabel(y){ return y < 0 ? `${Math.abs(y)} BCE` : `${y} CE`; }
+function xOf(year){ return leftPad + (year - range[0]) * pxPerYear; }
+
+function buildAxis(){
+  const ticks = [];
+  const span = range[1] - range[0];
+  const step = span > 2000 ? 500 : span > 800 ? 200 : span > 300 ? 100 : 50;
+  let start = Math.ceil(range[0] / step) * step;
+  for (let y = start; y <= range[1]; y += step) ticks.push(y);
+  return ticks;
+}
+
+function render(){
+  const width = leftPad + (range[1] - range[0]) * pxPerYear + rightPad;
+  const height = topPad + LANES.length * (laneH + laneGap) + axisH;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('width', width);
+  svg.setAttribute('height', height);
+
+  let out = '';
+
+  /* axis */
+  out += `<g class="axis">`;
+  buildAxis().forEach(y => {
+    const x = xOf(y);
+    out += `<line x1="${x}" y1="${topPad-8}" x2="${x}" y2="${height-axisH+4}"/>`;
+    out += `<text x="${x}" y="${height-8}" text-anchor="middle">${yearLabel(y)}</text>`;
+  });
+  out += `</g>`;
+
+  /* lanes */
+  LANES.forEach((lane, i) => {
+    const y = topPad + i * (laneH + laneGap);
+    out += `<text class="lane-label" x="8" y="${y + laneH/2 + 4}">${lane.label}</text>`;
+    out += `<line x1="${leftPad-14}" y1="${y+laneH/2}" x2="${width-rightPad}" y2="${y+laneH/2}" stroke="color-mix(in srgb, var(--ink) 12%, transparent)" stroke-width="1"/>`;
+  });
+
+  /* segments */
+  const laneIndex = Object.fromEntries(LANES.map((l,i)=>[l.id,i]));
+  SEGMENTS.forEach((seg, idx) => {
+    const from = Math.max(seg.from, range[0]), to = Math.min(seg.to, range[1]);
+    if (to <= from) return;
+    const li = laneIndex[seg.lane];
+    const y = topPad + li * (laneH + laneGap);
+    const x1 = xOf(from), x2 = xOf(to);
+    const w = Math.max(2, x2 - x1);
+    const dim = activeFilter && activeFilter.kind === 'lane' && activeFilter.laneId !== seg.lane;
+    out += `<rect class="seg-rect${dim?' dim':''}" data-idx="${idx}" x="${x1}" y="${y+4}" width="${w}" height="${laneH-8}" rx="5"
+      fill="${LANES[li].color}"/>`;
+    if (w > 46) out += `<text class="seg-label" x="${x1+8}" y="${y+laneH/2+4}">${seg.label}</text>`;
+  });
+
+  /* relation connectors — curved path between lane midpoints at the given year */
+  RELATIONS.forEach((rel, idx) => {
+    if (rel.at < range[0] || rel.at > range[1]) return;
+    const li1 = laneIndex[rel.from], li2 = laneIndex[rel.to];
+    const x = xOf(rel.at);
+    const y1 = topPad + li1 * (laneH + laneGap) + laneH/2;
+    const y2 = topPad + li2 * (laneH + laneGap) + laneH/2;
+    const dim = activeFilter && !(activeFilter.kind === 'rel' && activeFilter.idx === idx) && activeFilter.kind === 'rel';
+    const cls = rel.type === 'rivalry' ? 'rel-line dashed' : 'rel-line';
+    out += `<path class="${cls}${dim?' dim':''}" data-rel="${idx}" d="M${x},${y1} C${x+26},${(y1+y2)/2} ${x+26},${(y1+y2)/2} ${x},${y2}"
+      ${rel.type==='conquest' ? 'marker-end="url(#arrowhead)"' : ''}/>`;
+    out += `<path class="rel-hit" data-rel="${idx}" d="M${x},${y1} C${x+26},${(y1+y2)/2} ${x+26},${(y1+y2)/2} ${x},${y2}"/>`;
+  });
+
+  svg.innerHTML = `
+    <defs>
+      <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 Z" fill="var(--ink)"/>
+      </marker>
+    </defs>
+    ${out}
+  `;
+
+  svg.querySelectorAll('.seg-rect').forEach(el => {
+    el.addEventListener('click', () => {
+      const seg = SEGMENTS[Number(el.dataset.idx)];
+      showDetail(seg.label, `${yearLabel(seg.from)} \u2013 ${yearLabel(seg.to)}`, seg.note);
+    });
+  });
+  svg.querySelectorAll('.rel-hit').forEach(el => {
+    el.addEventListener('click', () => {
+      const rel = RELATIONS[Number(el.dataset.rel)];
+      const fromLabel = LANES.find(l=>l.id===rel.from).label;
+      const toLabel = LANES.find(l=>l.id===rel.to).label;
+      const verb = rel.type === 'conquest' ? 'conquered by' : 'rivals / allies with';
+      showDetail(`${fromLabel} \u2192 ${toLabel}`, `${verb === 'conquered by' ? 'Conquered by' : 'Rivalry / alliance with'} ${toLabel}, ${yearLabel(rel.at)}`, rel.note);
+    });
+  });
+}
+
+function showDetail(title, kicker, note){
+  document.getElementById('detail').innerHTML = `
+    <p class="kicker">${kicker}</p>
+    <p class="title">${title}</p>
+    <p class="body">${note}</p>
+  `;
+}
+
+document.getElementById('rangeSeg').addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  [...e.currentTarget.children].forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+  range = RANGES[btn.dataset.range];
+  render();
+});
+
+render();
+</script>
+</body>
+</html>

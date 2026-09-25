@@ -63,8 +63,7 @@ function buildMedia(images) {
     const img = images[0];
     return `<figure class="single-img-slot">
       <div class="img-slot">
-        ${img.src ? `<img src="${img.src}" alt="${(img.caption||'').replace(/"/g,'&quot;')}"${img.focus ? ` style="object-position:${img.focus}"` : ''}>` : 'image'}
-      </div>
+        ${img.src ? `<img src="${img.src}" alt="${(img.caption||'').replace(/"/g,'&quot;')}" style="${img.focus?`object-position:${img.focus};`:''}${img.fit?`object-fit:${img.fit};`:''}">` : 'image'}</div>
       ${img.caption ? `<figcaption class="carousel-caption">${img.caption}</figcaption>` : ''}
     </figure>`;
   }
@@ -74,7 +73,7 @@ function buildMedia(images) {
 function buildCarousel(images) {
   const slides = images.map((img, i) => `
     <figure class="carousel-slide" data-caption="${(img.caption||'').replace(/"/g,'&quot;')}">
-      <div class="img-slot"><img src="${img.src}" alt="${(img.caption||'').replace(/"/g,'&quot;')}"${img.focus ? ` style="object-position:${img.focus}"` : ''}></div>
+      <div class="img-slot"><img src="${img.src}" alt="${(img.caption||'').replace(/"/g,'&quot;')}" style="${img.focus?`object-position:${img.focus};`:''}${img.fit?`object-fit:${img.fit};`:''}"></div>
     </figure>`).join('');
   return `<div class="carousel"><div class="carousel-viewport"><div class="carousel-track">${slides}</div>
     <button class="carousel-arrow carousel-prev" aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
@@ -124,7 +123,7 @@ function resolveColor(c) {
   const el = document.createElement('span');
   el.style.color = c;
   document.body.appendChild(el);
-  const rgb = getComputedStyle(el).color;   // always "rgb(r, g, b)"
+  const rgb = getComputedStyle(el).color;
   el.remove();
   return rgb;
 }
@@ -163,7 +162,7 @@ function cardHtml(item, badge, opts = {}) {
     : '';
   return `
     <div class="expand-pad">
-      <section class="card" style="--accent-color:var(--${item.color})">
+      <section class="card" style="--accent-color:var(--${item.color || 'text-soft'})">
         <div class="card-head">
           <h2 class="card-title">${item.name}${item.native ? `<span class="card-native">${item.native}</span>` : ''}</h2>
           ${badge ? `<span class="card-tag">${badge}</span>` : ''}
@@ -280,6 +279,7 @@ function initFlowTree(TREE_DATA) {
       chip.title = ev.label;
       chip.setAttribute('aria-label', ev.label);
       chip.dataset.id = ev.id;
+      chip.id = ev.id;
       chip.addEventListener('click', () => toggleExpand(ev.id, chip, ev, 'event'));
       evRow.appendChild(chip);
       flow.appendChild(evRow);
@@ -359,18 +359,17 @@ function svgEl(tag, attrs) {
   return el;
 }
 
-const RANKS = ['domain','kingdom','phylum','subphylum','class','infraclass','order','family','genus','species'];
+const RANKS = ['domain','kingdom','phylum','subphylum','class','subclass','infraclass','order','suborder','infraorder','superfamily','family','genus','species'];
 
 function initStageTree(TREE_DATA) {
-  /* ---- which ranks can be hidden ---- */
   const CORE = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'];
-  const isExtra = n => !!n.rankLabel && !CORE.includes(n.rankLabel);   // subphylum, clade, superclass...
+  const isExtra = n => !!n.rankLabel && !CORE.includes(n.rankLabel);
   let showExtra = true;
 
   const flow = document.getElementById('treeFlow');
   const linksSvg = document.getElementById('treeLinks');
   const detailZone = document.getElementById('detailZone');
-  const dataById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));   // never modified
+  const dataById = Object.fromEntries(TREE_DATA.nodes.map(n => [n.id, n]));
   const ROW_HEIGHT = 55;
 
   let nodesById = {};
@@ -537,7 +536,7 @@ function initStageTree(TREE_DATA) {
           btn.className = `node-btn kind-${n.kind}${n.extinct ? ' is-extinct' : ''}`;
           btn.style.setProperty('--accent-color', `var(--${n.color})`);
           btn.dataset.id = n.id;
-          btn.id = `node-${n.id}`;
+          btn.id = `${n.id}`;
           btn.innerHTML = `${n.name}${n.extinct ? '<span class="extinct-mark"> †</span>' : ''}`;
           btn.addEventListener('click', () => toggleExpand(n.id, btn, n, n.rankLabel || null));
           colEl.appendChild(btn);

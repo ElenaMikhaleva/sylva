@@ -34,12 +34,13 @@
 </div>
 <script>
 const TREE_DATA = {
-ranks: ['domain','kingdom','phylum','subphylum'],
+ranks: ['domain','kingdom','phylum','subphylum','order'],
 nodes: [
     { id:'eukaryota', name:'Eukaryota', kind:'rank', rankLabel:'domain',
       html:`Appeared in endosymbiosis of 1st emerger.`
       },
     { id:'fungi', name:'Fungi', from:'eukaryota', kind:'rank', rankLabel:'kingdom', color:'c-fungi',
+      lived: ['Ordovician'],
       html:`<p>Yeasts, molds, and mushrooms</p><ul><li>have chitin in their cell walls;</li><li>a fungus does not perform photosynthesis;</li><li>the principal decomposers in ecological systems.</li></ul>`
       },
     { id:'plantae', name:'Plantae', from:'eukaryota', kind:'rank', rankLabel:'kingdom', color:'c-plantae',
@@ -74,6 +75,17 @@ nodes: [
       },
     { id:'hexapoda', name:'Hexapoda', from:'arthropoda', kind:'rank', rankLabel:'subphylum', color:'c-animalia',
       html:'Arthropods with bodies divided into three main parts (head, <span class="term" tabindex="0" data-def="chest">thorax</span>, and abdomen) and possess three pairs of legs attached to the thorax.'
+      },
+    { id:'laminariales', name:'Laminariales', from:'eukaryota', kind:'rank', rankLabel:'order', color:'c-protist',
+      taxonPath: 'd.Eukaryota → Sar → Stramenopiles → Ochrophyta → c.Phaeophyceae',
+      lived: ['Paleogene'],
+      html:'<p>Kelps are large brown algae or seaweeds.</p><p>Despite its appearance and use of photosynthesis in chloroplasts, kelp is not a plant but a <span class="term" tabindex="0" data-def="not fungi, plant, or animal">protist</span>.</p>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9VSnaiPRo3MmzgK391uCATUu7x_PbNGrj73D6eSuw7yhRYXqRwE3bkVo&s=10', fit:'cover'},
+        {src:'https://assets.science.nasa.gov/content/dam/science/missions/landsat/2020/04/Kelp_southAmerica_NGS.jpg?w=1440&h=960&fit=clip&crop=faces%2Cfocalpoint', fit:'cover'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ66PxUYdikiJqImuUVOf8nXaL3fXOFwg4rsG3cKh1CG18l8pzMQkBSReE&s=10', fit:'cover'},
+        {src:'https://shakablog.s3.us-west-1.amazonaws.com/images/1b1e04a0268dc424ceee5755b04705c3.webp', fit:'cover', focus:'right'}
+        ]
       }
 ] };
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));

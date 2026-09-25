@@ -34,46 +34,46 @@
 const TREE_DATA = {
   nodes: [
     { id:'bacteria', name:'Bacteria', native:'Бактерии', kind:'rank', rankLabel:'domain', color:'archean',
-      html:`<p>Appeared 3.5 Bya in <a href="geological-time.html#archean">Archean</a>.</p><p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.</p><p>Consists of <span class="highlight">one biological cell</span>.</p>`,
+      html:`<p><a href="tree-prokaryotes.html#bacteria">Bacteria</a> appeared 3.5 Bya in <a href="geological-time.html#archean">Archean</a>.</p><p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.</p><p>Consists of <span class="highlight">one biological cell</span>.</p>`,
       today:`bacteria are found in essentially every environment on Earth.`,
       images:[
         {src:'https://www.pharmapproach.com/wp-content/uploads/2021/01/Diagram-of-a-bacterial-cell-showing-structural-parts-750x640.jpg', caption:'Bacteria cell structure.', focus:'top'}
       ] },
 
     { id:'archaea', name:'Archaea', native:'Археи', kind:'rank', rankLabel:'domain', color:'archean',
-      html:`<p>Appeared 3.4 Bya in <a href="geological-time.html#archean">Archean</a>.<p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.<p>Consists of <span class="highlight">one biological cell</span>. Their cell membranes, enzymes, and genetic processes resemble those of eukaryotes more closely than bacteria.</p>`,
+      html:`<p><a href="tree-prokaryotes.html#archaea">Archaea</a> appeared 3.4 Bya in <a href="geological-time.html#archean">Archean</a>.<p>One of the two primary prokaryote <span class="term" data-def="A group of related organisms sharing a common ancestor.">lineages</span>.<p>Consists of <span class="highlight">one biological cell</span>. Their cell membranes, enzymes, and genetic processes resemble those of eukaryotes more closely than bacteria.</p>`,
       today:`found almost everywhere.`,
       images:[
         {src:'https://xbio-live.s3.amazonaws.com/bio-dictionary/ARCHAEAIII.DP.RGB.png', caption:'Bacteria cell structure'}
       ] },
 
     { id:'methanobacterium', name:'Methanobacterium', native:'Метанобактерии', kind:'rank', rankLabel:'genus', color:'archean',
-      html:`<p>Appeared 3.4 Bya in <a href="geological-time.html#archean">Archean</a>.</p><p><span class="term" data-def="produce methane as a metabolic byproduct">Methanogens</span>. Live without oxygen, which is toxic to them.</p>`,
-      today:`...`,
+      html:`<p><a href="tree-prokaryotes.html#methanobacterium">Methanobacterium</a> appeared 3.4 Bya in <a href="geological-time.html#archean">Archean</a>.</p><p><span class="term" data-def="produce methane as a metabolic byproduct">Methanogens</span>. Live without oxygen, which is toxic to them.</p>`,
+      today:` Found widely in anoxic environments such as freshwater sediments, swamps, peat bogs, rice fields, sewage digesters, and animal digestive tracts.`,
       images:[
-        {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Sn%C3%ADmek_ze_skenovac%C3%ADho_elektronov%C3%A9ho_mikroskopu_Methanobacterium_formicicum.jpg/500px-Sn%C3%ADmek_ze_skenovac%C3%ADho_elektronov%C3%A9ho_mikroskopu_Methanobacterium_formicicum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://www.researchgate.net/profile/K-H-Blotevogel-2/publication/226968776/figure/fig2/AS:670702558523409@1536919359876/figure-fig2_Q320.jpg', fit:'cover'}
       ] },
 
     { id:'cyanobacteria', name:'Cyanobacteria', native:'Цианобактерии', kind:'rank', rankLabel:'phylum', color:'archean',
-      html:`<p>Cyanobacteria or blue-green algae. The first organisms to <span class="term" data-def="Using light energy to build sugars from CO₂ and water.">photosynthesize</span> using water, releasing oxygen as a byproduct.</p>`,
+      html:`<p><a href="tree-prokaryotes.html#cyanobacteria">Cyanobacteria</a> or blue-green algae</p><p>The first organisms to <span class="term" data-def="Using light energy to build sugars from CO₂ and water.">photosynthesize</span> using water, releasing oxygen as a byproduct.</p>`,
       today:`still exists as "blue-green algae".`,
       images:[
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5sDrTezdJoDtigu_B1pMN-XnTmEYyo4zhkA_tBIOpch2ep3UsMrLP6LHr4qpMnRfAt8TJskc4JHlxABYrPfLSrIi0qqdG9wbUNo8F67w&s=10'}
       ] },
 
     { id:'eukaryotes', name:'Eukaryotes', native:'Эукариоты', kind:'rank', rankLabel:'domain', color:'proterozoic',
-      html:`<p>Appeared 1.7 Bya in <a href="geological-time.html#proterozoic">Proterozoic</a>.</p><p>Organisms whose cells contain a distinct, membrane-bound nucleus and other specialized structures called organelles.</p>`,
+      html:`<p><a href="tree-eukaryotes.html#eukaryota">Eukaryotes</a> appeared 1.7 Bya in <a href="geological-time.html#proterozoic">Proterozoic</a>.</p><p>Organisms whose cells contain a distinct, membrane-bound nucleus and other specialized structures called organelles.</p>`,
       today:`The root of every plant, animal, fungus, and protist alive today.`,
       images:[
         {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Typical_human_cell.tif/lossy-page1-330px-Typical_human_cell.tif.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Eukaryote cell structure'}
       ] },
 
     { id:'algae', name:'Algae & plants', native:'Водоросли и растения', kind:'lineage', color:'proterozoic',
-      html:`<p>Appeared 1.6 Bya in <a href="geological-time.html#proterozoic">Proterozoic</a>.</p><p>Organisms that have chloroplast and make their own food through photosynthesis.</p>`,
+      html:`<p><a href="tree-eukaryotes.html#plantae">Plants</a> appeared 1.6 Bya in <a href="geological-time.html#proterozoic">Proterozoic</a>.</p><p>Organisms that have chloroplast and make their own food through photosynthesis.</p>`,
       today:`the ancestor of algae and land plant.` },
 
-    { id:'animalline', name:'Animal line', native:'Линия животных', kind:'lineage', color:'proterozoic',
-      html:`<p>Multicellular, eukaryotic organisms belonging to the biological kingdom Animalia.</p>`,
+    { id:'animalia', name:'Animalia', kind:'rank', rankLabel:'kingdom', color:'proterozoic',
+      html:`<p><a href="tree-eukaryotes.html#animalia">Animals</a> are multicellular, eukaryotic organisms.</p>`,
       today:`the ancestor of animals.` },
 
     { id:'ediacaran', name:'Ediacaran biota', native:'Эдиакарская биота', kind:'lineage', color:'proterozoic',
@@ -81,27 +81,20 @@ const TREE_DATA = {
       today:`extinct.`,
       images:[
         {src: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Dickinsonia_costata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original', caption:'Dickinsonia'},
-        {src: 'https://hakaimagazine.com/wp-content/uploads/header-dickinsonia.jpg', caption:'Dickinsonia, illustration', focus:'-40px'},
+        {src: 'https://hakaimagazine.com/wp-content/uploads/header-dickinsonia.jpg', caption:'Dickinsonia, illustration', fit:'cover', focus:'23%'},
         {src: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Spriggina_Floundensi_4.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original', caption:'Spriggina, a possible early ancestor to trilobites or arthropods'},
         {src: 'https://paleozoo.com.au/resources/Spriggina_Model_Paleozoo.jpg', caption:'Spriggina, illustration', focus:'top'},
         {src: 'https://www.charnwoodforest.org/wp-content/uploads/2023/09/Charnia.jpg', caption:'Charnia'},
-        {src: 'https://www.charnwoodforest.org/wp-content/uploads/2024/03/Charnia-Community-No-Labels-web-sq-1200x1200.png', caption:'Charnia, illustration', focus:'bottom'},
-        {src: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Kimberella_quadrata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original', caption:'Kimberella'},
+        {src: 'https://www.charnwoodforest.org/wp-content/uploads/2024/03/Charnia-Community-No-Labels-web-sq-1200x1200.png', caption:'Charnia, illustration', fit:'cover', focus:'bottom'},
+        {src: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Kimberella_quadrata.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original', caption:'Kimberella', fit:'cover'},
         {src: 'https://alchetron.com/cdn/kimberella-54aa8734-9432-45b4-83ba-ddca325beba-resize-750.jpeg', caption:'Kimberella, illustration'},
         {src: 'https://mediasvc.eurekalert.org/Api/v1/Multimedia/adfaa3b8-c9be-4724-b092-a70f51c4a437/Rendition/low-res/Content/Public', caption:'Cloudina, the earliest animals to evolve hard, mineralized outer shells', focus:'top'},
-        {src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCmocy_WB0m7tolyznESRfm3aXwmgIWRII121SJwSvsQ&s=10', caption:'Cloudina, illustration', focus:'3px'}
-      ] },
-
-    { id:'bangiomorphapubescens', name:'Bangiomorpha pubescens', kind:'rank', rankLabel:'species', color:'proterozoic',
-      html:`<p>Appeared in 1047 Mya in <a href="geological-time#proterozoic">Proterozoic</a>. Red algae, the first known sexually reproducing organism.</p>`,
-      today:`extinct.`,
-      images:[
-        {src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiiLnZwkK6Hw-LnPstiAlS8kVbIc4l-IoBg-EgFnoE-i9-oQZsgwteiU0&s=10' }
+        {src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCmocy_WB0m7tolyznESRfm3aXwmgIWRII121SJwSvsQ&s=10', caption:'Cloudina, illustration'}
       ] },
 
     { id:'asgardarchaea', name:'Asgard archaea', kind:'rank', rankLabel:'kingdom', color:'archean',
-      html:`<p>Another name Promethearchaeati.</p><p>Appeared 3.3 Bya in <a href="geological-time.html#archean">Archean</a><p>Contain eukaryotic signature proteins. It appears that the eukaryotes emerged within the Promethearchaeati.</p>`,
-      today:`...`,
+      html:`<p><a href='tree-prokaryotes.html#asgardarchaea'>Asgard archaea</a> or Promethearchaeati.</p><p>Appeared 3.3 Bya in <a href="geological-time.html#archean">Archean</a><p>Contain eukaryotic signature proteins.</p><p>It appears that the eukaryotes emerged within the Promethearchaeati.</p>`,
+      today:`exists`,
       images:[
         {src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Promethearchaeum_syntrophicum.jpg/500px-Promethearchaeum_syntrophicum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail' }
       ] }
@@ -111,7 +104,7 @@ const TREE_DATA = {
     { id:'prokaryotes', label:'Prokaryotes', memberIds:['bacteria','archaea'], color:'archean',
       name:'Prokaryotes', native:'Прокариоты',
       html:`<p>An informal umbrella term for cells with no nucleus.</p>`,
-      today:`Every bacterium and archaeon alive today is a prokaryote.` }
+      today:`Every bacterium and archaeon is a prokaryote.` }
   ],
 
   events: [
@@ -121,7 +114,7 @@ const TREE_DATA = {
     },
     { id:'merger2', label:'2nd merger', from:['cyanobacteria','eukaryotes'], to:'algae', color:'proterozoic',
       name:'Endosymbiosis — 2nd merger',
-      html:`<p>One eukaryotic lineage engulfed a cyanobacterium — which became the chloroplast.</p>`
+      html:`<p>One eukaryotic lineage engulfed a cyanobacterium, which became the chloroplast.</p>`
     }
   ],
 
@@ -134,8 +127,8 @@ const TREE_DATA = {
     { type:'row', items:[ {id:'eukaryotes'} ] },
     { type:'event', id:'merger2' },
     { type:'row', items:[
-      {id:'algae', sub:[{id:'bangiomorphapubescens'}]},
-      {id:'animalline', from:'eukaryotes', sub:[{id:'ediacaran'}]} ] },
+      {id:'algae'},
+      {id:'animalia', from:'eukaryotes', sub:[{id:'ediacaran'}]} ] },
   ]
 };
 document.addEventListener('DOMContentLoaded', () => initFlowTree(TREE_DATA));
