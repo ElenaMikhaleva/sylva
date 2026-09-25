@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylva — Vertebrates</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
+</head>
+<body data-page="species">
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <a href="studies.html">Studies</a>
+            <a>Library</a>
+        </div>
+    </nav>
+</header>
+<div class="frame">
+    <h1>Vertebrates</h1>
+    <div class="crumbs"><p><a href="studies.html">Biology</a> · Phylogeny</p></div>
+    <p>A reference map for biological classification of vertebrate animals.</p>
+    <div class="layout-split">
+        <button id="toggle-extra">Hide subtaxa</button>
+        <div class="tree-flow" id="treeFlow"><svg class="tree-links" id="treeLinks"></svg></div>
+        <div class="detail-zone" id="detailZone"></div>
+    </div>
+    <h2>Related</h2>
+    <ul>
+        <li><a href="https://www.gbif.org/" target="_blank">GBIF</a> — database of species with assigned Linnaean ranks;</li>
+        <li><a href="https://www.mindat.org/" target="_blank">mindat.org</a> — database of species.</li>
+    </ul>
+</div>
+<script>
+const TREE_DATA = {
+ranks: ['class','subclass','infraclass','order','suborder','infraorder','superfamily','family','genus','species'],
+nodes: [
+    { id:'creodonta', name:'Creodonta', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → Vertebrata → c.Mammalia',
+      lived: ['Paleogene', 'Neogene'],
+      extinct:true,
+      html:'Carnivorous placental mammals.',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4KBVnoaereR7R9Plmng2giJnaTSHfIPqyx7BIlQ4MLEAWmPy3JZS7tM&s=10', fit:'cover', focus:'right'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXnT-7dmCf02sGrrcFRqR8YDgVuYW-SoNE6MfB2RQGOp4RlrWtVHUR8nueVznLvz-uUQ0UbV8ipIPL_B7VQdp3Am8Dn6G2bOpvYw_yfgY&s=10', fit:'cover'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV7SfE9qMFtJ5kLnCVI1lIpTl1jncbXge2d3aAOKSLbw&s=10'}
+        ]
+      },
+    { id:'placentalia', name:'Placentalia', from:'mammalia', kind:'rank', rankLabel:'infraclass', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
+      html:'Animals that carry the fetus in the uterus of its mother to a relatively late stage of development.'
+      },
+    { id:'marsupialia', name:'Marsupialia', from:'mammalia', kind:'rank', rankLabel:'infraclass', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
+      html:'The young are born in a relatively undeveloped state and then nurtured within a pouch on their mother\'s abdomen.'
+      },
+    { id:'mammalia', name:'Mammalia', from:'synapsida', kind:'rank', rankLabel:'class', color:'c-chordata',
+      taxonPath: 'Animalia → Chordata → Vertebrata',
+      html:'<p>Mammals have:</p><ul><li>milk-producing mammary glands for feeding their young;</li><li>a broad neocortex region of the brain;</li><li>fur or hair;</li><li>three middle ear bones.</li></ul>'
+      },
+    { id:'primates', name:'Primates', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
+      lived: ['Paleogene'],
+      html:'<p>lemur, baboons, gibbon, orangutan, human</p><p>Primates arose from small terrestrial mammals. Many primate characteristics represent adaptations to the life among tree tops, including</p><ul><li>large brain sizes;</li><li>binocular vision;</li><li>color vision;</li><li>vocalizations;</li><li>shoulder girdles allowing a large degree of movement in the upper limbs;</li><li>opposable thumbs that enable better grasping and dexterity.</li></ul>',
+      },
+    { id:'hominoidea', name:'Hominoidea', from:'simiiformes', kind:'rank', rankLabel:'superfamily', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates',
+      lived: ['Neogene'],
+      html:'<p>Hominoids or apes are simians native to sub-Saharan Africa and Southeast Asia.</p><p>Do not have tail.</p>',
+      },
+    { id:'australopithecus', name:'Australopithecus', from:'hominoidea', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      etymology: 'from Latin <em>australis</em> (southern) and Ancient Greek <em>πίθηκος</em> (píthēkos, ape)',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates → Homininae → Hominini → Australopithecina',
+      lived: ['Neogene', 'Quaternary'],
+      extinct:true,
+      html:'<p>Regularly walked on two legs like humans, but their strong arms show they also spent time climbing in trees.</p>',
+      images:[
+        {src:'https://media.sciencephoto.com/c0/11/22/86/c0112286-800px-wm.jpg', fit:'cover'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR39MNG5eOkAkqX3zaPo8fNtcm-gu_s3kMYOwIPd8nwoA&s', fit:'cover', focus:'top'}
+        ]
+      },
+    { id:'simiiformes', name:'Simiiformes', from:'primates', kind:'rank', rankLabel:'infraorder', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates',
+      lived: ['Paleogene'],
+      etymology: 'from Latin <em>simis</em> (monkey)',
+      html:'<p>Simians, anthropoids, or higher primates.</p>',
+      },
+    { id:'cetacea', name:'Cetacea', from:'placentalia', kind:'rank', rankLabel:'infraorder', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Artiodactyla',
+      lived: ['Paleogene'],
+      html:'<p>whales, dolphins, orca</p><p>Cetaceans are marine mammals.</p>',
+      },
+    { id:'basilosaurus', name:'Basilosaurus', from:'cetacea', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Artiodactyla → f.Basilosauridae → Basilosaurinae',
+      lived: ['Paleogene'],
+      extinct:true,
+      html:'<p>Large, predatory, prehistoric whale.</p>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRIbO9I7LnN6o7bObJDiewIimW68z9KJEBpco8-4EZMA&s=10', fit:'cover', focus:'right'},
+        {src:'https://media.whalescientists.com/2022/03/21213814/800px-Basilosaurus_cetoides.png', fit:'cover'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy1U4A5gagjb95tKZa075efmB3BgS4WiByG75rpHbzPw&s=10', fit:'cover'}
+        ]
+      },
+    { id:'hipparion', name:'Hipparion', from:'equidae', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Equidae → Equinae → Hipparionini',
+      lived: ['Neogene'],
+      extinct:true,
+      html:'<p>Medium-sized <span class="term" tabindex="0" data-def="лошадиные">equine</span>.</p>',
+      images:[
+        {src:'https://images.pixels.com/images/artworkimages/mediumlarge/2/hipparion-roman-uchytelscience-photo-library.jpg', fit:'cover'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Hipparion_NNHM.jpg/500px-Hipparion_NNHM.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Fossil_Hipparion_in_Haining_Museum_02_2014-08.JPG/500px-Fossil_Hipparion_in_Haining_Museum_02_2014-08.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Three-toed <em>Hipparion</em> hind leg fossil', fit:'cover'}
+        ]
+      },
+    { id:'eohippus', name:'Eohippus', from:'equidae', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Equidae',
+      lived: ['Paleogene'],
+      extinct:true,
+      html:'<p>Extinct genus of small <span class="term" tabindex="0" data-def="лошадиные">equids</span>. The only species is <em>E. angustidens</em>.</p>'
+      },
+    { id:'eohippusangustidens', name:'E. angustidens', from:'eohippus', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Equidae → g.Eohippus',
+      lived: ['Paleogene'],
+      extinct:true,
+      html:'<p>Small <span class="term" tabindex="0" data-def="лошадиные">equids</em>.</p>',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Eohippus.jpg/500px-Eohippus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Restoration by Charles Knight', fit:'cover', focus:'right'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/HyracotheriumVasacciensisLikeHorse.JPG/500px-HyracotheriumVasacciensisLikeHorse.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+        ]
+      },
+    { id:'perissodactyla', name:'Perissodactyla', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
+      lived: ['Paleogene'],
+      html:'<p>horses, asses, and zebras, rhinoceroses, tapirs</p><p>Odd-toed <span class="term" tabindex="0" data-def="mostly large mammals with hooves">ungulates</span>.</p>'
+      },
+    { id:'eurohippus', name:'Eurohippus', from:'perissodactyla', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Palaeotheriidae → Pachynolophinae',
+      extinct:true,
+      html:'<p>Extinct genus of <span class="term" tabindex="0" data-def="mostly large mammals with hooves">ungulate</span>.</p>',
+      images:[
+        {src:'https://upload.wikimedia.org/wikipedia/commons/9/95/Eurohippus_parvulus.jpg?utm_source=he.wikipedia.org&utm_campaign=index&utm_content=original'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQthbJN02ehqMkE7d5x6Jo9t0jnwj75r_ZtHni1tlofCjLD_k-vqmpnOYc7&s=10', fit:'cover'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9rBCZB8w80hQIPcmF6SHnfWLCKRANKJTFpXds1aXqNwbtw4E3v-B9rZ-J&s=10', cover:'<em>Eurohippus</em> and modern horse', fit:'cover'},
+        {src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Eurohippus_messelensis_-_Naturmuseum_Senckenberg_-_DSC02238.JPG?utm_source=he.wikipedia.org&utm_campaign=index&utm_content=original'},
+        ]
+      },
+    { id:'equidae', name:'Equidae', from:'perissodactyla', kind:'rank', rankLabel:'family', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla',
+      html:'<p>horses, <span class="term" tabindex="0" data-def="ослы">asses</span>, zebras</p><p>Equidae or the horse family.</p>'
+      },
+    { id:'elephantiformes', name:'Elephantiformes', from:'proboscidea', kind:'rank', rankLabel:'suborder', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Proboscidea',
+      lived: ['Paleogene'],
+      html:'<p>Members of this group are primitively characterised by tusks.</p>'
+      },
+    { id:'palaeomastodon', name:'Palaeomastodon', from:'elephantiformes', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Proboscidea → Elephantiformes → f.Palaeomastodontidae',
+      lived: ['Paleogene'],
+      extinct:'true',
+      html:'<p>One of the largest animals of the Late Miocene-Middle Pliocene.</p>',
+      images:[
+        {src:'https://www.dinofan.com/Life/LifeFormImages/Palaeomastodon1.gif', fit:'cover', focus:'60% center'},
+        {src:'https://upload.wikimedia.org/wikipedia/commons/9/91/Paleomastodon.jpg?utm_source=he.wikipedia.org&utm_campaign=index&utm_content=original'},
+        {src:'https://upload.wikimedia.org/wikipedia/commons/0/0a/Palaeomastodon_beadnelli.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/03/Palaeomastodon_size_comparison.png/250px-Palaeomastodon_size_comparison.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+        ]
+      },
+    { id:'feliscatus', name:'Felis catus', from:'felidae', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → f.Felidae → g.Felis',
+      lived: ['Quaternary'],
+      html:'<p>Domestic cats.</p>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXgdwvvk3y7wcLL5AiIbbQH8HLtx8JLHtdUG30hEEqLCwWrJtRBHaQ4L8&s=10', fit:'cover', focus:'78% center'}
+        ]
+      },
+    { id:'carnivora', name:'Carnivora', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
+      lived: ['Paleogene'],
+      html:'<p>Carnivorans are placental mammals specialised primarily in eating flesh.</p>'
+      },
+    { id:'felidae', name:'Felidae', from:'carnivora', kind:'rank', rankLabel:'family', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → Feloidea',
+      lived: ['Paleogene'],
+      html:'<p>tiger, lynx, ocelot, serval, cougar</p><p>Felids or cats.</p>'
+      },
+    { id:'canisfamiliaris', name:'Canis familiaris', from:'canidae', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → f.Canidae → g.Canis',
+      lived: ['Neogene'],
+      html:'<p>Domestic dogs.</p>',
+      images:[
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Brooks_Chase_Ranger_of_Jolly_Dogs_Jack_Russell.jpg/250px-Brooks_Chase_Ranger_of_Jolly_Dogs_Jack_Russell.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Dog_-_%E0%B4%A8%E0%B4%BE%E0%B4%AF-6.JPG/250px-Dog_-_%E0%B4%A8%E0%B4%BE%E0%B4%AF-6.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Chin_posing.jpg/250px-Chin_posing.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
+        ]
+      },
+    { id:'canidae', name:'Canidae', from:'carnivora', kind:'rank', rankLabel:'family', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora',
+      lived: ['Paleogene'],
+      html:'<p>dogs, wolves, coyotes, raccoon dogs, foxes, jackals</p><p>Canids or dogs.</p>'
+      },
+    { id:'mammuthus', name:'Mammuthus', from:'proboscidea', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Proboscidea → f.Elephantidae → Elephantinae → Elephantini',
+      lived: ['Neogene', 'Quaternary'],
+      extinct:true,
+      html:'<p>Mammoth, lived until about 4000 years ago.</p><ul><li>large spirally twisted tusks;</li><li>numerous adaptions to living in cold environments, including a thick layer of fur</li></ul>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv5FKvapbRAF-pj9MQklHz-xdepL1rNxdWaBlr1e-8_XM1wxSR8iGmyD1Z&s=10'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYNyvkBivSfRo4m-b_l8xNprZgggfeck4Ej4gW1m4a6g&s', fit:'cover', focus:'left'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYh_uEphVG7lsBVZeWkkQw1IAIbPEG3aSpZcQnBJNM2lhs-3C6l0aniXY&s=10'}
+        ]
+      },
+    { id:'proboscidea', name:'Proboscidea', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
+      lived: ['Neogene', 'Quaternary'],
+      html:'<p>Elephants and their extinct relatives.</p>'
+      },
+    { id:'megatherium', name:'Megatherium', from:'placentalia', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Pilosa → Folivora → f.Megatheriidae → Megatheriinae',
+      lived: ['Neogene', 'Quaternary'],
+      extinct:true,
+      html:'<p>Large ground sloths endemic to South America.</p>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK5A0dQNSvtwtVqINeVdLyJCt-oKKZTOneIEJSi_JOLteoxJRY9w7D938&s=10', fit:'cover'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKnNk7dNFgZzsoxOEM6AoMtwEqEJa-SzvK-MQOO0PYI_5ETz30mppREUM&s=10'},
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0ZZdaBLoYuPpZnV8hZ1JjLi24BUrf4B_1SBBWJU5zy9iwwe4m8XFbUuXI&s=10'}
+        ]
+      },
+    { id:'aenocyondirus', name:'Aenocyon dirus', from:'canidae', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → f.Canidae → Caninae → Canini → Canina → g.Aenocyon',
+      lived: ['Quaternary'],
+      extinct:true,
+      html:'<p>Dire wolf is an extinct species of canine which was native to the Americas.</p>',
+      images:[
+        {src:'https://static.wikia.nocookie.net/prehistoric-wiki/images/e/ee/Illustration_of_Gray_Wolves_and_Dire_Wolves_fight.png/revision/latest?cb=20210712221443'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Canis_dirus_Sternberg_Museum.jpg/960px-Canis_dirus_Sternberg_Museum.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://i.redd.it/ne90ojk2lkxd1.png'}
+        ]
+      },
+    { id:'smilodon', name:'Smilodon', from:'felidae', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → f.Felidae → Machairodontinae → Smilodontini',
+      lived: ['Quaternary'],
+      extinct:true,
+      html:'<p>Commonly known as the saber-toothed tiger, but it was not closely related to the tiger or other modern cats.</p>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmhWaQwcfvzkImektIaMs_oOtCfRMQWHOl6jvBHZoEXtj3KvygKxmXtRM&s=10'},
+        {src:'https://media.sciencephoto.com/c0/04/80/38/c0048038-800px-wm.jpg'},
+        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Smilodon_populator_fossil%2C_Tellus_Science_Museum_1.jpg/500px-Smilodon_populator_fossil%2C_Tellus_Science_Museum_1.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
+        {src:'https://www.prehistoric-wildlife.com/wp-content/uploads/smilodon-size.jpg'}
+        ]
+      },
+    { id:'homosapiens', name:'H.sapiens', from:'homo', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates → Hominoidea → f.Hominidae → g.Homo',
+      lived: ['Quaternary'],
+      html:'<p>Species of primates, characterized by</p><ul><li>bipedalism;</li><li>minimal body hair;</li><li>large, complex brains</li><li>highly social beings and tend to live in complex social structures composed of many cooperating and competing groups, from families and kinship networks to political states. Social interactions between humans have established a wide variety of values, social norms, and rituals.</li></ul>',
+      images:[
+        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ7KKMYDkTh99pfzhOvBpjJV4D62JvyhFJZ3weD9YREQ&s=10'}
+        ]
+      },
+    { id:'homo', name:'Homo', from:'hominoidea', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates → Hominoidea → f.Hominidae',
+      lived: ['Quaternary'],
+      html:'<p>A genus of great ape that emerged from the genus <em>Australopithecus</em>.</p>'
+      },
+    { id:'homoneanderthalensis', name:'H.neanderthalensis', from:'homo', kind:'rank', rankLabel:'species', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates → Hominoidea → f.Hominidae → g.Homo',
+      lived: ['Quaternary'],
+      extinct:true,
+      html:'<p>Neanderthals are an extinct group of archaic humans who inhabited Europe and Western and Central Asia during the Middle to Late Pleistocene.</p>',
+      images:[
+        {src:'https://cdn.britannica.com/83/77983-050-30F242F5/Skeleton-Neanderthal-skeleton-human.jpg'}
+        ]
+      },
+] };
+
+document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));
+</script>
+</body>
+</html>

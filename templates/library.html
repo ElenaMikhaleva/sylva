@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylva — Library</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="../scripts/main.js" defer></script>
+    <script src="../scripts/library.js"></script>
+    <style>
+
+  .wave { display: none; width: 100%; height: 1.6rem; margin: .5rem 0 .1rem; }
+  .wave rect { fill: var(--c); }
+
+  /* ---------- List ---------- */
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
+  .item { border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); }
+
+  .item__main {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 2fr) minmax(0, 1.4fr) 6.5rem 5.5rem 8.5rem;
+    align-items: center;
+    gap: .2rem 1rem;
+    padding: .8rem .2rem;
+    text-align: left;
+    font: 400 .92rem var(--ff-label);
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .item__main:hover { background: color-mix(in srgb, var(--c) 8%, transparent); }
+  .item__title { font-family: var(--ff-head); font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; }
+  .item__creator { color: var(--ink-soft); }
+  .item__kind { display: inline-flex; align-items: center; gap: .4rem; }
+  .item__year { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .item__subject { display: inline-flex; align-items: center; gap: .45rem; font-weight: 500; color: var(--c); }
+
+  .item__more {
+    padding: .2rem .2rem 1rem calc(1.25rem + 1rem + .2rem);
+    max-width: 62ch;
+  }
+  .item__more p { margin: 0 0 .5rem; }
+  .item__more a { color: var(--ink); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .item__more a:hover { color: var(--c); }
+  .also { color: var(--ink-soft); font-size: .88rem; }
+  .verdict { font-weight: 600; }
+
+  .empty { color: var(--ink-soft); padding: 2rem 0; }
+    </style>
+</head>
+<body data-page="library">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5h6a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H3z M21 5h-6a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H21z"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+  <symbol id="i-podcast" viewBox="0 0 24 24"><circle cx="12" cy="10.5" r="2"/><path d="M7.6 6.1a6.2 6.2 0 0 0 0 8.8M16.4 6.1a6.2 6.2 0 0 1 0 8.8M12 13v7"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M3.5 7.5h17v3a1.8 1.8 0 0 0 0 3.6v3h-17v-3a1.8 1.8 0 0 0 0-3.6z"/></symbol>
+</svg>
+<header>
+    <nav>
+        <a class="brand" href="home.html">Sylva</a>
+        <div class="navlinks">
+            <button data-page="study">Studies</button>
+            <button data-page="media">Library</button>
+        </div>
+    </nav>
+</header>
+<div class="frame" id="app">
+    <h1>Library</h1>
+    <section class="controls" aria-label="View and filters">
+        <div class="row-controls">
+            <div class="seg" role="group" aria-label="Layout">
+                <button type="button" data-view="cards">Cards</button>
+                <button type="button" data-view="list">List</button>
+          </div>
+          <span class="count" id="count" aria-live="polite"></span>
+        </div>
+        <div class="chips" id="subjectChips" role="group" aria-label="Subject"></div>
+        <div class="row-controls">
+            <label class="field">Kind <select id="kindSel"></select></label>
+            <label class="field">Status
+                <select id="statusSel">
+                    <option value="all">All</option>
+                    <option value="finished">Finished</option>
+                    <option value="inprogress">In progress</option>
+                    <option value="notstarted">Not started</option>
+                    <option value="willnotfinish">Will not finish</option>
+                </select>
+            </label>
+            <label class="field">Rating
+                <select id="ratingSel">
+                    <option value="all">Any</option>
+                    <option value="4">Loved</option>
+                    <option value="3">Liked</option>
+                    <option value="2">Ok</option>
+                    <option value="1">Didn't like</option>
+                </select>
+            </label>
+            <label class="field">Sort
+                <select id="sortSel">
+                    <option value="added">Recently added</option>
+                    <option value="title">Title A–Z</option>
+                    <option value="newest">Year, newest</option>
+                    <option value="oldest">Year, oldest</option>
+                    <option value="rating">Rating</option>
+                </select>
+            </label>
+        </div>
+    </section>
+    <div id="out"></div>
+    <dialog id="preview" class="preview">
+        <button type="button" class="preview__close" aria-label="Close">×</button>
+        <div class="preview__body" id="previewBody"></div>
+    </dialog>
+</div>
+<script>
+/* ============================================================
+   App
+   ============================================================ */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const app = document.getElementById('app');
+  const out = document.getElementById('out');
+
+  const state = { view: 'cards', shapes: 'medium', subject: 'all', kind: 'all', status: 'all', rating: 'all', sort: 'added' };
+
+  /* ----- persistence (guarded: storage / history can be unavailable) ----- */
+  try {
+    const saved = JSON.parse(localStorage.getItem('library-prefs') || '{}');
+    if (saved.view) state.view = saved.view;
+    if (saved.shapes) state.shapes = saved.shapes;
+  } catch (e) {}
+  try {
+    const q = new URLSearchParams(location.search);
+    ['view', 'subject', 'kind', 'status', 'rating', 'sort'].forEach(k => { if (q.get(k)) state[k] = q.get(k); });
+  } catch (e) {}
+
+  function persist() {
+    try { localStorage.setItem('library-prefs', JSON.stringify({ view: state.view, shapes: state.shapes })); } catch (e) {}
+    try {
+      const q = new URLSearchParams();
+      ['subject', 'kind', 'status', 'rating'].forEach(k => { if (state[k] !== 'all') q.set(k, state[k]); });
+      history.replaceState(null, '', q.toString() ? '?' + q : location.pathname);
+    } catch (e) {}
+  }
+
+  /* ----- helpers ----- */
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  const icon = id => {
+    const s = document.createElementNS(NS, 'svg');
+    s.setAttribute('class', 'icon');
+    s.setAttribute('aria-hidden', 'true');
+    const u = document.createElementNS(NS, 'use');
+    u.setAttribute('href', '#i-' + id);
+    s.appendChild(u);
+    return s;
+  };
+  const fmtYear = y => (y < 0 ? `${-y} BCE` : String(y));
+
+  // Deterministic little waveform for podcast cards (shape only; colour comes from CSS)
+  function wave(id) {
+    const s = document.createElementNS(NS, 'svg');
+    s.setAttribute('class', 'wave');
+    s.setAttribute('viewBox', '0 0 120 26');
+    s.setAttribute('preserveAspectRatio', 'none');
+    s.setAttribute('aria-hidden', 'true');
+    let h = 7;
+    for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    for (let i = 0; i < 28; i++) {
+      h = (h * 1664525 + 1013904223) >>> 0;
+      const v = 5 + (h >>> 24) % 20;
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', (i * 4.3).toFixed(1));
+      r.setAttribute('y', ((26 - v) / 2).toFixed(1));
+      r.setAttribute('width', '2.4');
+      r.setAttribute('height', v);
+      r.setAttribute('rx', '1.2');
+      s.appendChild(r);
+    }
+    return s;
+  }
+
+  /* ----- preview dialog (click a card → mini window, centered) ----- */
+  const preview = document.getElementById('preview');
+  const previewBody = document.getElementById('previewBody');
+
+  function buildPreviewBody(it) {
+    const frag = document.createDocumentFragment();
+
+    const top = el('div', 'l-card__top');
+    const kind = el('span', 'kind');
+    kind.append(icon(it.kind), KINDS[it.kind]);
+    top.append(kind, el('span', 'year', fmtYear(it.year)));
+    frag.appendChild(top);
+
+    frag.appendChild(el('h2', 'l-card__title', it.title));
+    frag.appendChild(el('p', 'l-card__creator', it.creator));
+
+    const foot = el('div', 'l-card__foot');
+    const st = el('span', 'status');
+    st.append(markerEl(it), statusLabel(it));
+    const tag = el('span', 'tag', it.genre);
+    foot.append(st, tag);
+    frag.appendChild(foot);
+
+    if (it.status === 'finished' && it.rating) {
+      frag.appendChild(el('p', 'verdict', RATINGS[it.rating]));
+    }
+    frag.appendChild(el('p', '', it.note));
+    if (it.also && it.also.length) {
+      frag.appendChild(el('p', 'also', 'Also linked to ' + it.also.map(s => SUBJECTS[s]).join(', ') + '.'));
+    }
+
+    const open = el('a', 'preview__full', 'Open full page');
+    open.href = '#' + it.id;
+    open.addEventListener('click', e => e.preventDefault()); // placeholder until item.html exists
+    frag.appendChild(open);
+
+    return frag;
+  }
+
+  function openPreview(it) {
+    preview.className = 'preview subject--' + it.subject;
+    previewBody.replaceChildren(buildPreviewBody(it));
+    if (typeof preview.showModal === 'function') preview.showModal();
+  }
+
+  preview.querySelector('.preview__close').addEventListener('click', () => preview.close());
+  // Click on the backdrop area (the dialog element itself, not its content) closes it
+  preview.addEventListener('click', e => { if (e.target === preview) preview.close(); });
+
+  /* ----- static controls ----- */
+  const chips = document.getElementById('subjectChips');
+  const kindSel = document.getElementById('kindSel');
+  const statusSel = document.getElementById('statusSel');
+  const sortSel = document.getElementById('sortSel');
+  const ratingSel = document.getElementById('ratingSel');
+
+  function chip(value, label) {
+    const b = el('button', 'chip' + (value === 'all' ? '' : ` subject--${value}`));
+    b.type = 'button';
+    b.dataset.subject = value;
+    if (value !== 'all') b.appendChild(el('i', 'dot'));
+    b.appendChild(document.createTextNode(label));
+    chips.appendChild(b);
+  }
+  chip('all', 'All subjects');
+  Object.entries(SUBJECTS).forEach(([id, label]) => chip(id, label));
+
+  kindSel.appendChild(new Option('All', 'all'));
+  Object.entries(KINDS).forEach(([id, label]) => kindSel.appendChild(new Option(label, id)));
+
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    state.subject = b.dataset.subject; render();
+  });
+  document.querySelectorAll('[data-view]').forEach(b =>
+    b.addEventListener('click', () => { state.view = b.dataset.view; render(); }));
+  kindSel.addEventListener('change', () => { state.kind = kindSel.value; render(); });
+  statusSel.addEventListener('change', () => { state.status = statusSel.value; render(); });
+  ratingSel.addEventListener('change', () => { state.rating = ratingSel.value; render(); });
+  sortSel.addEventListener('change', () => { state.sort = sortSel.value; render(); });
+
+  // opts.rank controls whether a finished+rated item shows the ink-density
+  // dot pattern. Cards show it (that's the whole point of the marker);
+  // list rows just need plain status, so they pass { rank: false }.
+  function markerEl(it, opts = {}) {
+    const showRank = opts.rank !== false;
+    const lvl = showRank && it.status === 'finished' && it.rating ? ` marker--r${it.rating}` : '';
+    return el('i', 'marker marker--' + it.status + lvl);
+  }
+
+  const STATUS_LABEL = {
+    finished: 'Finished',
+    inprogress: 'In progress',
+    notstarted: 'Not started',
+    willnotfinish: 'Will not finish'
+  };
+
+  function statusLabel(it) {
+    if (it.status === 'finished' && it.rating) return `Finished, ${RATINGS[it.rating].toLowerCase()}`;
+    return STATUS_LABEL[it.status] || STATUS_LABEL.notstarted;
+  }
+  // Short text for the card footer: a rated finished item just says how it landed
+  function statusText(it) {
+    if (it.status === 'finished') return it.rating ? RATINGS[it.rating] : 'Finished';
+    return STATUS_LABEL[it.status] || STATUS_LABEL.notstarted;
+  }
+
+  function card(it) {
+    const c = el('article', `l-card ${it.kind} subject--${it.subject}` + (it.status === 'inprogress' ? ' is-progress' : ''));
+    c.tabIndex = 0;
+    c.setAttribute('role', 'button');
+    c.setAttribute('aria-haspopup', 'dialog');
+
+    const top = el('div', 'l-card__top');
+    const kind = el('span', 'kind');
+    kind.append(icon(it.kind), KINDS[it.kind]);
+    top.append(kind, el('span', 'year', fmtYear(it.year)));
+
+    const h = el('h3', 'l-card__title');
+    const a = el('a', '', it.title);
+    a.href = '#' + it.id;              // → item page (until item.html exists, opens the preview)
+    h.appendChild(a);
+
+    c.append(top, h, el('p', 'l-card__creator', it.creator));
+    if (it.kind === 'podcast') c.appendChild(wave(it.id));
+    c.appendChild(el('p', 'l-card__note', it.note));
+
+    const foot = el('div', 'l-card__foot');
+    const st = el('span', 'status');
+    st.append(markerEl(it), statusText(it));
+    const tag = el('span', 'tag', it.genre);
+    foot.append(st, tag);
+    c.appendChild(foot);
+
+    c.addEventListener('click', e => { e.preventDefault(); openPreview(it); });
+    c.addEventListener('keydown', e => {
+      if (e.target === c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPreview(it); }
+    });
+    return c;
+  }
+
+  function row(it, i) {
+    const li = el('li', `item subject--${it.subject}` + (it.status === 'inprogress' ? ' is-progress' : ''));
+    const b = el('button', 'item__main');
+    b.type = 'button';
+    b.setAttribute('aria-expanded', 'false');
+    b.setAttribute('aria-controls', 'more-' + i);
+
+    const marker = markerEl(it, { rank: false });
+    marker.title = statusLabel(it);
+    const sr = el('span', 'sr', statusLabel(it) + ': ');
+    const title = el('span', 'item__title'); title.append(sr, it.title);
+    const kind = el('span', 'item__kind'); kind.append(icon(it.kind), KINDS[it.kind]);
+    const genre = el('span', 'item__subject', it.genre);
+
+    b.append(marker, title, el('span', 'item__creator', it.creator), kind, el('span', 'item__year', fmtYear(it.year)), genre);
+
+    const more = el('div', 'item__more');
+    more.id = 'more-' + i;
+    more.hidden = true;
+    if (it.status === 'finished' && it.rating) more.appendChild(el('p', 'verdict', RATINGS[it.rating]));
+    more.appendChild(el('p', '', it.note));
+    if (it.also && it.also.length) {
+      more.appendChild(el('p', 'also', 'Also linked to ' + it.also.map(s => SUBJECTS[s]).join(', ') + '.'));
+    }
+    const open = el('a', '', 'Open page');
+    open.href = '#' + it.id;
+    open.addEventListener('click', e => e.preventDefault());
+    more.appendChild(open);
+
+    b.addEventListener('click', () => {
+      const show = more.hidden;
+      more.hidden = !show;
+      b.setAttribute('aria-expanded', String(show));
+    });
+
+    li.append(b, more);
+    return li;
+  }
+
+  /* ----- render ----- */
+  function visibleItems() {
+    const list = ITEMS.map((it, idx) => ({ ...it, idx })).filter(it =>
+      (state.subject === 'all' || it.subject === state.subject) &&
+      (state.kind === 'all' || it.kind === state.kind) &&
+      (state.status === 'all' || it.status === state.status) &&
+      (state.rating === 'all' || it.rating === Number(state.rating)));
+    const sorts = {
+      added:  (a, b) => b.idx - a.idx,
+      title:  (a, b) => a.title.localeCompare(b.title),
+      newest: (a, b) => b.year - a.year,
+      oldest: (a, b) => a.year - b.year,
+      rating: (a, b) => (b.rating || 0) - (a.rating || 0) || a.title.localeCompare(b.title)
+    };
+    return list.sort(sorts[state.sort] || sorts.added);
+  }
+
+  function render() {
+    // The page's dominant ink follows the subject filter
+    app.className = 'frame' + (state.subject !== 'all' ? ` subject--${state.subject}` : '');
+
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === state.view)));
+    chips.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.subject === state.subject)));
+    kindSel.value = state.kind; statusSel.value = state.status; ratingSel.value = state.rating; sortSel.value = state.sort;
+
+    const items = visibleItems();
+    document.getElementById('count').textContent = `${items.length} of ${ITEMS.length}`;
+
+    out.replaceChildren();
+    if (!items.length) {
+      out.appendChild(el('p', 'empty', 'Nothing matches these filters yet.'));
+    } else if (state.view === 'cards') {
+      const grid = el('div', 'l-cards');
+      items.forEach(it => grid.appendChild(card(it)));
+      out.appendChild(grid);
+    } else {
+      const ul = el('ul', 'list');
+      items.forEach((it, i) => ul.appendChild(row(it, i)));
+      out.appendChild(ul);
+    }
+    persist();
+  }
+  render();
+})();
+</script>
+</body>
+</html>

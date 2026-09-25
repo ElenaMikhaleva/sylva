@@ -35,7 +35,7 @@
 </div>
 <script>
 const TREE_DATA = {
-ranks: ['kingdom','phylum','subphylum','class','infraclass','order','family','genus','species'],
+ranks: ['kingdom','phylum','subphylum','class','subclass','infraclass','order','suborder','infraorder','superfamily','family','genus','species'],
 nodes: [
     { id:'chordata', name:'Chordata', from:'animalia', kind:'rank', rankLabel:'phylum',
       html:'<p>All chordates possess:</p><ul><li>a <span class="term" tabindex="0" data-def="a flexible, unsegmented, rod-like structure found in the embryonic stage of all chordates">notochord</span>;</li><li>a <span class="term" tabindex="0" data-def="a hollow cord of nervous tissue that runs along the back of chordate animals">dorsal nerve cord</span>;</li><li>an endostyle or <span class="term" tabindex="0" data-def="щитовидная железа">thyroid</span>;</li><li><span class="term" tabindex="0" data-def="жаберные щели">pharyngeal slits</span>;</li><li>a post-anal tail.</li></ul><p>All animals are <a href="tree-animalia.html">here</a></p>'
@@ -43,7 +43,7 @@ nodes: [
     { id:'vertebrata', name:'Vertebrata', from:'chordata', kind:'rank', rankLabel:'subphylum',
       html:'Vertebrates or <b>craniates</b> are animals with a <span class="term" tabindex="0" data-def="позвоночник">vertebral column</span> and a <span class="term" tabindex="0" data-def="skull">cranium</span>.'
       },
-    { id:'placoderm', name:'Placoderm', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+    { id:'placoderm', name:'Placoderm', from:'gnathostomata', kind:'rank', rankLabel:'class', color:'c-chordata',
       lived: ['Silurian', 'Devonian'],
       extinct:true,
       html:'Prehistoric fish with head and <span class="term" tabindex="0" data-def="chest">thorax</span> covered by armoured plates, and the rest of the body scaled or naked depending on the species.',
@@ -52,137 +52,26 @@ nodes: [
         {src:'https://www.darwinsdoor.co.uk/wp-content/uploads/2020/11/Dunkleosteus-Julio-Lacerda-PNG.png'}
         ]
       },
-    { id:'dimetrodon', name:'Dimetrodon', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-chordata',
+    { id:'dimetrodon', name:'Dimetrodon', from:'synapsida', kind:'rank', rankLabel:'genus', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → Synapsida → f.Sphenacodontidae → Sphenacodontinae',
+      lived: ['Permian'],
       extinct:true,
+      etymology: '/daɪˈmiːtrəˌdɒn/',
       html:'<span class="term" tabindex="0" data-def="all mammals and their extinct relatives">Synapsid</span> with large neural spine sail on its back formed by elongated spines extending from the vertebrae.',
       images:[
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Dimetrodon_incisivum_01.jpg/960px-Dimetrodon_incisivum_01.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
         {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxrS_nqHo73leVdXYdjbaexRjfQrFgptv1dFxJfEibffKjeGdbzFebPROhbBbMZmwPs39uytd0yWISqIDkKdTyPXddhkSx5tqXe2HcoaBvQg&s=10', fit:'cover'}
         ]
       },
-    { id:'reptilia', name:'Reptilia', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+    { id:'reptilia', name:'Reptilia', from:'sauropsida', kind:'rank', rankLabel:'class', color:'c-chordata',
       taxonPath: 'Animalia → Chordata → Vertebrata',
-      html:'Reptiles are <span class="term" tabindex="0" data-def="with four legs">tetrapod</span> vertebrate animals.'
+      html:'<p>Reptiles are <span class="term" tabindex="0" data-def="with four legs">tetrapod</span> vertebrate animals.</p><p>Full class <a href="tree-reptilia.html">here</a>.</p>'
       },
-    { id:'ichthyosauria', name:'Ichthyosauria', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
-      extinct:true,
-      html:'<p>Ichthyosaurs</p><ul><li>from 1 to 26 metres in length;</li><li>resembled both modern fish and dolphins;</li><li>limbs had been fully transformed into flippers, which sometimes contained a very large number of digits and phalanges.</li></ul>',
-      images:[
-        {src:'https://www.newscientist.com/wp-content/uploads/2020/08/20140907/c0354182-ichthyosaur_preying_on_an_ammonite_illustration_web.jpg?w=840', fit:'cover', focus:'left'},
-        {src:'https://cdn.mos.cms.futurecdn.net/QBuDU4hGFzoBuQHkncwDoR-1920-80.jpg'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Ichthyosaurus_communis_in_London.jpg/500px-Ichthyosaurus_communis_in_London.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
-        ]
-      },
-    { id:'eoraptorlunensis', name:'E. lunensis', from:'eoraptor', kind:'rank', rankLabel:'species', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Eoraptor',
-      extinct:true,
-      html:'Small, lightly built dianosaur. The only species of genus <em>Eoraptor</em>.',
-      images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Eoraptor_Lunensis_20250105.jpg/500px-Eoraptor_Lunensis_20250105.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=<thumbnail></thumbnail>', fit:'cover', focus:'left'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe0gKWIN4sYDgq2EaScW1Rkzv5QBf4HqWP7UmV7-d_-EML1M7O9StYPpu4&s=10'}
-        ]
-      },
-    { id:'eoraptor', name:'Eoraptor', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
-      extinct:true,
-      html:'The genus has only one species <em>Eoraptor lunensis</em>.'
-      },
-    { id:'pterosauria', name:'Pterosauria', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
-      extinct:true,
-      html:'<p>Pterosaurs</p><ul><li>warm-blooded flying reptiles;</li><li>the earliest vertebrates known to have evolved powered flight. Their wings were formed by a membrane of skin, muscle, and other tissues stretching from the ankles to a dramatically lengthened fourth finger.</li></ul>',
-      images:[
-        {src:'https://www.snexplores.org/wp-content/uploads/sites/3/2022/12/1030_LLA_pterosaurs_feat_rev.jpg'}
-        ]
-      },
-    { id:'plesiosauria', name:'Plesiosauria', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
-      extinct:true,
-      html:'<p>Marine reptiles that</p><ul><li>had a broad flat body and a short tail. Their limbs had evolved into four long <span class="term" tabindex="0" data-def="ласты">flippers</span>;</li><li>breathed air;</li><li><span class="term" tabindex="0" data-def="рождали живых детенышей">bore live young</span>;</li><li>there are indications that they were warm-blooded.</li></ul>',
-      images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Paleo_Hall_at_HMNS_plesiosaur.jpg/500px-Paleo_Hall_at_HMNS_plesiosaur.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
-        {src:'https://www.snexplores.org/wp-content/uploads/sites/3/2022/09/1440_AT_plesiosaur_swimmers.png?w=1030'}
-        ]
-      },
-    { id:'tyrannosaurusrex', name:'T.rex', from:'tyrannosaurus', kind:'rank', rankLabel:'species', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Tyrannosauridae → Tyrannosaurus',
-      extinct:true,
-      html:'An apex predator.',
-      images:[
-        {src:'https://npr.brightspotcdn.com/dims3/default/strip/false/crop/6016x4512+0+0/resize/6016x4512!/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F53%2F1b%2Fb88ca59b4560a60283b90e063e37%2Fap26195563377996.jpg', fit:'cover'},
-        {src:'https://as1.ftcdn.net/v2/jpg/02/14/10/16/1000_F_214101651_rDo4CQsGCUQqMAYNgxR1JsrWilRKskYZ.jpg', fit:'cover'}
-        ]
-      },
-    { id:'tyrannosaurus', name:'Tyrannosaurus', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Tyrannosauridae',
-      extinct:true,
-      html:'<ul><li>A bipedal carnivore with a massive skull balanced by a long, heavy tail. The forelimbs of Tyrannosaurus were short but unusually powerful for their size, and they had two clawed digits.</li></ul>'
-      },
-    { id:'ankylosaurus', name:'Ankylosaurus', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Ankylosauridae',
-      extinct:true,
-      html:'Armored dinosaur, contains only one species <em>A. magniventris</em>'
-      },
-    { id:'ankylosaurusmagniventris', name:'A.magniventris', from:'ankylosaurus', kind:'rank', rankLabel:'species', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Ankylosauridae → Ankylosaurus',
-      extinct:true,
-      html:'Armored dinosaur.',
-      images:[
-        {src:'https://images.dinosaurpictures.org/Ankylosaurus/Ankylosaurus_775883a1.jpg'},
-        {src:'https://people.ohio.edu/witmerl/collections/images/ankylosaurus_DSC_7105.JPG'},
-        ]
-      },
-    { id:'triceratops', name:'Triceratops', from:'reptilia', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Ceratopsidae',
-      extinct:true,
-      html:'Dinosaur.',
-      images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/LA-Triceratops_mount-2.jpg/500px-LA-Triceratops_mount-2.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover'},
-        {src:'https://preview.redd.it/how-smart-and-socially-complex-were-triceratops-3d-art-and-v0-69ee203201vf1.png?width=640&crop=smart&auto=webp&s=1b9967ac86717bf2fc42ae5e175a087554fd1c7f'},
-        ]
-      },
-    { id:'squamata', name:'Squamata', from:'reptilia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia',
-      html:'<p>lizards, snakes</p><ul><li>skin with horny scales or shields, periodically undergo molting.</li></ul>',
-      },
-    { id:'mosasauridae', name:'Mosasauridae', from:'squamata', kind:'rank', rankLabel:'family', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Reptilia → Squamata',
-      extinct:true,
-      html:'Mosasaurs, large aquatic reptiles.',
-      images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Platecarpus_planifrons_Clean.png/960px-Platecarpus_planifrons_Clean.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCF2QSHR9e4eVeEqn3sl2sFhjHgbFJ-blkvyu27h2TUaVlCf0fo1DMZylt&s=10'},
-        ]
-      },
-    { id:'creodonta', name:'Creodonta', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → Vertebrata → c.Mammalia',
-      lived: ['Paleogene', 'Neogene'],
-      extinct:true,
-      html:'Carnivorous placental mammals.',
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV7SfE9qMFtJ5kLnCVI1lIpTl1jncbXge2d3aAOKSLbw&s=10'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh4KBVnoaereR7R9Plmng2giJnaTSHfIPqyx7BIlQ4MLEAWmPy3JZS7tM&s=10', fit:'cover', focus:'right'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXnT-7dmCf02sGrrcFRqR8YDgVuYW-SoNE6MfB2RQGOp4RlrWtVHUR8nueVznLvz-uUQ0UbV8ipIPL_B7VQdp3Am8Dn6G2bOpvYw_yfgY&s=10', fit:'cover'}
-        ]
-      },
-    { id:'placentalia', name:'Placentalia', from:'mammalia', kind:'rank', rankLabel:'infraclass', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
-      html:'Animals that carry the fetus in the uterus of its mother to a relatively late stage of development.'
-      },
-    { id:'marsupialia', name:'Marsupialia', from:'mammalia', kind:'rank', rankLabel:'infraclass', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata → Mammalia',
-      html:'The young are born in a relatively undeveloped state and then nurtured within a pouch on their mother\'s abdomen.'
-      },
-    { id:'mammalia', name:'Mammalia', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
+    { id:'mammalia', name:'Mammalia', from:'synapsida', kind:'rank', rankLabel:'class', color:'c-chordata',
       taxonPath: 'Animalia → Chordata → Vertebrata',
-      html:'<p>Mammals have:</p><ul><li>milk-producing mammary glands for feeding their young;</li><li>a broad neocortex region of the brain;</li><li>fur or hair;</li><li>three middle ear bones.</li></ul>'
+      html:'<p>Mammals have:</p><ul><li>milk-producing mammary glands for feeding their young;</li><li>a broad neocortex region of the brain;</li><li>fur or hair;</li><li>three middle ear bones.</li></ul><p>Full class <a href="tree-mammalia.html">here</a>.</p>'
       },
-    { id:'aves', name:'Aves', from:'vertebrata', kind:'rank', rankLabel:'class', color:'c-chordata',
-      taxonPath: 'Animalia → Chordata → Vertebrata',
-      html:'<p>Mammals have:</p><ul><li>milk-producing mammary glands for feeding their young;</li><li>a broad neocortex region of the brain;</li><li>fur or hair;</li><li>three middle ear bones.</li></ul>'
-      },
-    { id:'cladoselache', name:'Cladoselache', from:'vertebrata', kind:'rank', rankLabel:'genus', color:'c-chordata',
+    { id:'cladoselache', name:'Cladoselache', from:'gnathostomata', kind:'rank', rankLabel:'genus', color:'c-chordata',
       taxonPath: 'k.Animalia → p.Chondrichthyes → Holocephali → o.Cladoselachiformes → f.Cladoselachidae',
       lived: ['Devonian'],
       extinct:true,
@@ -192,171 +81,38 @@ nodes: [
         {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Cladoselache_fyleri_full_AMNH_specimens.png/500px-Cladoselache_fyleri_full_AMNH_specimens.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
         ]
       },
-    { id:'primates', name:'Primates', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
-      lived: ['Paleogene'],
-      html:'<p>lemur, baboons, gibbon, orangutan, human</p><p>Primates arose from small terrestrial mammals. Many primate characteristics represent adaptations to the life among tree tops, including</p><ul><li>large brain sizes;</li><li>binocular vision;</li><li>color vision;</li><li>vocalizations;</li><li>shoulder girdles allowing a large degree of movement in the upper limbs;</li><li>opposable thumbs that enable better grasping and dexterity.</li></ul>',
+    { id:'synapsida', name:'Synapsida', kind:'rank', rankLabel:'clade', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → Tetrapoda → Reptiliomorpha → Amniota',
+      from:'amniota',
+      lived: ['Carboniferous'],
+      html:'<p>All mammals and their extinct relatives.</p>'
       },
-    { id:'hominoidea', name:'Hominoidea', from:'simiiformes', kind:'rank', rankLabel:'superfamily', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates',
-      lived: ['Neogene'],
-      html:'<p>Hominoids or apes are simians native to sub-Saharan Africa and Southeast Asia.</p><p>Do not have tail.</p>',
+    { id:'sauropsida', name:'Sauropsida', kind:'rank', rankLabel:'clade', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → Tetrapoda → Reptiliomorpha → Amniota',
+      from:'amniota',
+      lived: ['Carboniferous'],
+      html:'<p>Egg-laying land vertebrates that includes all modern reptiles and birds, as well as their ancient fossil relatives.</p>'
       },
-    { id:'australopithecus', name:'Australopithecus', from:'hominoidea', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      etymology: 'from Latin <em>australis</em> (southern) and Ancient Greek <em>πίθηκος</em> (píthēkos, ape)',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates → Homininae → Hominini → Australopithecina',
-      lived: ['Neogene', 'Quaternary'],
-      extinct:true,
-      html:'<p>Regularly walked on two legs like humans, but their strong arms show they also spent time climbing in trees.</p>',
-      images:[
-        {src:'https://media.sciencephoto.com/c0/11/22/86/c0112286-800px-wm.jpg', fit:'cover'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR39MNG5eOkAkqX3zaPo8fNtcm-gu_s3kMYOwIPd8nwoA&s', fit:'cover', focus:'top'}
-        ]
+    { id:'amniota', name:'Amniota', kind:'rank', rankLabel:'clade', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → Tetrapoda → Reptiliomorpha',
+      from:'tetrapoda',
+      lived: ['Carboniferous'],
+      html:'<p>reptiles, birds, mammals</p><p>Defined by embryos that develop inside a fluid-filled protective membrane called an <span class="highlight">amnion</span>. This allows them to reproduce on dry land.</p><ul><li>have thicker, waterproof, keratinized skin and rely entirely on internal lungs ventilated by ribs;</li><li>don\'t need moisture to stay functional.</li></ul>'
       },
-    { id:'simiiformes', name:'Simiiformes', from:'primates', kind:'rank', rankLabel:'infraorder', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Primates',
-      lived: ['Paleogene'],
-      etymology: 'from Latin <em>simis</em> (monkey)',
-      html:'<p>Simians, anthropoids, or higher primates.</p>',
+    { id:'tetrapoda', name:'Tetrapoda', kind:'rank', rankLabel:'clade', color:'c-chordata',
+      taxonPath: 'k.Animalia → p.Chordata → Stegocephali',
+      from:'gnathostomata',
+      lived: ['Devonian'],
+      etymology: 'from Ancient Greek <em>τετρα</em> (tetra, four) and <em>πούς</em> (poús, foot)',
+      html:'<p>Vertebrates that have 4 limbs, connected to the shoulder- and pelvic girdles.</p><p>Tetrapoda is defined such that it includes every organism which descended from four-limbed ancestors, including those which have lost some or all of these limbs, e.g. snakes.</p>'
       },
-    { id:'cetacea', name:'Cetacea', from:'placentalia', kind:'rank', rankLabel:'infraorder', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Artiodactyla',
-      lived: ['Paleogene'],
-      html:'<p>whales, dolphins, orca</p><p>Cetaceans are marine mammals.</p>',
-      },
-    { id:'basilosaurus', name:'Basilosaurus', from:'cetacea', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Artiodactyla → f.Basilosauridae → Basilosaurinae',
-      lived: ['Paleogene'],
-      extinct:true,
-      html:'<p>Large, predatory, prehistoric whale.</p>',
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRIbO9I7LnN6o7bObJDiewIimW68z9KJEBpco8-4EZMA&s=10', fit:'cover', focus:'right'},
-        {src:'https://media.whalescientists.com/2022/03/21213814/800px-Basilosaurus_cetoides.png', fit:'cover'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy1U4A5gagjb95tKZa075efmB3BgS4WiByG75rpHbzPw&s=10', fit:'cover'}
-        ]
-      },
-    { id:'hipparion', name:'Hipparion', from:'equidae', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Equidae → Equinae → Hipparionini',
-      lived: ['Neogene'],
-      extinct:true,
-      html:'<p>Medium-sized <span class="term" tabindex="0" data-def="лошадиные">equine</span>.</p>',
-      images:[
-        {src:'https://images.pixels.com/images/artworkimages/mediumlarge/2/hipparion-roman-uchytelscience-photo-library.jpg', fit:'cover'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Hipparion_NNHM.jpg/500px-Hipparion_NNHM.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Fossil_Hipparion_in_Haining_Museum_02_2014-08.JPG/500px-Fossil_Hipparion_in_Haining_Museum_02_2014-08.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Three-toed <em>Hipparion</em> hind leg fossil', fit:'cover'}
-        ]
-      },
-    { id:'eohippus', name:'Eohippus', from:'equidae', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Equidae',
-      lived: ['Paleogene'],
-      extinct:true,
-      html:'<p>Extinct genus of small <span class="term" tabindex="0" data-def="лошадиные">equids</span>. The only species is <em>E. angustidens</em>.</p>'
-      },
-    { id:'eohippusangustidens', name:'E. angustidens', from:'eohippus', kind:'rank', rankLabel:'species', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Equidae → g.Eohippus',
-      lived: ['Paleogene'],
-      extinct:true,
-      html:'<p>Small <span class="term" tabindex="0" data-def="лошадиные">equids</em>.</p>',
-      images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Eohippus.jpg/500px-Eohippus.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', caption:'Restoration by Charles Knight', fit:'cover', focus:'right'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/HyracotheriumVasacciensisLikeHorse.JPG/500px-HyracotheriumVasacciensisLikeHorse.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
-        ]
-      },
-    { id:'perissodactyla', name:'Perissodactyla', from:'mammalia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
-      lived: ['Paleogene'],
-      html:'<p>horses, asses, and zebras, rhinoceroses, tapirs</p><p>Odd-toed <span class="term" tabindex="0" data-def="mostly large mammals with hooves">ungulates</span>.</p>'
-      },
-    { id:'eurohippus', name:'Eurohippus', from:'perissodactyla', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla → f.Palaeotheriidae → Pachynolophinae',
-      extinct:'true',
-      html:'<p>Extinct genus of <span class="term" tabindex="0" data-def="mostly large mammals with hooves">ungulate</span>.</p>',
-      images:[
-        {src:'https://upload.wikimedia.org/wikipedia/commons/9/95/Eurohippus_parvulus.jpg?utm_source=he.wikipedia.org&utm_campaign=index&utm_content=original'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQthbJN02ehqMkE7d5x6Jo9t0jnwj75r_ZtHni1tlofCjLD_k-vqmpnOYc7&s=10', fit:'cover'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9rBCZB8w80hQIPcmF6SHnfWLCKRANKJTFpXds1aXqNwbtw4E3v-B9rZ-J&s=10', cover:'<em>Eurohippus</em> and modern horse', fit:'cover'},
-        {src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Eurohippus_messelensis_-_Naturmuseum_Senckenberg_-_DSC02238.JPG?utm_source=he.wikipedia.org&utm_campaign=index&utm_content=original'},
-        ]
-      },
-    { id:'equidae', name:'Equidae', from:'perissodactyla', kind:'rank', rankLabel:'family', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Perissodactyla',
-      html:'<p>horses, <span class="term" tabindex="0" data-def="ослы">asses</span>, zebras</p><p>Equidae or the horse family.</p>'
-      },
-    { id:'paracrax', name:'Paracrax', from:'aves', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Aves → o.Cariamiformes → f.Bathornithidae',
-      lived: ['Paleogene'],
-      extinct:'true',
-      html:'<p>Extinct North American flightless birds.</p>',
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfK0KZl1vTRqT6iO0QNRr8d7B6D0b5bApJIKKOvDK2sU32wx0ExeSskvk&s=10'}
-        ]
-      },
-    { id:'elephantiformes', name:'Elephantiformes', from:'proboscidea', kind:'rank', rankLabel:'suborder', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Proboscidea',
-      lived: ['Paleogene'],
-      html:'<p>Members of this group are primitively characterised by tusks.</p>'
-      },
-    { id:'palaeomastodon', name:'Palaeomastodon', from:'elephantiformes', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Proboscidea → Elephantiformes → f.Palaeomastodontidae',
-      lived: ['Paleogene'],
-      extinct:'true',
-      html:'<p>One of the largest animals of the Late Miocene-Middle Pliocene.</p>',
-      images:[
-        {src:'https://www.dinofan.com/Life/LifeFormImages/Palaeomastodon1.gif', fit:'cover', focus:'60% center'},
-        {src:'https://upload.wikimedia.org/wikipedia/commons/9/91/Paleomastodon.jpg?utm_source=he.wikipedia.org&utm_campaign=index&utm_content=original'},
-        {src:'https://upload.wikimedia.org/wikipedia/commons/0/0a/Palaeomastodon_beadnelli.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/0/03/Palaeomastodon_size_comparison.png/250px-Palaeomastodon_size_comparison.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
-        ]
-      },
-    { id:'feliscatus', name:'Felis catus', from:'felidae', kind:'rank', rankLabel:'species', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → f.Felidae → g.Felis',
-      lived: ['Quaternary'],
-      html:'<p>Domestic cats.</p>',
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXgdwvvk3y7wcLL5AiIbbQH8HLtx8JLHtdUG30hEEqLCwWrJtRBHaQ4L8&s=10', fit:'cover', focus:'78% center'}
-        ]
-      },
-    { id:'carnivora', name:'Carnivora', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
-      lived: ['Paleogene'],
-      html:'<p>Carnivorans are placental mammals specialised primarily in eating flesh.</p>'
-      },
-    { id:'felidae', name:'Felidae', from:'carnivora', kind:'rank', rankLabel:'family', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → Feloidea',
-      lived: ['Paleogene'],
-      html:'<p>tiger, lynx, ocelot, serval, cougar</p><p>Felids or cats.</p>'
-      },
-    { id:'canisfamiliaris', name:'Canis familiaris', from:'canidae', kind:'rank', rankLabel:'species', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora → f.Canidae → g.Canis',
-      lived: ['Neogene'],
-      html:'<p>Domestic dogs.</p>',
-      images:[
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Brooks_Chase_Ranger_of_Jolly_Dogs_Jack_Russell.jpg/250px-Brooks_Chase_Ranger_of_Jolly_Dogs_Jack_Russell.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Dog_-_%E0%B4%A8%E0%B4%BE%E0%B4%AF-6.JPG/250px-Dog_-_%E0%B4%A8%E0%B4%BE%E0%B4%AF-6.JPG?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail', fit:'cover'},
-        {src:'https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Chin_posing.jpg/250px-Chin_posing.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'}
-        ]
-      },
-    { id:'canidae', name:'Canidae', from:'carnivora', kind:'rank', rankLabel:'family', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Carnivora',
-      lived: ['Paleogene'],
-      html:'<p>dogs, wolves, coyotes, raccoon dogs, foxes, jackals</p><p>Canids or dogs.</p>'
-      },
-    { id:'mammuthus', name:'Mammuthus', from:'proboscidea', kind:'rank', rankLabel:'genus', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia → o.Proboscidea → f.Elephantidae → Elephantinae → Elephantini',
-      lived: ['Neogene', 'Quaternary'],
-      extinct:true,
-      html:'<p>Mammoth, lived until about 4000 years ago.</p><ul><li>large spirally twisted tusks;</li><li>numerous adaptions to living in cold environments, including a thick layer of fur</li></ul>',
-      images:[
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv5FKvapbRAF-pj9MQklHz-xdepL1rNxdWaBlr1e-8_XM1wxSR8iGmyD1Z&s=10'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYNyvkBivSfRo4m-b_l8xNprZgggfeck4Ej4gW1m4a6g&s', fit:'cover', focus:'left'},
-        {src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYh_uEphVG7lsBVZeWkkQw1IAIbPEG3aSpZcQnBJNM2lhs-3C6l0aniXY&s=10'}
-        ]
-      },
-    { id:'proboscidea', name:'Proboscidea', from:'placentalia', kind:'rank', rankLabel:'order', color:'c-chordata',
-      taxonPath: 'k.Animalia → p.Chordata → c.Mammalia',
-      lived: ['Neogene', 'Quaternary'],
-      html:'<p>Elephants and their extinct relatives.</p>'
-      },
+    { id:'gnathostomata', name:'Gnathostomata', kind:'rank', rankLabel:'infraphylum', color:'c-chordata',
+      taxonPath: 'k.Animalia →  p.Chordata → Olfactores → Vertebrata',
+      from:'vertebrata',
+      lived: ['Silurian'],
+      etymology: 'from Ancient Greek <em>γνάθος</em> (gnathos, jaw) + <em>στόμα</em> (stoma, mouth)',
+      html:'<p>Vertebrate animals with jaws.</p>'
+      }
 ] };
 
 document.addEventListener('DOMContentLoaded', () => initStageTree(TREE_DATA));

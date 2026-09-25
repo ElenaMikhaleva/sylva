@@ -359,7 +359,7 @@ function svgEl(tag, attrs) {
   return el;
 }
 
-const RANKS = ['domain','kingdom','phylum','subphylum','class','subclass','infraclass','order','suborder','infraorder','superfamily','family','genus','species'];
+const RANKS = ['domain','kingdom','phylum','subphylum','infraphylum','class','subclass','infraclass','order','suborder','infraorder','superfamily','family','genus','species'];
 
 function initStageTree(TREE_DATA) {
   const CORE = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'];
@@ -438,8 +438,18 @@ function initStageTree(TREE_DATA) {
     function columnOf(n) {
       if (n.__ghostColumn != null) return n.__ghostColumn;
       if (!n.rankLabel) return 0;
-      const idx = RANK_LIST.indexOf(n.rankLabel);
-      return idx >= 0 ? idx + 1 : RANK_LIST.length + 1;
+
+      const namedIdx = RANK_LIST.indexOf(n.rankLabel);
+      if (namedIdx >= 0) return namedIdx + 1;
+
+      let cur = n, hops = 0;
+      while (cur.from && dataById[cur.from]) {
+        cur = dataById[cur.from];
+        hops++;
+        const idx = cur.rankLabel ? RANK_LIST.indexOf(cur.rankLabel) : -1;
+        if (idx >= 0) return idx + 1 + hops * 0.1;
+      }
+      return hops * 0.1;
     }
 
     nodesById = Object.fromEntries(visible.map(n => [n.id, n]));
