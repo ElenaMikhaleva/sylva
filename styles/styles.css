@@ -601,6 +601,7 @@ body[data-page="history"] {
 }
 body[data-page="library"] {
   --paleontology: #5f8f3a;
+  --antiquity: #3c6e90;
 }
 
 /* STUDY NOTES */
@@ -630,7 +631,7 @@ body[data-page="library"] {
     width:8px;
     height:8px;
     border-radius:50%;
-    background:var(--text-soft);
+    background:var(--accent-color, var(--text-soft));
     flex-shrink:0;
     }
 .tab-item.current{
@@ -1427,7 +1428,7 @@ body[data-page="species"] .tree-flow {
     display: inline-block;
     width: .7rem; height: .7rem;
     border-radius: 50%;
-    background: var(--color-accent, var(--text));
+    background: var(--accent-color, var(--text));
   }
 .l-cards {
     display: grid;
@@ -1454,7 +1455,13 @@ body[data-page="species"] .tree-flow {
     font-size: .8rem;
     color: var(--text-soft);
   }
-.kind { display: inline-flex; align-items: center; gap: .4rem; color: var(--text-soft); font-weight: 500; }
+.kind {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    color: var(--accent-color, var(--text-soft));
+    font-weight: 500;
+    }
 .icon {
     width: 1.05em; height: 1.05em; flex: none;
     fill: none; stroke: currentColor; stroke-width: 1.8;
@@ -1468,10 +1475,51 @@ body[data-page="species"] .tree-flow {
     letter-spacing: -.01em;
     line-height: 1.2;
     font-family: var(--ff-title);
+    display: flex;
+    align-items: center;
+    gap: .45rem;
   }
   .l-card__title a { color: inherit; text-decoration: none; }
-  .l-card__creator { margin: 0; font-size: .9rem; color: var(--ink-soft); }
-  .l-card__note {
+.marker {
+    --dot: var(--accent-color, var(--text));
+    flex: none;
+    display: inline-block;
+    width: 0.82rem;
+    height: 0.82rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--dot);
+    background-color: var(--dot);
+    background-size: 4px 4px;
+  }
+.marker--r1, .marker--r2, .marker--r3 { background-color: transparent; }
+.marker--r1 {
+    background: repeating-linear-gradient(
+        135deg,
+        transparent,
+        transparent 3px,
+        rgb(from var(--accent-color) r g b / var(--grain, .45)) 3px,
+        rgb(from var(--accent-color) r g b / var(--grain, .45)) 6px);
+    opacity: 0.45;
+  }
+.marker--r2 {
+    background-color: rgb(from var(--accent-color, var(--text-soft)) r g b);
+    opacity: 0.35;
+  }
+.marker--r3 {
+    background-color: rgb(from var(--accent-color, var(--text-soft)) r g b);
+    opacity: 0.75;
+  }
+.is-progress .marker,
+.marker--progress {
+    background: transparent;
+    border: 2px dashed var(--dot);
+  }
+.marker--notstarted {
+    background: transparent;
+    border: 1.5px solid rgb(from var(--accent-color) r g b / var(--grain, .35));
+  }
+.l-card__creator { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+.l-card__note {
     margin: .4rem 0 0;
     font-size: .85rem;
     line-height: 1.4;
@@ -1492,14 +1540,20 @@ body[data-page="species"] .tree-flow {
   }
   .status, .tag { display: inline-flex; align-items: center; gap: .4rem; }
   .tag { font-weight: 500; color: var(--accent-color, var(--text-soft)); }
+.l-card.book { padding-left: 1.4rem; }
+.l-card.book::before {
+    content: "";
+    position: absolute; inset: 0 auto 0 0; z-index: 0;
+    width: .7rem;
+    background: var(--accent-color);
+  }
 .l-card.play > .l-card__foot::before,
 .l-card.play > .l-card__foot::after {
     content: "";
-    position: absolute; top: -.6rem;
-    width: 1.2rem; height: 1.2rem;
+    position: absolute; top: -.8rem;
+    width: 1.5rem; height: 1.5rem;
     border-radius: 50%;
-    background: var(var(--bg-main));
-    border: 1.5px solid var(--text);
+    background: var(--bg-main);
   }
 .l-card.play > .l-card__foot::before {
     left: calc(-.95rem - .6rem);
@@ -1507,6 +1561,9 @@ body[data-page="species"] .tree-flow {
 .l-card.play > .l-card__foot::after  {
     right: calc(-.95rem - .6rem);
     }
+.l-card.play > .l-card__foot {
+    border-top: 1.5px dashed color-mix(in srgb, var(--accent-color, var(--text-soft)) 55%, transparent);
+  }
 .l-card.podcast { border-radius: 28px; padding-left: 1.15rem; padding-right: 1.15rem; }
 .l-card.podcast .wave { display: block; }
 .l-card.music::after {
@@ -1517,7 +1574,7 @@ body[data-page="species"] .tree-flow {
     border-radius: 50%;
     opacity: .5;
     background:
-      radial-gradient(circle, var(--paper) 0 7%, var(--c) 7% 22%, transparent 22%),
+      radial-gradient(circle, var(--paper) 0 7%, var(--accent-color) 7% 22%, transparent 22%),
       repeating-radial-gradient(circle, var(--ink) 0 1px, transparent 1px 5px);
   }
 .l-card.film::before {
@@ -1530,47 +1587,16 @@ body[data-page="species"] .tree-flow {
     height: .5rem;
     background: repeating-linear-gradient(90deg, var(--accent-color, var(--text-soft)) 0 .55rem, transparent .55rem 1.1rem);
   }
-.marker {
-    --dot: var(--accent-color, var(--text));
-    flex: none;
-    display: inline-block;
-    width: 1rem; height: 1rem;
-    border-radius: 50%;
-    border: 1.5px solid var(--dot);
-    background-color: var(--dot);
-    background-size: 4px 4px;
-  }
-  .marker--r1, .marker--r2 { background-color: transparent; }
-  .marker--r1 {
-    background-image:
-      radial-gradient(circle at 25% 25%, var(--dot) 0 .7px, transparent .95px),
-      radial-gradient(circle at 75% 75%, var(--dot) 0 .7px, transparent .95px);
-  }
-  .marker--r2 {
-    background-image:
-      radial-gradient(circle at 25% 25%, var(--dot) 0 1.2px, transparent 1.45px),
-      radial-gradient(circle at 75% 75%, var(--dot) 0 1.2px, transparent 1.45px);
-  }
-  .is-progress .marker,
-  .marker--progress {
-    background: transparent;
-    border: 2px dashed var(--dot);
-  }
-.marker--notstarted,
-  .marker--willnotfinish {
-    background: transparent;
-  }
 
 .wave { display: none; width: 100%; height: 1.6rem; margin: .5rem 0 .1rem; }
 .wave rect { fill: var(--c); }
 
-/* ---------- List ---------- */
 .list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
 .item {
     list-style: none;
     border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
   }
-  /* Defensive: kills any site-wide li marker/decorative bullet on these rows */
+
   .item::marker { content: ''; }
   .item::before { content: none !important; }
 
@@ -1611,7 +1637,7 @@ body[data-page="species"] .tree-flow {
 
 .l-card { cursor: pointer; }
 .l-card:focus-visible { outline: 2.5px solid var(--c, var(--ink)); outline-offset: 2px; }
-.l-card__title a { pointer-events: none; } /* the article itself handles the click */
+.l-card__title a { pointer-events: none; }
 
 .preview {
     margin: auto;

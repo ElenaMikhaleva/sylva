@@ -556,9 +556,8 @@ function initStageTree(TREE_DATA) {
       flow.appendChild(stageEl);
     });
 
-    /* 5. keep the open card in sync with what is now visible */
     if (activeId && !nodesById[activeId]) {
-      closeExpand();                       // its node was just hidden
+      closeExpand();
     } else if (activeId) {
       const b = document.getElementById(`node-${activeId}`);
       if (b) b.classList.add('is-active');

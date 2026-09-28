@@ -13,41 +13,6 @@
   .wave { display: none; width: 100%; height: 1.6rem; margin: .5rem 0 .1rem; }
   .wave rect { fill: var(--c); }
 
-  /* ---------- List ---------- */
-  .list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
-  .item { border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); }
-
-  .item__main {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1.25rem minmax(0, 2fr) minmax(0, 1.4fr) 6.5rem 5.5rem 8.5rem;
-    align-items: center;
-    gap: .2rem 1rem;
-    padding: .8rem .2rem;
-    text-align: left;
-    font: 400 .92rem var(--ff-label);
-    color: var(--ink);
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-  }
-  .item__main:hover { background: color-mix(in srgb, var(--c) 8%, transparent); }
-  .item__title { font-family: var(--ff-head); font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; }
-  .item__creator { color: var(--ink-soft); }
-  .item__kind { display: inline-flex; align-items: center; gap: .4rem; }
-  .item__year { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-  .item__subject { display: inline-flex; align-items: center; gap: .45rem; font-weight: 500; color: var(--c); }
-
-  .item__more {
-    padding: .2rem .2rem 1rem calc(1.25rem + 1rem + .2rem);
-    max-width: 62ch;
-  }
-  .item__more p { margin: 0 0 .5rem; }
-  .item__more a { color: var(--ink); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
-  .item__more a:hover { color: var(--c); }
-  .also { color: var(--ink-soft); font-size: .88rem; }
-  .verdict { font-weight: 600; }
-
   .empty { color: var(--ink-soft); padding: 2rem 0; }
     </style>
 </head>
@@ -117,9 +82,6 @@
     </dialog>
 </div>
 <script>
-/* ============================================================
-   App
-   ============================================================ */
 (() => {
   const NS = 'http://www.w3.org/2000/svg';
   const app = document.getElementById('app');
@@ -165,6 +127,14 @@
   };
   const fmtYear = y => (y < 0 ? `${-y} BCE` : String(y));
 
+  // Same mapping your site already does for [data-accent] elements, but
+  // callable on demand — needed because this page rebuilds its DOM on
+  // every filter/sort change, so a one-time page-load pass isn't enough.
+  function syncAccents(root) {
+    (root || document).querySelectorAll('[data-accent]').forEach(node =>
+      node.style.setProperty('--accent-color', `var(--${node.dataset.accent})`));
+  }
+
   // Deterministic little waveform for podcast cards (shape only; colour comes from CSS)
   function wave(id) {
     const s = document.createElementNS(NS, 'svg');
@@ -191,6 +161,9 @@
   /* ----- preview dialog (click a card → mini window, centered) ----- */
   const preview = document.getElementById('preview');
   const previewBody = document.getElementById('previewBody');
+  if (!preview || !previewBody) {
+    console.warn('Library: #preview dialog markup is missing from this page — card clicks will do nothing until it is added.');
+  }
 
   function buildPreviewBody(it) {
     const frag = document.createDocumentFragment();
@@ -201,12 +174,14 @@
     top.append(kind, el('span', 'year', fmtYear(it.year)));
     frag.appendChild(top);
 
-    frag.appendChild(el('h2', 'l-card__title', it.title));
+    const titleEl = el('h2', 'l-card__title');
+    const markerDot = markerEl(it);
+    markerDot.title = statusLabel(it);
+    titleEl.append(markerDot, document.createTextNode(it.title));
+    frag.appendChild(titleEl);
     frag.appendChild(el('p', 'l-card__creator', it.creator));
 
     const foot = el('div', 'l-card__foot');
-    const st = el('span', 'status');
-    st.append(markerEl(it), statusLabel(it));
     const tag = el('span', 'tag', it.genre);
     foot.append(st, tag);
     frag.appendChild(foot);
@@ -228,14 +203,19 @@
   }
 
   function openPreview(it) {
-    preview.className = 'preview subject--' + it.subject;
+    if (!preview || !previewBody) return;
+    preview.className = 'preview';
+    preview.dataset.accent = it.subject;
     previewBody.replaceChildren(buildPreviewBody(it));
+    syncAccents(preview);
     if (typeof preview.showModal === 'function') preview.showModal();
   }
 
-  preview.querySelector('.preview__close').addEventListener('click', () => preview.close());
-  // Click on the backdrop area (the dialog element itself, not its content) closes it
-  preview.addEventListener('click', e => { if (e.target === preview) preview.close(); });
+  if (preview) {
+    preview.querySelector('.preview__close').addEventListener('click', () => preview.close());
+    // Click on the backdrop area (the dialog element itself, not its content) closes it
+    preview.addEventListener('click', e => { if (e.target === preview) preview.close(); });
+  }
 
   /* ----- static controls ----- */
   const chips = document.getElementById('subjectChips');
@@ -245,15 +225,16 @@
   const ratingSel = document.getElementById('ratingSel');
 
   function chip(value, label) {
-    const b = el('button', 'chip' + (value === 'all' ? '' : ` subject--${value}`));
+    const b = el('button', 'chip');
     b.type = 'button';
     b.dataset.subject = value;
-    if (value !== 'all') b.appendChild(el('i', 'dot'));
+    if (value !== 'all') { b.dataset.accent = value; b.appendChild(el('i', 'dot')); }
     b.appendChild(document.createTextNode(label));
     chips.appendChild(b);
   }
   chip('all', 'All subjects');
   Object.entries(SUBJECTS).forEach(([id, label]) => chip(id, label));
+  syncAccents(chips);
 
   kindSel.appendChild(new Option('All', 'all'));
   Object.entries(KINDS).forEach(([id, label]) => kindSel.appendChild(new Option(label, id)));
@@ -289,14 +270,14 @@
     if (it.status === 'finished' && it.rating) return `Finished, ${RATINGS[it.rating].toLowerCase()}`;
     return STATUS_LABEL[it.status] || STATUS_LABEL.notstarted;
   }
-  // Short text for the card footer: a rated finished item just says how it landed
   function statusText(it) {
     if (it.status === 'finished') return it.rating ? RATINGS[it.rating] : 'Finished';
     return STATUS_LABEL[it.status] || STATUS_LABEL.notstarted;
   }
 
   function card(it) {
-    const c = el('article', `l-card ${it.kind} subject--${it.subject}` + (it.status === 'inprogress' ? ' is-progress' : ''));
+    const c = el('article', `l-card ${it.kind}` + (it.status === 'inprogress' ? ' is-progress' : ''));
+    c.dataset.accent = it.subject;
     c.tabIndex = 0;
     c.setAttribute('role', 'button');
     c.setAttribute('aria-haspopup', 'dialog');
@@ -307,19 +288,19 @@
     top.append(kind, el('span', 'year', fmtYear(it.year)));
 
     const h = el('h3', 'l-card__title');
+    const markerDot = markerEl(it);
+    markerDot.title = statusLabel(it);
     const a = el('a', '', it.title);
     a.href = '#' + it.id;              // → item page (until item.html exists, opens the preview)
-    h.appendChild(a);
+    h.append(markerDot, a);
 
     c.append(top, h, el('p', 'l-card__creator', it.creator));
     if (it.kind === 'podcast') c.appendChild(wave(it.id));
     c.appendChild(el('p', 'l-card__note', it.note));
 
     const foot = el('div', 'l-card__foot');
-    const st = el('span', 'status');
-    st.append(markerEl(it), statusText(it));
     const tag = el('span', 'tag', it.genre);
-    foot.append(st, tag);
+    foot.append(tag);
     c.appendChild(foot);
 
     c.addEventListener('click', e => { e.preventDefault(); openPreview(it); });
@@ -330,7 +311,8 @@
   }
 
   function row(it, i) {
-    const li = el('li', `item subject--${it.subject}` + (it.status === 'inprogress' ? ' is-progress' : ''));
+    const li = el('li', 'item' + (it.status === 'inprogress' ? ' is-progress' : ''));
+    li.dataset.accent = it.subject;
     const b = el('button', 'item__main');
     b.type = 'button';
     b.setAttribute('aria-expanded', 'false');
@@ -386,7 +368,6 @@
   }
 
   function render() {
-    // The page's dominant ink follows the subject filter
     app.className = 'frame' + (state.subject !== 'all' ? ` subject--${state.subject}` : '');
 
     document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === state.view)));
@@ -408,6 +389,7 @@
       items.forEach((it, i) => ul.appendChild(row(it, i)));
       out.appendChild(ul);
     }
+    syncAccents();
     persist();
   }
   render();

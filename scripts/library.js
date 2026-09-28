@@ -280,5 +280,18 @@ const ITEMS = [
     also: ['greece'],
     note: 'Thoughts about love.'
     },
+  {
+    id: 'batrachomyomachia',
+    title: 'Batrachomyomachia',
+    creator: '-',
+    year: -250,
+    kind: 'book',
+    status: 'finished',
+    rating: 3,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    note: 'Parody of the Iliad.'
+    },
 ];
 
