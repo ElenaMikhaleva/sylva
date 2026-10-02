@@ -41,6 +41,9 @@ document.querySelectorAll('.tl-segment').forEach(segment => {
 document.querySelectorAll('[data-accent]').forEach(el =>
   el.style.setProperty('--accent-color', `var(--${el.dataset.accent})`)
 );
+document.querySelectorAll('[data-accent2]').forEach(el =>
+  el.style.setProperty('--accent-color2', `var(--${el.dataset.accent2})`)
+);
 
 /* ============================================================
    TREE OF LIFE — shared engine for two page types
@@ -612,3 +615,24 @@ function initStageTree(TREE_DATA) {
   window.addEventListener('hashchange', openFromHash);
 }
 
+/* ----------------------------------------------------- NOTES ------------------------------------------------- */
+
+const note = document.getElementById('note');
+  function wire(boxId, attr) {
+    const btns = document.querySelectorAll('#' + boxId + ' button');
+    btns.forEach(b => b.addEventListener('click', () => {
+      note.dataset[attr] = b.dataset.v;
+      btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    }));
+  }
+  wire('fonts', 'font');
+  wire('anns', 'ann');
+  wire('themes', 'theme');
+
+  function link(e, on) {
+    const t = e.target.closest('[data-n]');
+    if (!t) return;
+    note.querySelectorAll('[data-n="' + t.dataset.n + '"]').forEach(x => x.classList.toggle('is-linked', on));
+  }
+  ['mouseover', 'focusin'].forEach(ev => note.addEventListener(ev, e => link(e, true)));
+  ['mouseout', 'focusout'].forEach(ev => note.addEventListener(ev, e => link(e, false)));

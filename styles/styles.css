@@ -18,6 +18,7 @@
     --ff-title: 'Fraunces',serif;
     --ff-label: 'Golos Text', sans-serif;
     --ff-body: 'Work Sans',sans-serif;
+    --ff-hand: 'Caveat', cursive;
 
     --border-rad: 7px;
 }
@@ -603,6 +604,10 @@ body[data-page="library"] {
   --paleontology: #5f8f3a;
   --antiquity: #3c6e90;
 }
+body[data-page="notes"] {
+  --greece-1: #e4572e;
+  --greece-2: #2f6fd6;
+}
 
 /* STUDY NOTES */
 
@@ -748,13 +753,13 @@ body[data-page="library"] {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;      /* was flex-end: both columns start at the top */
-  gap: 16px 36px;
+  align-items: flex-start;
+  gap: 16px 10px;
+  margin-bottom: 5px;
 }
 .page-intro > p {
-  margin: 0;                    /* removes the default top margin */
+  margin: 0;
   flex: 1 1 320px;
-  max-width: 44ch;
 }
 
 .intro-years {
@@ -1703,3 +1708,112 @@ body[data-page="species"] .tree-flow {
     text-underline-offset: 3px;
   }
   .preview__full:hover { color: var(--c); }
+
+/* -------------------------------------------------- SHEET ---------------------------- */
+
+.sheet {
+    counter-reset: sec;
+    background-color: var(--bg-main);
+    }
+.note-sec { padding: 1.6rem 0 .8rem; }
+.note-sec h2 {
+    counter-increment: sec;
+    counter-reset: subsec;
+}
+.note-sec h2::before {
+    content: counter(sec, decimal-leading-zero) " ";
+    color: var(--accent-color);
+    }
+.note-sec h3 {
+    font-family: var(--ff-title);
+    font-size: var(--fs-l);
+    }
+.note-sec h3::before {
+    counter-increment: subsec;
+    content: counter(sec, decimal-leading-zero) "." counter(subsec) " ";
+    color: var(--accent-color);
+    }
+.line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    gap: .4rem 2.8rem;
+    align-items: start;
+    padding: .4rem 0;
+    }
+.line ul {
+    list-style-type: disc;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 3px;
+    unicode-bidi: isolate;
+}
+.line li {
+    position: relative;
+    margin: 0;
+    padding-left: 1.1rem;
+    }
+.line li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .55em;
+    width: .42rem;
+    height: .42rem;
+    border-radius: 50%;
+    background: var(--accent-color);
+    }
+.line--def .t { padding-left: 0; }
+.line--def .t::before { display: none; }
+.def { margin: .4rem 0 0; padding: .2rem 0 .2rem 1rem; border-left: 4px solid var(--a); }
+.def b { display: block; font: 600 .72rem var(--ff-label); text-transform: uppercase; letter-spacing: .06em; }
+.note-side {
+    display: flex;
+    flex-direction:
+    column;
+    gap: .9rem;
+    }
+.note-side .margin {
+    position: relative;
+    margin: 0; color: var(--accent-color2, var(--text-soft));
+    font: 500 1.4rem/1.15 var(--ff-hand);
+    transition: background .12s;
+    border-radius: 8px;
+    }
+.anchor { border-radius: 4px; transition: background .12s; }
+.anchor::after, .margin::after {
+  content: attr(data-n);
+  display: inline-grid;
+  place-items: center;
+  width: 1.2em;
+  height: 1.2em;
+  color: var(--accent-color2, var(--text-soft));
+  border-radius: 50%;
+  font: 700 .8rem/1 var(--ff-hand); }
+.anchor::after {
+    margin-left: -0.35em;
+    vertical-align: .3em;
+    font-size: .95rem;
+    }
+.margin::after {
+    position: absolute;
+    left: -1.25rem;
+    top: .2em;
+    font-size: 1rem;
+    border-color: var(--accent-color2, var(--text-soft));
+    }
+[data-ann="off"] .anchor::after, [data-ann="off"] .margin::after {
+    display: none;
+    }
+.anchor.is-linked {
+    background: color-mix(in srgb, var(--accent-color2, var(--text-soft)) 20%, transparent);
+    }
+.margin.is-linked {
+    background: color-mix(in srgb, var(--accent-color2, var(--text-soft)) 14%, transparent);
+    box-shadow: 0 0 0 .35rem color-mix(in srgb, var(--accent-color2, var(--text-soft)) 14%, transparent);
+    }
+.anchor, .margin {
+    outline-offset: 3px;
+    }
+.anchor:focus-visible, .margin:focus-visible {
+    outline: 2px solid var(--accent-color2, var(--text-soft));
+    }
