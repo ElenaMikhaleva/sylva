@@ -12,6 +12,7 @@ const ITEMS = [
     title: 'Prehistoric Planet',
     creator: 'Jon Favreau',
     year: 2022,
+    yearEnd: 2025,
     kind: 'film',
     status: 'inprogress',
     rating: null,
