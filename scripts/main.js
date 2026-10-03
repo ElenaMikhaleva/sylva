@@ -617,22 +617,281 @@ function initStageTree(TREE_DATA) {
 
 /* ----------------------------------------------------- NOTES ------------------------------------------------- */
 
-const note = document.getElementById('note');
-  function wire(boxId, attr) {
-    const btns = document.querySelectorAll('#' + boxId + ' button');
-    btns.forEach(b => b.addEventListener('click', () => {
-      note.dataset[attr] = b.dataset.v;
-      btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-    }));
-  }
-  wire('fonts', 'font');
-  wire('anns', 'ann');
-  wire('themes', 'theme');
+/* Works wherever it is loaded: it waits for the page, and each feature is isolated so one
+   failure can't stop the others. No colours are set or calculated here: everything
+   takes its colour from your CSS (the page's --accent-color). */
+(() => {
+  const pad = n => String(n).padStart(2, '0');
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
 
-  function link(e, on) {
-    const t = e.target.closest('[data-n]');
-    if (!t) return;
-    note.querySelectorAll('[data-n="' + t.dataset.n + '"]').forEach(x => x.classList.toggle('is-linked', on));
+  /* 1. hover / focus a phrase or its note -> both light up */
+  function initLinks() {
+    const root = document.querySelector('.sheet') || document;
+    const link = (e, on) => {
+      const t = e.target.closest('[data-n]');
+      if (!t) return;
+      root.querySelectorAll('[data-n="' + t.dataset.n + '"]').forEach(x => x.classList.toggle('is-linked', on));
+    };
+    ['mouseover', 'focusin'].forEach(ev => root.addEventListener(ev, e => link(e, true)));
+    ['mouseout', 'focusout'].forEach(ev => root.addEventListener(ev, e => link(e, false)));
   }
-  ['mouseover', 'focusin'].forEach(ev => note.addEventListener(ev, e => link(e, true)));
-  ['mouseout', 'focusout'].forEach(ev => note.addEventListener(ev, e => link(e, false)));
+
+  /* 2. contents: one pill with the current section, full-width dropdown with all h2s */
+  function initToc() {
+    const toc = document.querySelector('.toc');
+    const secs = [...document.querySelectorAll('.sheet .note-sec')].filter(s => s.querySelector('h2'));
+    if (!toc || !secs.length) return;
+
+    const det = el('details');
+    const sum = el('summary');
+    const curNum = el('b');
+    const curTitle = el('span', '', 'Contents');
+    sum.append(curNum, curTitle);
+    const list = el('ol');
+
+    secs.forEach((s, i) => {
+      if (!s.id) s.id = 'sec-' + (i + 1);
+      const a = el('a');
+      a.href = '#' + s.id;
+      a.append(el('b', '', pad(i + 1)), s.querySelector('h2').textContent);
+      a.addEventListener('click', () => { det.open = false; });
+      const li = el('li');
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    det.append(sum, list);
+    toc.appendChild(det);
+
+    const links = [...list.querySelectorAll('a')];
+    const setCurrent = i => {
+      curNum.textContent = pad(i + 1);
+      curTitle.textContent = secs[i].querySelector('h2').textContent;
+      links.forEach((a, j) => a.setAttribute('aria-current', String(j === i)));
+    };
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) setCurrent(secs.indexOf(en.target)); });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    secs.forEach(s => io.observe(s));
+
+    document.addEventListener('click', e => { if (!toc.contains(e.target)) det.open = false; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') det.open = false; });
+  }
+
+  /* 3. period strip: own section here -> filled, links there; otherwise dashed, links to the timeline */
+  function initPeriods() {
+    document.querySelectorAll('.periods .period').forEach(li => {
+      const id = li.dataset.period;
+      const a = li.querySelector('a');
+      const here = document.getElementById(id);
+      a.href = here ? '#' + id : 'greek-history.html#' + id;
+      li.classList.toggle('is-done', !!here);
+      li.classList.toggle('is-todo', !here);
+      if (!here) a.title = 'On the timeline page';
+    });
+  }
+
+  /* 4. materials. Put any of these on a <section class="note-sec"> or on an empty <div>:
+          data-ids="iliad odyssey"   exactly these items, in this order
+          data-materials="tag"       items whose "tags" array contains it
+          data-years="-800,-480"     items whose year (or year–yearEnd) overlaps the range
+          data-related="id id"       a second group, "Also related"
+          <ol class="recommended">…</ol> inside the div: a collapsed "Recommended" group (plain text)
+          data-closed                start collapsed
+        A collapsible "Materials" block is added; nothing is added if nothing matches. */
+  const fmtYear = y => (y < 0 ? `${-y} BCE` : String(y));
+  const fmtSpan = it => {
+    const a = it.year, b = it.yearEnd;
+    if (b == null || b === a) return fmtYear(a);
+    if (a < 0 && b < 0) return `${-a}–${-b} BCE`;
+    if (a < 0) return `${-a} BCE – ${b}`;
+    return `${a}–${b}`;
+  };
+
+  const STATUS = { finished: 'Finished', inprogress: 'In progress', notstarted: 'Not started', willnotfinish: 'Will not finish' };
+  let uid = 0;
+
+  /* same markup as the list view on the library page */
+  function row(it) {
+    const li = el('li', 'item' + (it.status === 'inprogress' ? ' is-progress' : ''));
+    li.dataset.accent = it.subject;                           // colour comes from CSS, see note-sheet.css
+
+    const b = el('button', 'item__main');
+    b.type = 'button';
+    const moreId = 'mat-' + (++uid);
+    b.setAttribute('aria-expanded', 'false');
+    b.setAttribute('aria-controls', moreId);
+
+    const rank = it.status === 'finished' && it.rating ? ` marker--r${it.rating}` : '';
+    const marker = el('i', 'marker marker--' + it.status + rank);
+    const title = el('span', 'item__title');
+    title.append(el('span', 'sr', (STATUS[it.status] || STATUS.notstarted) + ': '), it.title);
+
+    const kind = el('span', 'item__kind');
+    if (document.getElementById('i-' + it.kind)) {           // icon only if your sprite is on this page
+      const NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'icon');
+      svg.setAttribute('aria-hidden', 'true');
+      const use = document.createElementNS(NS, 'use');
+      use.setAttribute('href', '#i-' + it.kind);
+      svg.appendChild(use);
+      kind.appendChild(svg);
+    }
+    kind.append(typeof KINDS !== 'undefined' ? KINDS[it.kind] : it.kind);
+
+    b.append(marker, title, el('span', 'item__creator', it.creator), kind, el('span', 'item__year', fmtSpan(it)), el('span', 'item__subject', it.genre));
+
+    const more = el('div', 'item__more');
+    more.id = moreId;
+    more.hidden = true;
+    if (it.status === 'finished' && it.rating && typeof RATINGS !== 'undefined') more.appendChild(el('p', 'verdict', RATINGS[it.rating]));
+    if (it.note) more.appendChild(el('p', '', it.note));
+    if (it.also && it.also.length && typeof SUBJECTS !== 'undefined') {
+      more.appendChild(el('p', 'also', 'Also linked to ' + it.also.map(s => SUBJECTS[s] || s).join(', ') + '.'));
+    }
+    const open = el('a', '', 'Open page');
+    open.href = 'library.html#' + it.id;                     // change to your item page later
+    more.appendChild(open);
+
+    b.addEventListener('click', () => {
+      const show = more.hidden;
+      more.hidden = !show;
+      b.setAttribute('aria-expanded', String(show));
+    });
+    li.append(b, more);
+    return li;
+  }
+
+  /* look items up by id (warns about typos) */
+  function lookup(str) {
+    return (str || '').split(/\s+/).filter(Boolean).map(id => {
+      const it = ITEMS.find(x => x.id === id);
+      if (!it) console.warn('note-sheet: no item with id "' + id + '"');
+      return it;
+    }).filter(Boolean);
+  }
+  function pick(ids, tag, years) {
+    const listed = lookup(ids);
+    const rest = ITEMS.filter(it => {
+      if (listed.includes(it)) return false;
+      if (tag && (it.tags || []).includes(tag)) return true;
+      if (years && it.year != null) return it.year <= years[1] && (it.yearEnd ?? it.year) >= years[0];
+      return false;
+    }).sort((x, y) => x.year - y.year || x.title.localeCompare(y.title));
+    return [...listed, ...rest];
+  }
+
+  function initMaterials() {
+    const hosts = document.querySelectorAll('.materials, [data-ids], [data-materials], [data-years], [data-related]');
+    if (!hosts.length) return;
+    if (typeof ITEMS === 'undefined') {
+      console.warn('note-sheet: ITEMS is not defined. Load the data script as a normal (non-module) script.');
+      hosts.forEach(h => h.append(el('p', 'materials-error', 'Materials unavailable: ITEMS not found.')));
+      return;
+    }
+    hosts.forEach(host => {
+      const years = host.dataset.years ? host.dataset.years.split(',').map(Number) : null;
+      const rec = host.querySelector(':scope > .recommended');   // plain list written in the HTML
+      const blocks = [
+        { label: 'Directly related', items: pick(host.dataset.ids, host.dataset.materials, years) },
+        { label: 'Also related',     items: lookup(host.dataset.related) }
+      ].filter(g => g.items.length).map(g => {
+        const list = el('ul', 'list');
+        g.items.forEach(it => list.appendChild(row(it)));
+        return { label: g.label, node: list, fold: false };
+      });
+      if (rec) blocks.push({ label: 'Recommended', node: rec, fold: true });
+      if (!blocks.length) return;
+
+      const box = el('details', 'materials-box');
+      box.open = !host.hasAttribute('data-closed');
+      box.appendChild(el('summary', '', 'Materials'));
+      blocks.forEach(g => {
+        if (blocks.length === 1 && !g.fold) { box.appendChild(g.node); return; }
+        if (g.fold) {                                          // collapsible, starts closed
+          const d = el('details', 'materials-group');
+          d.append(el('summary', '', g.label), g.node);
+          box.appendChild(d);
+        } else {                                               // always visible
+          const d = el('div', 'materials-group');
+          d.append(el('p', 'materials-label', g.label), g.node);
+          box.appendChild(d);
+        }
+      });
+      host.appendChild(box);
+    });
+  }
+
+  /* 5a. a .line with a note column needs ONE text block next to it: if the text is several
+         elements (p + ul ...), wrap them so the grid keeps two columns */
+  function initWrap() {
+    document.querySelectorAll('.line').forEach(line => {
+      if (!line.querySelector(':scope > .note-side')) return;
+      const kids = [...line.children].filter(c => !c.classList.contains('note-side'));
+      if (kids.length < 2) return;
+      const box = el('div', 'line__text');
+      line.insertBefore(box, kids[0]);
+      kids.forEach(k => box.appendChild(k));
+    });
+  }
+
+  /* 5b. note column width s / m / l: picked from the longest note in the line
+         (override by hand with <div class="line" data-side="s|m|l">).
+         Default is m; quotes and pictures always get l. */
+  const SIDE_SHORT = 24, SIDE_LONG = 110;                   // characters
+  function initSide() {
+    document.querySelectorAll('.line').forEach(line => {
+      const side = line.querySelector(':scope > .note-side');
+      if (!side || line.hasAttribute('data-side')) return;
+      let longest = 0;
+      side.querySelectorAll(':scope > .margin').forEach(n => {
+        const s = n.querySelector('summary');
+        longest = Math.max(longest, (s ? s.textContent : n.textContent).trim().length);
+      });
+      const heavy = side.querySelector('.margin--quote, .img-box');
+      line.dataset.side = heavy || longest > SIDE_LONG ? 'l' : (longest <= SIDE_SHORT ? 's' : 'm');
+    });
+  }
+
+  /* 5. margin notes sit level with the phrase they belong to (stacking when they would overlap) */
+  function initNotes() {
+    const mq = window.matchMedia('(max-width: 44rem)');
+    const lines = [...document.querySelectorAll('.line')].filter(l => l.querySelector(':scope > .note-side > [data-n]'));
+    if (!lines.length) return;
+    const place = line => {
+      const side = line.querySelector(':scope > .note-side');
+      const notes = [...side.querySelectorAll(':scope > [data-n]')];
+      notes.forEach(n => { n.style.marginTop = ''; });
+      if (mq.matches) return;
+      const gap = parseFloat(getComputedStyle(side).rowGap) || 0;
+      const base = side.getBoundingClientRect().top;
+      let cursor = 0;
+      notes.forEach(n => {
+        const a = line.querySelector('.anchor[data-n="' + n.dataset.n + '"]');
+        const want = a ? a.getBoundingClientRect().top - base : cursor;
+        const mt = Math.max(0, want - cursor);
+        n.style.marginTop = mt + 'px';
+        cursor += mt + n.offsetHeight + gap;
+      });
+    };
+    const all = () => lines.forEach(place);
+    all();
+    window.addEventListener('resize', all);
+    mq.addEventListener('change', all);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+    if (window.ResizeObserver) lines.forEach(l => new ResizeObserver(() => place(l)).observe(l));
+  }
+
+  function start() {
+    [initLinks, initToc, initPeriods, initMaterials, initWrap, initSide, initNotes].forEach(f => {
+      try { f(); } catch (err) { console.error('note-sheet: ' + f.name + ' failed', err); }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();

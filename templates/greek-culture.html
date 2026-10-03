@@ -5,7 +5,9 @@
     <title>Sylva — Greek Culture</title>
     <link rel="stylesheet" href="../styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=Golos+Text:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">    <script src="../scripts/main.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=Golos+Text:wght@400;500;600&family=Reenie+Beanie&display=swap" rel="stylesheet">    <script src="../scripts/main.js" defer></script>
+    <script src="../scripts/main.js" defer></script>
+    <script src="../scripts/library.js"></script>
 </head>
 <body data-page="notes" data-accent="greece-1" data-accent2="greece-2">
 <header>
@@ -29,8 +31,40 @@
             <div class="intro-label">years covered, <br>from 800 BCE to 5 AD</div>
         </div>
     </div>
+    <nav class="toc" aria-label="Contents"></nav>
+    <div class="materials"
+            data-ids="prehistoricplanet odyssey iliad theogony worksanddays"
+            data-related="batrachomyomachia odyssey2026">
+            <ol class="recommended">
+                <li>Акимова Л. Искусство Древней Греции. Классика. СПб, 2007.</li>
+                <li>Большая история искусства. Т.2. (Древняя Греция). М., 2009.</li>
+                <li>Винничук Л. Люди, нравы и обычаи Древней Греции и Рима. М., 1988.</li>
+                <li>Гаспаров М.Л. Занимательная Греция. М., 1995.</li>
+                <li>Куманецкий К. История культуры Древней Греции и Рима. М., 1990.</li>
+                <li>Лосев А.Ф. Античная литература. Любое издание.</li>
+                <li>Радциг С.И. Введение в классическую филологию. М., 1965.</li>
+                <li>Радциг С.И. История древнегреческой литературы. М., 1977.</li>
+                <li>Словарь античности. М., 1994.</li>
+                <li>Тронский И.М. История античной литературы. М., 1983.</li>
+                <li>Боннар А. Греческая цивилизация. М., 1995.</li>
+                <li>Дьяконов И.М. Архаические мифы Востока и Запада. М., 2008.</li>
+                <li>Головня В.В. Аристофан. М., 1955.</li>
+                <li>Головня В.В. История античного театра. М., 1972.</li>
+                <li>Каллистов П. Античный театр. Л., 1978.</li>
+                <li>Лосев А.Ф. Гомер. М., 1960.</li>
+                <li>Лосев А.Ф. Мифология греков и римлян. М., 1996.</li>
+                <li>Мелетинский Е.М. Общее понятие мифа и мифологии// Мифология. Большой энциклопедический словарь. С. 653 – 658.</li>
+                <li>Мелетинский Е.М. Поэтика мифа. М., 1976.</li>
+                <li>Мифологический словарь/ Под ред. Е.М. Мелетинского. М., 1991.</li>
+                <li>Мякин Т.Г. Сапфо: язык мировоззрение, жизнь. СПб, 2004.</li>
+                <li>Шталь И.В. Гомеровский эпос. М., 1975.</li>
+                <li>Ярхо В.Н. Античная драма. Технология мастерства. М., 1990.</li>
+                <li>Ярхо В.Н., Полонская К.П. Античная лирика. М., 1967.</li>
+                <li>Ярхо В.Н. У истоков европейской комедии М., 1979</li>
+            </ol>
+        </div>
     <div class="sheet">
-        <div class="note-sec">
+        <section class="note-sec" id="society">
             <h2>Greek Society</h2>
             <div class="line">
                 <ul>
@@ -39,9 +73,11 @@
                     <li>Greeks felt a shared identity as <span class="anchor" data-n="1" tabindex="0">Hellenes</span>.</li>
                 </ul>
                 <div class="note-side">
-                    <p class="margin" data-n="1" tabindex="0">Helen of Troy isn't the woman's real name then? Assuming she existed</p>
+                    <p class="margin" data-n="1" tabindex="0">Helen of Troy isn't the woman's real name then? Assuming she existed.</p>
                 </div>
             </div>
+        </section>
+        <section class="note-sec" id="features">
             <h2>Features of Greek Culture</h2>
             <ul>
                 <li><span class="highlight">Harmony is beauty:</span>
@@ -96,24 +132,26 @@
                 <li>No difference between inside and outside, the architects rejected the interior.</li>
             </ul>
             <p>Pottery shapes: amphora (storage), hydria (water), kylix/skyphos (drinking cup), krater (mixing wine and water), oinochoe (pouring wine), lekythos/alabastron (oil, perfume), pelike, stamnos (storage).</p>
+        </section>
+        <section class="note-sec" id="periodization">
             <h2>Periodization of Greek Literature</h2>
-            <div class="line">
                 <ul>
-                    <li>Pre-literary: myth, folklore;
+                    <li class="li-period">Pre-literary: myth, folklore;
                         <ul>
-                            <li>Ancient Europe, 3rd millennium BC;</li>
+                            <li class="li-period">Ancient Europe, 3rd millennium BC;</li>
                             <li><span class="term" tabindex="0" data-def="эгейская культура">Aegean culture</span>. Connection to nature. Significant role of women, cult of the Great Goddess. Chthonic beings (earth);</li>
                             <li>Minoan civilization, c.2000 – c.1450 BC;</li>
                             <li>Mycenaean civilization, c.1700 – c.1100 BC. Indo-European influence. Male dominance. Principal deities associated with the sky. Struggle against the Aegean legacy and a complete reinterpretation of the old culture's deities. Destruction of cities and loss of writing as consequences of the 12th-century BC catastrophe (the "Dark Ages");</li>
                             <li>Olympian mythology forms, c. 1200 BC.</li>
                         </ul>
                     </li>
-                    <li><a href="greek-history.html#archaic">Archaic</a>: Homer, Hesiod, lyric;</li>
-                    <li><a href="greek-history.html#classical">Classical</a>;</li>
-                    <li><a href="greek-history.html#hellenistic">Hellenistic</a>;</li>
-                    <li><a href="greek-history.html#roman">Roman</a>.</li>
+                    <li class="li-period"><a href="greek-history.html#archaic">Archaic</a>: Homer, Hesiod, lyric;</li>
+                    <li class="li-period"><a href="greek-history.html#classical">Classical</a>;</li>
+                    <li class="li-period"><a href="greek-history.html#hellenistic">Hellenistic</a>;</li>
+                    <li class="li-period"><a href="greek-history.html#roman">Roman</a>.</li>
                 </ul>
-            </div>
+        </section>
+        <section class="note-sec" id="preliterary">
             <h2>Pre-literary</h2>
             <p>Features of Greek mythology:
                 <ul>
@@ -123,7 +161,7 @@
                     <li>anthropomorphism;</li>
                     <li>importance of Fate: the Moirai stand above the gods.</li>
                 </ul>
-            <p>Gods: Zeus (supreme god, thunder), his companions <span class="term" tabindex="0" data-def="Fates">Moirai</span>, <span class="term" tabindex="0" data-def="goddesses of the seasons">Horai</span>, <span class="term" tabindex="0" data-def="goddesses of joy">Charites</span>, <span class="term" tabindex="0" data-def="god of seas and earthquakes">Poseidon</span>, <span class="term" tabindex="0" data-def="underworld">Hades</span>, <span class="term" tabindex="0" data-def="hearth, домашний очаг">Hestia</span>, <span class="term" tabindex="0" data-def="agriculture">Demeter</span>, <span class="term" tabindex="0" data-def="marriage">Hera</span>, <span class="term" tabindex="0" data-def="god of trade, sports, roads, tricksters; guide of souls of the dead">Hermes</span>, <span class="term" tabindex="0" data-def="goddess of love and beauty">Aphrodite</span>, <span class="term" tabindex="0" data-def="god of war">Ares</span>, <span class="term" tabindex="0" data-def="goddess of civilized war, crafts, wisdom; motherless">Athena</span>, <span class="term" tabindex="0" data-def="the smith god; born of Hera without Zeus">Hephaestus</span>, <span class="term" tabindex="0" data-def="virgin huntress; patroness of groves, meadows; patroness of women in childbirth">Artemis</span>, <span class="term" tabindex="0" data-def="god of light, arts, prophecy">Apollo</span>, <span class="term" tabindex="0" data-def="god of wine, theater (a later cult); dying-and-rising god">Dionysus</span>.</p>
+            <p>Gods: <span class="term" tabindex="0" data-def="supreme god, thunder">Zeus</span>, his companions <span class="term" tabindex="0" data-def="Fates">Moirai</span>, <span class="term" tabindex="0" data-def="goddesses of the seasons">Horai</span>, <span class="term" tabindex="0" data-def="goddesses of joy">Charites</span>, <span class="term" tabindex="0" data-def="god of seas and earthquakes">Poseidon</span>, <span class="term" tabindex="0" data-def="underworld">Hades</span>, <span class="term" tabindex="0" data-def="hearth, домашний очаг">Hestia</span>, <span class="term" tabindex="0" data-def="agriculture">Demeter</span>, <span class="term" tabindex="0" data-def="marriage">Hera</span>, <span class="term" tabindex="0" data-def="god of trade, sports, roads, tricksters; guide of souls of the dead">Hermes</span>, <span class="term" tabindex="0" data-def="goddess of love and beauty">Aphrodite</span>, <span class="term" tabindex="0" data-def="god of war">Ares</span>, <span class="term" tabindex="0" data-def="goddess of civilized war, crafts, wisdom; motherless">Athena</span>, <span class="term" tabindex="0" data-def="the smith god; born of Hera without Zeus">Hephaestus</span>, <span class="term" tabindex="0" data-def="virgin huntress; patroness of groves, meadows; patroness of women in childbirth">Artemis</span>, <span class="term" tabindex="0" data-def="god of light, arts, prophecy">Apollo</span>, <span class="term" tabindex="0" data-def="god of wine, theater (a later cult); dying-and-rising god">Dionysus</span>.</p>
             <h3>Folklore Genres</h3>
             <ul>
                 <li>songs: for work; drinking (skolia); ritual for funeral, wedding, calendar (paean, dithyramb, partheneion);</li>
@@ -131,6 +169,8 @@
                 <li>fables, tales (a tale has a moral; myth is "truth"), heroic legends.</li>
             </ul>
             Performers of folklore: aoidos (improvising composer-performer); rhapsode (performer-collector).
+        </section>
+        <section class="note-sec" id="archaic">
             <h2>Archaic</h2>
             <div class="img-box right">
                 <div class="carousel">
@@ -186,6 +226,37 @@
                 <li>Doric Order. The oldest and simplest order, appearing around the 7th century BCE on the Greek mainland. Heavy, stocky columns with plain, rounded capitals and no base (Parthenon);</li>
                 <li>Ionic Order. Originated in Ionia (modern-day Turkey) around the mid-6th century BCE. It is taller and more slender, recognizable by scroll-like capitals called volutes and a distinct column base.</li>
             </ul>
+            <h3>Literature</h3>
+            <h4>Epic</h4>
+            <div class="materials"
+                data-ids="odyssey iliad theogony worksanddays"
+                data-related="batrachomyomachia odyssey2026">
+            </div>
+            <div class="line">
+                <p><span class="anchor" data-n="2" tabindex="0">Epic puts <span class="highlight">the collective above the individual</span>. It is consistent with the communal-tribal formation that gave rise to it, in which the collective also always holds primacy.</span></p>
+                <div class="note-side">
+                    <p class="margin" data-n="2" tabindex="0">by Losev</p>
+                </div>
+            </div>
+            <p>The epic style presents a collective that subordinates all personal life; any personal life becomes interesting to us only in connection with the collective's shared existence.</p>
+            <div class="line">
+                <p><span class="anchor" data-n="3" tabindex="0">Social background of <span class="highlight">Iliad and Odyssey:</span></span></p>
+                <div class="note-side">
+                    <p class="margin" data-n="3" tabindex="0">by Losev</p>
+                </div>
+            </div>
+            <ul>
+                <li>governance by kings, council of elders and a <span class="term" tabindex="0" data-def="народное собрание">popular assembly</span>;</li>
+                <li>clan aristocracy with luxury, feasts and a growing sense of private property;</li>
+                <li>developed crafts;</li>
+                <li>early trade disguised as gift exchange;</li>
+                <li>patriarchal slavery;
+                    <blockquote>У Гомера мы находим также и рабов. Эти рабы пока только рабы-пастухи и рабы домашние слуги. Имеются также привилегированные рабы — свинопас Евмей, даже имеющий собственного раба и собственное помещение, и нянька Одиссея, Евриклея. Евмей сам, в отсутствие хозяина, строит по собственному почину 12 закут для свиней и обносит весь этот скотный двор обширным забором (Од., XIV.7-16), строит дом, сам режет свиней из хозяйского стада для угощения прибывших, целуется со свободными при встрече, как будто бы и сам он свободный. Это в полном смысле слова друг Одиссея и родной для него наставник, почти руководитель. <br>От таких привилегированных рабов резко отличаются рабы — коровники, свинари, пахари. Как предвестие надвигающегося классового рабовладения можно рассматривать дикую расправу Одиссея с неверными рабами — особенно казнь Мелантия и повешение служанок (Од., XXII.471-477). Но если эта расправа Одиссея со своими рабами вызвана их виной, то Гомер вполне понимает, что бесчеловечное отношение к рабам может возникать и совершенно без всякой вины со стороны рабов. Андромаха ровно ничем не провинилась перед Ахиллом, и тем не менее он перебил ее родственников, когда брал ее в плен. Она остро переживает свое бесправие, а также бесправие и своего ребенка (Ил., XXII.477-499).</blockquote>
+                    <cite>— Лосев</cite>
+                </li>
+            </ul>
+        </section>
+        <section class="note-sec" id="classical">
             <h2>Classical</h2>
             <div class="img-box right">
                 <div class="carousel">
@@ -224,7 +295,7 @@
             <ul>
                 <li>Corinthian Order: The newest and most ornate of the three, evolving in the mid-5th century BCE. It features tall, slender columns topped with carved acanthus leaves.</li>
             </ul>
-        </div>
+        </section>
     </div>
 
 4. Epic: Homer

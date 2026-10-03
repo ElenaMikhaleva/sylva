@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="fixing bugs">
-      <change afterPath="$PROJECT_DIR$/templates/experiments/note-handwritten.html" afterDir="false" />
+    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="adding notes">
+      <change afterPath="$PROJECT_DIR$/templates/homer.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/iliad.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/odyssey.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/library.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/library.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/eons.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/eons.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/experiments/library_grid_with_covers_mockup.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/greek-culture.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/greek-culture.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -131,14 +134,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00014" summary="corrected index.html">
-      <option name="closed" value="true" />
-      <created>1784882272954</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1784882272954</updated>
     </task>
     <task id="LOCAL-00015" summary="corrected index.html">
       <option name="closed" value="true" />
@@ -524,7 +519,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790935423211</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="adding notes">
+      <option name="closed" value="true" />
+      <created>1790975363139</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1790975363139</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -549,6 +552,7 @@
     <MESSAGE value="fixing bugs and adding content" />
     <MESSAGE value="creating library" />
     <MESSAGE value="fixing bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing bugs" />
+    <MESSAGE value="adding notes" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding notes" />
   </component>
 </project>
