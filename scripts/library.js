@@ -297,5 +297,225 @@ const ITEMS = [
     also: ['greece'],
     note: 'Parody of the Iliad.'
     },
+  {
+    id: 'callinuspoems',
+    title: 'Poems',
+    creator: 'Callinus',
+    year: -650,
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Из воинственных элегий', status: 'finished', rating: 1 }
+    ]
+    },
+  {
+    id: 'tyrtaeuspoems',
+    title: 'Poems',
+    creator: 'Tyrtaeus',
+    year: -700,
+    yearEnd: -600,
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Благозаконие', status: 'finished', rating: 1 },
+        { title: 'Война с Мессенией', status: 'finished', rating: 1 }
+    ]
+    },
+  {
+    id: 'mimnermuspoems',
+    title: 'Poems',
+    creator: 'Mimnermus',
+    year: -550,
+    yearEnd: -500,
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Без золотой Афродиты', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'solonpoems',
+    title: 'Poems',
+    creator: 'Solon',
+    year: -500,
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Народ созвал я', status: 'finished', rating: 2 },
+        { title: 'Из элегии Саламин', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'theognispoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Theognis',
+    creatorNative: 'Феогнид',
+    year: -500,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'С умыслом добрым тебя обучу я тому', status: 'finished', rating: 1 },
+        { title: 'К низким людям, о Кирн, никогда не иди за советом', status: 'finished', rating: 1 },
+        { title: 'Что мне в любви на словах', status: 'finished', rating: 1 },
+        { title: 'Если тебя человек восхваляет', status: 'finished', rating: 1 },
+        { title: 'Низкому сделав добро', status: 'finished', rating: 1 },
+        { title: 'Нет в богатстве предела', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'archilochuspoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Archilochus',
+    year: -650,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Предоставь все божьей воле', status: 'finished', rating: 1 },
+        { title: 'Жизнеотношение', status: 'finished', rating: 1 },
+        { title: 'Можно ждать чего угодно', status: 'finished', rating: 1 },
+        { title: 'Мне не мил стратег высокий', status: 'finished', rating: 2 },
+        { title: 'Любовь. Необула', status: 'finished', rating: 1 },
+        { title: 'Друзья и враги', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'hipponaxpoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Hipponax',
+    year: -550,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Гермес Килленский', status: 'finished', rating: 1 },
+        { title: 'Ты не дал мне хламиды шерстяной, теплой', status: 'finished', rating: 2 },
+        { title: 'Богатства бог, чье имя Плутос', status: 'finished', rating: 1 },
+        { title: 'Я злу отдам усталую от мук душу', status: 'finished', rating: 2 }
+        ]
+    },
+  {
+    id: 'semonidesamorgospoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Semonides of Amorgos',
+    year: -650,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Различно женщин нрав сложил вначале Зевс', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'alcaeuspoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Alcaeus',
+    year: -620,
+    yearEnd: -580,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 3,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Весна', status: 'finished', rating: 3 },
+        { title: 'Гимн реке Гебру', status: 'finished', rating: 3 },
+        { title: 'Что из кувшина черпать большим ковшом', status: 'finished', rating: 1 },
+        { title: 'Буря не унимается', status: 'finished', rating: 1 },
+        { title: 'Новый вал', status: 'finished', rating: 2 },
+        { title: 'Алкей в святилище Геры', status: 'finished', rating: 2 },
+        { title: 'Послание Питтаку', status: 'finished', rating: 1 },
+        { title: 'Другу меланину', status: 'finished', rating: 1 },
+        { title: 'К Сапфо', status: 'finished', rating: 2 },
+        ]
+    },
+  {
+    id: 'sapphopoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Sappho',
+    year: -630,
+    yearEnd: -570,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 3,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Близ луны прекрасной', status: 'finished', rating: 1 },
+        { title: 'Гимн Афродите', status: 'finished', rating: 1 },
+        { title: 'Богу равным кажется мне по счастью', status: 'finished', rating: 1 },
+        { title: 'Пещера нимф', status: 'finished', rating: 1 },
+        { title: 'К брату Хараксу', status: 'finished', rating: 2 },
+        { title: 'К Анактории', status: 'finished', rating: 2 },
+        { title: 'Я к тебе взываю, Гонгила', status: 'finished', rating: 1 },
+        { title: 'Мнится, легче разлуки смерть', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'anacreonpoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Anacreon',
+    year: -573,
+    yearEnd: -485,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Артемиде', status: 'finished', rating: 1 },
+        { title: 'Дионису', status: 'finished', rating: 1 },
+        { title: 'Бросил шар свой пурпуровый', status: 'finished', rating: 2 },
+        { title: 'Бросился я в ночь со скалы', status: 'finished', rating: 2 },
+        { title: 'Поредели, побелели', status: 'finished', rating: 2 },
+        { title: 'Кобылица молодая', status: 'finished', rating: 2 }
+        ]
+    },
 ];
 

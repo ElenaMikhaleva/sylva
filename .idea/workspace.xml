@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="adding notes">
-      <change afterPath="$PROJECT_DIR$/templates/homer.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/iliad.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/odyssey.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/workanddays.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/library.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/library.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/experiments/library_grid_with_covers_mockup.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/greek-culture.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/greek-culture.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/odyssey.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/odyssey.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,14 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00015" summary="corrected index.html">
-      <option name="closed" value="true" />
-      <created>1784882406944</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1784882406944</updated>
     </task>
     <task id="LOCAL-00016" summary="corrected index.html">
       <option name="closed" value="true" />
@@ -527,7 +516,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790975363139</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="adding notes">
+      <option name="closed" value="true" />
+      <created>1791060909881</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1791060909881</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

@@ -1,5 +1,13 @@
 @charset "UTF-8";
 
+@font-face {
+  font-family: "MyHand";
+  src: url("fonts/MyHand.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
     --bg-main: #F5F0E6;
     --bg-dark: #F1ECDE;
@@ -19,7 +27,7 @@
     --ff-label: 'Golos Text', sans-serif;
     --ff-body: 'Work Sans',sans-serif;
     --ff-hand: 'Reenie Beanie', cursive;
-    --ff-hand-r: "Pangolin", cursive;
+    --ff-hand-r: "MyHand", "Pangolin", cursive;
 
     --border-rad: 7px;
 }
@@ -1616,9 +1624,7 @@ body[data-page="species"] .tree-flow {
 .list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
 .item {
     list-style: none;
-    border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
   }
-
   .item::marker { content: ''; }
   .item::before { content: none !important; }
 
@@ -1631,10 +1637,13 @@ body[data-page="species"] .tree-flow {
     padding: .8rem .2rem;
     text-align: left;
     font: 400 .92rem var(--ff-label);
-    color: var(--ink);
+    color: var(--text);
     background: transparent;
     border: 0;
     cursor: pointer;
+  }
+.sheet .item__main {
+    padding: .2rem .2rem;
   }
   .item__title {
     font-family: var(--ff-body);
