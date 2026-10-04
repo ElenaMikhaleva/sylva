@@ -517,5 +517,97 @@ const ITEMS = [
         { title: 'Кобылица молодая', status: 'finished', rating: 2 }
         ]
     },
+  {
+    id: 'alcmanpoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Alcman',
+    year: -700,
+    yearEnd: -600,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Спят вершины высокие гор и бездн провалы', status: 'finished', rating: 2 },
+        { title: 'Как-нибудь дам я треногий горшок тебе', status: 'finished', rating: 2 }
+        ]
+    },
+  {
+    id: 'ibycuspoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Ibycus',
+    year: -550,
+    yearEnd: -500,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Только весною цветут цветы', status: 'finished', rating: 1 },
+        { title: 'Эрос влажно-мерцающим взглядом очей своих', status: 'finished', rating: 2 }
+        ]
+    },
+  {
+    id: 'simonidesceospoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Simonide of Ceos',
+    year: -556,
+    yearEnd: -468,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 2,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Краткотечность жизни', status: 'finished', rating: 1 },
+        { title: 'Застолье', status: 'finished', rating: 1 },
+        { title: 'Стоит увидеть мне раз златокудрого Эхекратида', status: 'finished', rating: 2 },
+        { title: 'Победителям при Платеях', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'pindarpoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Pindar',
+    year: -518,
+    yearEnd: -438,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    parts: [
+        { title: 'Истмийская ода', status: 'finished', rating: 1 }
+        ]
+    },
+  {
+    id: 'bacchylidespoems',
+    color: 'greece',
+    title: 'Poems',
+    creator: 'Bacchylides',
+    year: -518,
+    yearEnd: -451,
+    country: 'greece',
+    kind: 'book',
+    status: 'finished',
+    rating: 1,
+    subject: 'antiquity',
+    genre: 'Poem',
+    also: ['greece'],
+    },
 ];
 
