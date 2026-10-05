@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="adding notes">
+      <change afterPath="$PROJECT_DIR$/templates/quotes.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/library.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/library.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/greek-culture.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/greek-culture.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mesozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mesozoic.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,14 +128,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00017" summary="corrected index.html">
-      <option name="closed" value="true" />
-      <created>1784884410536</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1784884410536</updated>
     </task>
     <task id="LOCAL-00018" summary="added phanerozoic.html">
       <option name="closed" value="true" />
@@ -521,7 +513,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791125184730</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="adding notes">
+      <option name="closed" value="true" />
+      <created>1791141219822</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1791141219822</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
