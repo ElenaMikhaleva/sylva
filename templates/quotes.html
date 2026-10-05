@@ -3,181 +3,141 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quotes block prototype</title>
-<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Quote of the day</title>
+<script>
+  /* inside Notion / another page (iframe) or ?embed=1: only the block. As a normal page: site stylesheet + header. */
+  var EMBED = window.top !== window.self || /[?&]embed\b/.test(location.search);
+  if (EMBED) document.documentElement.classList.add('embed');
+  else document.write('<link rel="stylesheet" href="style.css">');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ===== tokens: light / dark. Colours live here only. ===== */
-:root, [data-theme="light"] { --ink: #1f2328; --soft: #6b7280; --line: rgba(0,0,0,.14); --a: #e4572e; --b: #2f6fd6; --blend: multiply; }
-[data-theme="dark"]         { --ink: #ecebe8; --soft: #9aa0aa; --line: rgba(255,255,255,.16); --a: #ff7a52; --b: #6ea0ff; --blend: screen; }
+/* inks (all colour lives here). Overlaps multiply, like riso prints. */
+:root { --q-ink: #1f2328; --q-soft: #6b7280;
+  --q-orange: #e4572e; --q-blue: #2f6fd6; --q-yellow: #f5b700; --q-green: #1f9d6b; --q-pink: #f0508f; --q-teal: #0f9fa8; }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; background: transparent; }
+.quotes, .quotes * { box-sizing: border-box; }
+.embed body { margin: 0; background: transparent; }
+.embed .page-head { display: none; }
 
-/* ===== THE BLOCK (everything below .quotes is what gets embedded) ===== */
-.quotes { position: relative; max-width: 46rem; margin: 0 auto; padding: 1rem 0; color: var(--ink); font: 400 1rem/1.5 "Golos Text", Inter, system-ui, sans-serif; }
-.q { margin: 0; }
-.q blockquote, .q p { margin: 0; }
-.q p { color: var(--ink); }
-.q figcaption { display: flex; flex-wrap: wrap; gap: 0 .5rem; margin-top: .8rem; font-size: .85rem; color: var(--soft); }
-.q .who { font-weight: 600; color: var(--ink); }
-.q .work::before { content: "· "; }
-.q a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: .2em; }
-.q a:hover { text-decoration-color: var(--a); }
-.art { display: none; }
-
-/* single mode: one quote, arrows; list mode: all of them */
-.quotes:not([data-mode="list"]) .q:not(.is-current) { display: none; }
-.q.is-current { animation: in .35s ease; }
+.quotes { max-width: 46rem; margin: 0; padding: 1rem 0; color: var(--q-ink); font-weight: 400; font-size: 1rem; line-height: 1.5; font-family: var(--ff-label, "Golos Text", Inter, system-ui, sans-serif); }
+.q { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: .5rem 2rem; align-items: center; margin: 0; animation: in .4s ease; }
 @keyframes in { from { opacity: 0; transform: translateY(.3rem); } to { opacity: 1; transform: none; } }
-.quotes[data-mode="list"] .q + .q { margin-top: 1.2rem; }
-.nav { display: none; align-items: center; gap: .8rem; margin-top: 1.3rem; font-size: .82rem; color: var(--soft); font-variant-numeric: tabular-nums; }
-.quotes:not([data-mode="list"]) .nav { display: flex; }
-.quotes[data-mode="daily"] .nav button { display: none; }
-.nav[hidden] { display: none !important; }
-.nav button { width: 2rem; height: 2rem; padding: 0; border: 1.5px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1rem; line-height: 1; cursor: pointer; }
-.nav button:hover, .nav button:focus-visible { border-color: var(--a); outline: none; }
+.q blockquote { grid-column: 2; align-self: end; margin: 0; }
+.q p { margin: 0; color: var(--q-ink); font-weight: 500; font-size: clamp(1.3rem, 3.2vw, 1.9rem); line-height: 1.3; font-family: var(--ff-title, Inter, "Golos Text", system-ui, sans-serif); letter-spacing: -.02em; }
+.q figcaption { grid-column: 2; align-self: start; display: flex; flex-wrap: wrap; gap: 0 .5rem; font-size: .85rem; color: var(--q-soft); }
+.q .who { font-weight: 600; color: var(--q-ink); }
+.q .work::before { content: "· "; }
+.q a { color: inherit; text-decoration: underline; text-decoration-color: rgba(0,0,0,.2); text-underline-offset: .2em; }
+.q a:hover { text-decoration-color: var(--q-orange); }
 
-/* --- A. minimal: quiet, Notion-like quote rule --- */
-.quotes[data-style="minimal"] .q { padding: .2rem 0 .2rem 1.1rem; border-left: 2px solid var(--a); }
-.quotes[data-style="minimal"] .q p { font: 400 clamp(1.15rem, 2.6vw, 1.5rem)/1.45 Inter, "Golos Text", system-ui, sans-serif; letter-spacing: -.01em; }
+/* ===== the pictures: eight compositions, each with its own three inks (--p, --s, --t) ===== */
+.art { position: relative; width: 8rem; height: 8rem; grid-row: 1 / span 2; background-repeat: no-repeat; }
+.art::before, .art::after { content: ""; position: absolute; mix-blend-mode: multiply; }
 
-/* --- B. riso: flat tint, overprinted circles, offset second ink --- */
-.quotes[data-style="riso"] .q { position: relative; overflow: hidden; padding: 1.6rem 1.7rem 1.3rem; border-radius: 14px; background: color-mix(in srgb, var(--a) 15%, transparent); }
-.quotes[data-style="riso"] .q::before { content: ""; position: absolute; right: -1.6rem; top: -1.6rem; width: 6.5rem; height: 6.5rem; border-radius: 50%; background: var(--a); mix-blend-mode: var(--blend); opacity: .85; }
-.quotes[data-style="riso"] .q::after { content: ""; position: absolute; right: 3.6rem; top: 1.3rem; width: 5rem; height: 5rem; border-radius: 50%; mix-blend-mode: var(--blend); background: radial-gradient(var(--b) 1.4px, transparent 1.9px) 0 0 / 6px 6px; }
-.quotes[data-style="riso"] .q > * { position: relative; z-index: 1; }
-.quotes[data-style="riso"] .q p { max-width: 30ch; padding-top: .8rem; font: 700 clamp(1.25rem, 3vw, 1.7rem)/1.25 "Golos Text", system-ui, sans-serif; letter-spacing: -.02em; text-shadow: .04em .04em 0 color-mix(in srgb, var(--b) 35%, transparent); }
+/* 1 · circle, square, dot */
+.q[data-v="1"] { --p: var(--q-orange); --s: var(--q-blue); --t: var(--q-yellow); }
+.q[data-v="1"] .art { background: radial-gradient(circle at 90% 12%, var(--t) 0 .7rem, transparent .75rem); }
+.q[data-v="1"] .art::before { left: 0; top: 0; width: 5.8rem; height: 5.8rem; border-radius: 50%; background: var(--p); }
+.q[data-v="1"] .art::after  { right: 0; bottom: 0; width: 4rem; height: 4rem; background: var(--s); }
 
-/* --- C. art: a small geometric composition next to the text --- */
-.quotes[data-style="art"] .q { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: .5rem 2rem; align-items: center; padding: 1.2rem 0; }
-.quotes[data-style="art"][data-mode="list"] .q + .q { margin-top: 0; border-top: 1px solid var(--line); }
-.quotes[data-style="art"] .q p { font: 500 clamp(1.3rem, 3.2vw, 1.9rem)/1.3 Inter, "Golos Text", system-ui, sans-serif; letter-spacing: -.02em; }
-.quotes[data-style="art"] .art { display: block; position: relative; width: 7.5rem; height: 7.5rem; grid-row: 1 / span 2; }
-.quotes[data-style="art"] .q figcaption { grid-column: 2; margin-top: 0; align-self: start; }
-.quotes[data-style="art"] .q blockquote { grid-column: 2; align-self: end; }
-.quotes[data-style="art"] .art::before, .quotes[data-style="art"] .art::after { content: ""; position: absolute; mix-blend-mode: var(--blend); }
-.q[data-v="1"] .art::before { left: 0; top: 0; width: 5.4rem; height: 5.4rem; border-radius: 50%; background: var(--a); }
-.q[data-v="1"] .art::after  { right: 0; bottom: 0; width: 3.6rem; height: 3.6rem; background: var(--b); }
-.q[data-v="2"] .art::before { left: 0; bottom: 0; width: 7.5rem; height: 3.75rem; border-radius: 7.5rem 7.5rem 0 0; background: var(--b); }
-.q[data-v="2"] .art::after  { left: 0; top: 0; width: 7.5rem; height: 3.4rem; background: repeating-linear-gradient(180deg, var(--a) 0 .6rem, transparent .6rem 1.1rem); }
-.q[data-v="3"] .art::before { left: 0; top: .6rem; width: 6rem; height: 6rem; border-radius: 50%; border: 1.1rem solid var(--a); }
-.q[data-v="3"] .art::after  { right: 0; bottom: 0; width: 2.8rem; height: 2.8rem; border-radius: 50%; background: var(--b); }
-.q[data-v="4"] .art::before { left: 0; top: 1.2rem; width: 5rem; height: 5rem; border-radius: 50%; background: var(--a); }
-.q[data-v="4"] .art::after  { right: 0; top: 1.2rem; width: 5rem; height: 5rem; border-radius: 50%; background: var(--b); }
+/* 2 · ring, dot, square */
+.q[data-v="2"] { --p: var(--q-green); --s: var(--q-pink); --t: var(--q-yellow); }
+.q[data-v="2"] .art { background: linear-gradient(var(--t), var(--t)) 100% 0 / 1.5rem 1.5rem no-repeat; }
+.q[data-v="2"] .art::before { left: 0; top: .6rem; width: 6.4rem; height: 6.4rem; border-radius: 50%; border: 1.2rem solid var(--p); }
+.q[data-v="2"] .art::after  { right: 0; bottom: 0; width: 3rem; height: 3rem; border-radius: 50%; background: var(--s); }
+
+/* 3 · two overlapping circles, small square */
+.q[data-v="3"] { --p: var(--q-pink); --s: var(--q-teal); --t: var(--q-yellow); }
+.q[data-v="3"] .art { background: linear-gradient(var(--t), var(--t)) 50% 100% / 2rem 2rem no-repeat; }
+.q[data-v="3"] .art::before { left: 0; top: .6rem; width: 5.2rem; height: 5.2rem; border-radius: 50%; background: var(--p); }
+.q[data-v="3"] .art::after  { right: 0; top: .6rem; width: 5.2rem; height: 5.2rem; border-radius: 50%; background: var(--s); }
+
+/* 4 · Bauhaus tiles */
+.q[data-v="4"] { --p: var(--q-pink); --s: var(--q-blue); --t: var(--q-yellow); }
+.q[data-v="4"] .art { background: linear-gradient(var(--t), var(--t)) 0 100% / 3.7rem 3.7rem no-repeat, radial-gradient(circle at 100% 100%, var(--p) 0 3.8rem, transparent 3.85rem); }
+.q[data-v="4"] .art::before { left: 0; top: 0; width: 3.8rem; height: 3.8rem; border-radius: 3.8rem 0 0 0; background: var(--p); }
+.q[data-v="4"] .art::after  { right: 0; top: 0; width: 3.7rem; height: 3.7rem; border-radius: 50%; background: var(--s); }
+
+/* 5 · nested arches */
+.q[data-v="5"] { --p: var(--q-blue); --s: var(--q-orange); --t: var(--q-yellow); }
+.q[data-v="5"] .art::before { left: 0; bottom: 0; width: 8rem; height: 4rem; border-radius: 8rem 8rem 0 0; background: var(--p); }
+.q[data-v="5"] .art::after  { left: 1.4rem; bottom: 0; width: 5.2rem; height: 2.6rem; border-radius: 5.2rem 5.2rem 0 0; background: radial-gradient(circle at 50% 100%, var(--t) 0 1.1rem, var(--s) 1.15rem); mix-blend-mode: normal; }
+
+/* 6 · triangle, circle, square */
+.q[data-v="6"] { --p: var(--q-teal); --s: var(--q-orange); --t: var(--q-pink); }
+.q[data-v="6"] .art { background: linear-gradient(var(--t), var(--t)) 0 0 / 1.4rem 1.4rem no-repeat; }
+.q[data-v="6"] .art::before { left: 0; bottom: 0; width: 6.6rem; height: 6rem; background: var(--p); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.q[data-v="6"] .art::after  { right: 0; top: 0; width: 4.4rem; height: 4.4rem; border-radius: 50%; background: var(--s); }
+
+/* 7 · halftone disc, circle, square */
+.q[data-v="7"] { --p: var(--q-orange); --s: var(--q-teal); --t: var(--q-blue); }
+.q[data-v="7"] .art { background: linear-gradient(var(--t), var(--t)) 0 100% / 2rem 2rem no-repeat; }
+.q[data-v="7"] .art::before { left: 0; top: 0; width: 6rem; height: 6rem; border-radius: 50%; background: radial-gradient(var(--s) 2.2px, transparent 2.8px) 0 0 / .6rem .6rem; }
+.q[data-v="7"] .art::after  { right: 0; bottom: 0; width: 4.4rem; height: 4.4rem; border-radius: 50%; background: var(--p); }
+
+/* 8 · split circle */
+.q[data-v="8"] { --p: var(--q-orange); --s: var(--q-green); --t: var(--q-blue); }
+.q[data-v="8"] .art { background: radial-gradient(circle at 12% 88%, var(--t) 0 .9rem, transparent .95rem); }
+.q[data-v="8"] .art::before { left: 0; top: .5rem; width: 7rem; height: 3.5rem; border-radius: 7rem 7rem 0 0; background: var(--p); }
+.q[data-v="8"] .art::after  { right: 0; bottom: .5rem; width: 7rem; height: 3.5rem; border-radius: 0 0 7rem 7rem; background: var(--s); }
+
+/* ?gallery=1: all eight pictures, numbered */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, 9.5rem); gap: 1.6rem; }
+.gallery .q { display: block; }
+.gallery .num { margin-top: .5rem; font-size: .85rem; color: var(--q-soft); }
 
 @media (max-width: 34rem) {
-  .quotes[data-style="art"] .q { grid-template-columns: 1fr; }
-  .quotes[data-style="art"] .art { grid-row: auto; }
-  .quotes[data-style="art"] .q figcaption, .quotes[data-style="art"] .q blockquote { grid-column: 1; }
-  .quotes[data-style="art"] .art { width: 4.5rem; height: 4.5rem; transform-origin: top left; transform: scale(.6); margin-bottom: -2.5rem; }
+  .q { grid-template-columns: 1fr; }
+  .art { grid-row: auto; width: 5rem; height: 5rem; margin-bottom: .5rem; }
+  .art::before, .art::after { scale: .625; transform-origin: inherit; }
+  .q blockquote, .q figcaption { grid-column: 1; }
 }
-
-/* ===== prototype-only chrome (not part of the block). Hidden automatically inside an iframe or with ?embed=1 ===== */
-.embed-mode .bar, .embed-mode .page > :not(.quotes), .embed-mode .embed { display: none; }
-.embed-mode .stage, .embed-mode .stage[data-ctx] { min-height: 0; padding: 0; background: transparent; }
-.bar { position: sticky; top: 0; z-index: 9; display: flex; flex-wrap: wrap; gap: .5rem 1.3rem; align-items: center; padding: .6rem 1rem; background: #1d2433; color: #faf8f2; font: 400 .85rem system-ui, sans-serif; }
-.bar b { font-weight: 600; opacity: .7; }
-.bar button { font: 500 .85rem system-ui, sans-serif; color: inherit; background: transparent; border: 1.5px solid #fff5; border-radius: 999px; padding: .25rem .8rem; cursor: pointer; }
-.bar button[aria-pressed="true"] { background: #faf8f2; color: #1d2433; border-color: #faf8f2; }
-.stage { min-height: 28rem; padding: 2.2rem 1rem 3rem; color: var(--ink); transition: background .2s; }
-.stage[data-ctx="notion-light"] { background: #fff; }
-.stage[data-ctx="notion-dark"]  { background: #191919; }
-.stage[data-ctx="site"]         { background: #f2efe7; }
-.page { max-width: 46rem; margin: 0 auto; font: 400 1rem/1.6 system-ui, sans-serif; }
-.page h1 { margin: 0 0 .5rem; font-size: 2.2rem; letter-spacing: -.02em; }
-.page > p { color: var(--soft); }
-.embed { max-width: 46rem; margin: 1.5rem auto 3rem; padding: 0 1rem; font: 400 .9rem/1.6 system-ui, sans-serif; }
-.embed code { display: block; padding: .6rem .8rem; border-radius: 8px; background: #0001; word-break: break-all; }
 </style>
 </head>
 <body>
-<div class="bar">
-  <b>Style</b>
-  <span data-group="style">
-    <button type="button" data-v="minimal" aria-pressed="false">A · Minimal</button>
-    <button type="button" data-v="riso" aria-pressed="false">B · Riso</button>
-    <button type="button" data-v="art" aria-pressed="true">C · Art</button>
-  </span>
-  <b>Show</b>
-  <span data-group="mode">
-    <button type="button" data-v="daily" aria-pressed="true">Quote of the day</button>
-    <button type="button" data-v="single" aria-pressed="false">Browse</button>
-    <button type="button" data-v="list" aria-pressed="false">All</button>
-  </span>
-  <span id="dayctl"><button type="button" id="dayPrev" aria-label="Previous day">‹</button> <span id="dayLabel"></span> <button type="button" id="dayNext" aria-label="Next day">›</button></span>
-  <b>Preview in</b>
-  <span data-group="ctx">
-    <button type="button" data-v="notion-light" aria-pressed="true">Notion light</button>
-    <button type="button" data-v="notion-dark" aria-pressed="false">Notion dark</button>
-    <button type="button" data-v="site" aria-pressed="false">Site page</button>
-  </span>
-</div>
-
-<div class="stage" id="stage" data-ctx="notion-light" data-theme="light">
-  <div class="page">
-    <h1>Greek Culture</h1>
-    <p>Notes from the course. The block below is the embed.</p>
-
-    <!-- ===== the embeddable block ===== -->
-    <section class="quotes" id="quotes" data-style="art" data-mode="daily" aria-label="Selected quotes"></section>
-    <!-- ================================= -->
-
-    <p>The page continues here.</p>
-  </div>
-</div>
-
-<div class="embed">
-  <details open>
-    <summary><b>Embed it</b></summary>
-    <p>Host this file (GitHub Pages works), then in Notion type <b>/embed</b> and paste:</p>
-    <code id="url"></code>
-    <p>Other pages: <code id="iframe"></code></p>
-    <p>Options: <b>style</b> minimal | riso | art · <b>mode</b> daily | single | list · <b>theme</b> auto | light | dark · <b>auto</b> seconds between quotes (browse mode) · <b>label=0</b> hides the date · <b>tag</b> to show one topic only.</p>
-  </details>
+<div class="frame">
+  <h1 class="page-head">Quotes</h1>
+  <div class="crumbs page-head"><p><a href="index.html">Home</a></p></div>
+  <main class="quotes" id="quotes" aria-live="polite"></main>
 </div>
 
 <script>
-  /* sample quotes: replace with your own selection */
+  /* your selected quotes. "art" (1-8) is optional: it forces a picture for that quote. */
   const QUOTES = [
-    { text: 'Man is the measure of all things.', who: 'Protagoras', work: 'via Plato, Theaetetus', tag: 'society' },
-    { text: 'No man ever steps in the same river twice.', who: 'Heraclitus', work: 'Fragments', tag: 'philosophy' },
-    { text: 'У Гомера прекрасно не только драться, но и спать, и есть.', who: 'А. Ф. Лосев', work: 'Гомер', tag: 'epic', page: 'iliad.html' },
-    { text: 'Nothing in excess.', who: 'Delphic maxim', work: '', tag: 'society' },
-    { text: 'Wonders are many, and none is more wonderful than man.', who: 'Sophocles', work: 'Antigone', tag: 'drama' },
-    { text: 'The unexamined life is not worth living.', who: 'Socrates', work: 'via Plato, Apology', tag: 'philosophy' },
+    { text: 'Трезвость - это не постоянное чувство победы, а просто ощущение, что в какой-то рандомный вторник вы снова не пьете.', who: 'Дарья Кузина', work: 'video' },
+    { text: 'В этой непосредственности предполагаемого людская речь и журчание реки навевают одно и то же.', who: 'Чжуан-цзы', work: 'Чжуан-цзы, Предисловие' },
+    { text: 'Мы напрасно думаем, братья,<br>Что грозна небесная рать.<br>Ох, и жалкое же занятье —<br>Нас — таких! — посмертно карать!<br><…><br>И когда распоследней бурей<br>Наши грешные дни сметут, —<br>Там — нам всем ничего не будет.<br>Нам за все воздается — тут.', who: 'Дмитрий Быков' },
   ];
+  const ARTS = 8;
+  /* optional, one line per topic instead of one per quote: quotes with that tag take their pictures from this list */
+  const TAG_ART = {};                                          // e.g. { epic: [1, 6], philosophy: [3, 8] }
 
-  const q = new URLSearchParams(location.search);
+  const q = new URLSearchParams(location.search);              // ?date=2026-12-24 to preview a day, ?tag=epic, ?gallery=1, ?embed=1 to see the Notion version
   const box = document.getElementById('quotes');
-  const stage = document.getElementById('stage');
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
-  /* settings from the URL: ?style=riso&mode=list&theme=dark&auto=8&tag=epic */
-  const OK = { style: ['minimal', 'riso', 'art'], mode: ['daily', 'single', 'list'], theme: ['auto', 'light', 'dark'] };
-  const pick = (k, d) => (OK[k].includes(q.get(k)) ? q.get(k) : d);
-  box.dataset.style = pick('style', 'art');
-  box.dataset.mode = pick('mode', 'daily');
-  const themeParam = pick('theme', 'auto');
-  const setTheme = () => { document.documentElement.dataset.theme = themeParam === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : themeParam; };
-  setTheme();
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme);
-
-  if (window.top !== window.self || q.has('embed')) {            // inside Notion / another page: show only the block
-    document.documentElement.classList.add('embed-mode');
-    stage.removeAttribute('data-theme');                         // follow the real light/dark theme
+  function figure(it) {
+    const f = el('figure', 'q');
+    const set = TAG_ART[it.tag];
+    f.dataset.v = String(it.art || (set && set[it.i % set.length]) || (it.i % ARTS) + 1);   // a quote keeps its picture
+    const bq = el('blockquote');
+    bq.appendChild(el('p', '', it.text));
+    const cap = el('figcaption');
+    cap.appendChild(el('span', 'who', it.who));
+    if (it.work) {
+      const w = it.page ? el('a', 'work', it.work) : el('span', 'work', it.work);
+      if (it.page) w.href = it.page;
+      cap.appendChild(w);
+    }
+    f.append(el('div', 'art'), bq, cap);
+    return f;
   }
 
-  const list = QUOTES.filter(it => !q.get('tag') || it.tag === q.get('tag'));
-  let idx = 0;
-
   /* ----- quote of the day: random, but every quote comes up once before any repeats ----- */
-  let offset = 0;                                                // only the preview bar changes this
-  const when = () => {
-    const d = q.get('date') ? new Date(q.get('date') + 'T12:00:00') : new Date();
-    d.setDate(d.getDate() + offset);
-    return d;
-  };
-  const rng = seed => () => {                                    // small seeded generator (mulberry32)
+  const list = QUOTES.map((it, i) => ({ ...it, i })).filter(it => !q.get('tag') || it.tag === q.get('tag'));
+  const when = () => (q.get('date') ? new Date(q.get('date') + 'T12:00:00') : new Date());
+  const rng = seed => () => {                                  // small seeded generator (mulberry32)
     seed = (seed + 0x6D2B79F5) >>> 0;
     let t = seed;
     t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -189,86 +149,41 @@ html, body { margin: 0; background: transparent; }
     for (let i = n - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
     return a;
   }
-  function today() {
+  function todayIndex() {
     const n = list.length, d = when();
     if (n < 2) return 0;
     const day = Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000);   // local calendar day
     const cycle = Math.floor(day / n);
     let prevLast = -1, order = [];
-    for (let c = 0; c <= cycle; c++) {                           // same quote all day, for everyone
+    for (let c = 0; c <= cycle; c++) {
       order = shuffled(n, c + 1);
-      if (order[0] === prevLast) [order[0], order[1]] = [order[1], order[0]];   // no repeat across two cycles
+      if (order[0] === prevLast) [order[0], order[1]] = [order[1], order[0]];           // no repeat across two cycles
       prevLast = order[n - 1];
     }
     return order[day % n];
   }
-  const dayLabel = () => (q.get('label') === '0' ? '' : 'Quote of the day · ' + when().toLocaleDateString(undefined, { day: 'numeric', month: 'short' }));
 
-  list.forEach((it, i) => {
-    const f = el('figure', 'q');
-    f.dataset.v = String((i % 4) + 1);                       // which composition the "art" style uses
-    const bq = el('blockquote');
-    bq.appendChild(el('p', '', it.text));
-    const cap = el('figcaption');
-    cap.appendChild(el('span', 'who', it.who));
-    if (it.work) {
-      const w = it.page ? el('a', 'work', it.work) : el('span', 'work', it.work);
-      if (it.page) w.href = it.page;
-      cap.appendChild(w);
+  function render() {
+    box.replaceChildren();
+    if (q.has('gallery')) {
+      const g = el('div', 'gallery');
+      for (let v = 1; v <= ARTS; v++) {
+        const f = el('figure', 'q');
+        f.dataset.v = String(v);
+        f.append(el('div', 'art'), el('div', 'num', 'Picture ' + v));
+        g.appendChild(f);
+      }
+      box.appendChild(g);
+      return;
     }
-    f.append(el('div', 'art'), bq, cap);
-    box.appendChild(f);
-  });
-
-  const nav = el('div', 'nav');
-  const prev = el('button', '', '‹'); prev.type = 'button'; prev.setAttribute('aria-label', 'Previous quote');
-  const next = el('button', '', '›'); next.type = 'button'; next.setAttribute('aria-label', 'Next quote');
-  const count = el('span');
-  nav.append(prev, count, next);
-  box.appendChild(nav);
-
-  function show(i) {
-    idx = (i + list.length) % list.length;
-    box.querySelectorAll('.q').forEach((f, j) => f.classList.toggle('is-current', j === idx));
-    const daily = box.dataset.mode === 'daily';
-    count.textContent = daily ? dayLabel() : (idx + 1) + ' / ' + list.length;
-    nav.hidden = daily && !count.textContent;
+    if (!list.length) return;
+    box.appendChild(figure(list[todayIndex()]));
   }
-  prev.addEventListener('click', () => show(idx - 1));
-  next.addEventListener('click', () => show(idx + 1));
-  box.tabIndex = 0;
-  box.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') show(idx - 1); if (e.key === 'ArrowRight') show(idx + 1); });
-  const secs = Number(q.get('auto'));
-  if (secs > 0) setInterval(() => { if (box.dataset.mode === 'single') show(idx + 1); }, secs * 1000);
-  show(today());
-  const untilMidnight = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n + 1000; };
-  (function tick() { setTimeout(() => { if (box.dataset.mode === 'daily') show(today()); tick(); }, untilMidnight()); })();
-
-  /* prototype controls */
-  function embedText() {
-    const base = location.origin === 'null' ? 'https://YOUR-SITE/quotes.html' : location.origin + location.pathname;
-    const url = `${base}?style=${box.dataset.style}&mode=${box.dataset.mode}&theme=auto`;
-    const hgt = { daily: '13rem', single: '15rem', list: '40rem' }[box.dataset.mode];
-    document.getElementById('url').textContent = url;
-    document.getElementById('iframe').textContent = `<iframe src="${url}" style="width:100%;height:${hgt};border:0" loading="lazy"></iframe>`;
-  }
-  const dayctl = document.getElementById('dayctl');
-  const dayText = document.getElementById('dayLabel');
-  const syncDay = () => { dayText.textContent = when().toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + (offset ? '' : ' (today)'); };
-  [['dayPrev', -1], ['dayNext', 1]].forEach(([id, step]) => document.getElementById(id).addEventListener('click', () => { offset += step; show(today()); syncDay(); }));
-  syncDay();
-  document.querySelectorAll('.bar [data-group]').forEach(g => {
-    const btns = g.querySelectorAll('button');
-    btns.forEach(b => b.addEventListener('click', () => {
-      btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-      const k = g.dataset.group, v = b.dataset.v;
-      if (k === 'ctx') { stage.dataset.ctx = v; stage.dataset.theme = v === 'notion-dark' ? 'dark' : 'light'; }
-      else box.dataset[k] = v;
-      if (k === 'mode') { if (v !== 'list') show(today()); dayctl.hidden = v !== 'daily'; }
-      embedText();
-    }));
-  });
-  embedText();
+  render();
+  (function tick() {                                           // a page left open changes at midnight
+    const n = new Date();
+    setTimeout(() => { render(); tick(); }, new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n + 1000);
+  })();
 </script>
 </body>
 </html>

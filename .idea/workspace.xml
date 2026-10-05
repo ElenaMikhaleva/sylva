@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="adding notes">
-      <change afterPath="$PROJECT_DIR$/templates/quotes.html" afterDir="false" />
+    <list default="true" id="1be67b9a-5fc8-4d97-bbd8-6590e66db18f" name="Changes" comment="adding quotes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mesozoic.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mesozoic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/quotes.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/quotes.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,14 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770215658803</updated>
-    </task>
-    <task id="LOCAL-00018" summary="added phanerozoic.html">
-      <option name="closed" value="true" />
-      <created>1784898607953</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1784898607953</updated>
     </task>
     <task id="LOCAL-00019" summary="added phanerozoic.html, paleozoic.html">
       <option name="closed" value="true" />
@@ -521,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791141219822</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="adding quotes">
+      <option name="closed" value="true" />
+      <created>1791190878199</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1791190878200</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -547,6 +546,7 @@
     <MESSAGE value="creating library" />
     <MESSAGE value="fixing bugs" />
     <MESSAGE value="adding notes" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding notes" />
+    <MESSAGE value="adding quotes" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding quotes" />
   </component>
 </project>
