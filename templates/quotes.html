@@ -24,12 +24,27 @@
 .q { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: .5rem 2rem; align-items: center; margin: 0; animation: in .4s ease; }
 @keyframes in { from { opacity: 0; transform: translateY(.3rem); } to { opacity: 1; transform: none; } }
 .q blockquote { grid-column: 2; align-self: end; margin: 0; }
-.q p { margin: 0; color: var(--q-ink); font-weight: 500; font-size: clamp(1.3rem, 3.2vw, 1.9rem); line-height: 1.3; font-family: var(--ff-title, Inter, "Golos Text", system-ui, sans-serif); letter-spacing: -.02em; }
+.q p { margin: 0; color: var(--q-ink); font-weight: 500; font-size: clamp(1.3rem, 3.2vw, 1.9rem); line-height: 1.3; font-family: var(--ff-title, Inter, "Golos Text", system-ui, sans-serif); letter-spacing: -.02em; white-space: pre-line; }
+/* verses: line breaks kept, a bit smaller so lines don't wrap */
+.q p.verse { font-size: clamp(1.15rem, 2.8vw, 1.5rem); line-height: 1.4; }
 .q figcaption { grid-column: 2; align-self: start; display: flex; flex-wrap: wrap; gap: 0 .5rem; font-size: .85rem; color: var(--q-soft); }
 .q .who { font-weight: 600; color: var(--q-ink); }
 .q .work::before { content: "· "; }
 .q a { color: inherit; text-decoration: underline; text-decoration-color: rgba(0,0,0,.2); text-underline-offset: .2em; }
 .q a:hover { text-decoration-color: var(--q-orange); }
+
+/* Today / All switch */
+.mode { display: flex; gap: .4rem; max-width: 46rem; padding-top: 1rem; font-family: var(--ff-label, "Golos Text", Inter, system-ui, sans-serif); }
+.mode[hidden] { display: none; }
+.mode button { font: inherit; font-size: .85rem; padding: .25rem .8rem; border: 1px solid rgba(0,0,0,.18); border-radius: 2rem; background: transparent; color: var(--q-soft); cursor: pointer; }
+.mode button:hover { color: var(--q-ink); border-color: var(--q-ink); }
+.mode button[aria-pressed="true"] { color: var(--q-ink); border-color: var(--q-ink); font-weight: 600; }
+
+/* the list of all quotes */
+.all { display: flex; flex-direction: column; gap: 2.6rem; }
+.all .q { animation: none; }
+.all .q p { font-size: clamp(1.15rem, 2.6vw, 1.5rem); }
+.all .q p.verse { font-size: clamp(1.05rem, 2.4vw, 1.3rem); }
 
 /* ===== the pictures: eight compositions, each with its own three inks (--p, --s, --t) ===== */
 .art { position: relative; width: 8rem; height: 8rem; grid-row: 1 / span 2; background-repeat: no-repeat; }
@@ -99,30 +114,41 @@
 <div class="frame">
   <h1 class="page-head">Quotes</h1>
   <div class="crumbs page-head"><p><a href="index.html">Home</a></p></div>
+  <nav class="mode" id="mode" aria-label="View">
+    <button type="button" data-mode="today">Today</button>
+    <button type="button" data-mode="all">All</button>
+  </nav>
   <main class="quotes" id="quotes" aria-live="polite"></main>
 </div>
 
 <script>
-  /* your selected quotes. "art" (1-8) is optional: it forces a picture for that quote. */
+  /* your selected quotes. A line break in "text" (\n) makes it a verse, one line per verse line.
+     "art" (1-8) is optional: it forces a picture for that quote. */
   const QUOTES = [
     { text: 'Трезвость - это не постоянное чувство победы, а просто ощущение, что в какой-то рандомный вторник вы снова не пьете.', who: 'Дарья Кузина', work: 'video' },
     { text: 'В этой непосредственности предполагаемого людская речь и журчание реки навевают одно и то же.', who: 'Чжуан-цзы', work: 'Чжуан-цзы, Предисловие' },
-    { text: 'Мы напрасно думаем, братья,<br>Что грозна небесная рать.<br>Ох, и жалкое же занятье —<br>Нас — таких! — посмертно карать!<br><…><br>И когда распоследней бурей<br>Наши грешные дни сметут, —<br>Там — нам всем ничего не будет.<br>Нам за все воздается — тут.', who: 'Дмитрий Быков' },
+    { text: 'Мы напрасно думаем, братья,<br>Что грозна небесная рать.<br>Ох, и жалкое же занятье —<br>Нас — таких! — посмертно карать!<br>…<br>И когда распоследней бурей<br>Наши грешные дни сметут, —<br>Там — нам всем ничего не будет.<br>Нам за все воздается — тут.', who: 'Дмитрий Быков' },
+    { text: 'Heaven and Earth are not kind: \nThe ten thousand things are straw dogs to them.', who: 'Laozi', work: 'Dao De Jing' },
+    { text: 'The sun shines on everyone. The person having a wonderful day and the person struggling through grief. The kind soul and the difficult one. Rain falls on every garden.', work: 'Tao Te Ching Podcast' },
+    { text: 'The tree doesn\'t wonder if it deserves the rain, it just grows.', work: 'Tao Te Ching Podcast' },
   ];
   const ARTS = 8;
   /* optional, one line per topic instead of one per quote: quotes with that tag take their pictures from this list */
-  const TAG_ART = {};                                          // e.g. { epic: [1, 6], philosophy: [3, 8] }
+  const TAG_ART = {};
 
-  const q = new URLSearchParams(location.search);              // ?date=2026-12-24 to preview a day, ?tag=epic, ?gallery=1, ?embed=1 to see the Notion version
+  const q = new URLSearchParams(location.search);   // ?date=2026-10-11 previews a day, ?tag=epic, ?all=1 the list, ?gallery=1, ?embed=1 the Notion version
   const box = document.getElementById('quotes');
+  const modeBar = document.getElementById('mode');
+  let showAll = q.has('all');
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
   function figure(it) {
     const f = el('figure', 'q');
     const set = TAG_ART[it.tag];
     f.dataset.v = String(it.art || (set && set[it.i % set.length]) || (it.i % ARTS) + 1);   // a quote keeps its picture
+    const text = it.text.replace(/<br\s*\/?>/gi, '\n').trim();                               // old <br> still works
     const bq = el('blockquote');
-    bq.appendChild(el('p', '', it.text));
+    bq.appendChild(el('p', text.includes('\n') ? 'verse' : '', text));
     const cap = el('figcaption');
     cap.appendChild(el('span', 'who', it.who));
     if (it.work) {
@@ -137,7 +163,7 @@
   /* ----- quote of the day: random, but every quote comes up once before any repeats ----- */
   const list = QUOTES.map((it, i) => ({ ...it, i })).filter(it => !q.get('tag') || it.tag === q.get('tag'));
   const when = () => (q.get('date') ? new Date(q.get('date') + 'T12:00:00') : new Date());
-  const rng = seed => () => {                                  // small seeded generator (mulberry32)
+  const rng = seed => () => {
     seed = (seed + 0x6D2B79F5) >>> 0;
     let t = seed;
     t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -165,6 +191,8 @@
 
   function render() {
     box.replaceChildren();
+    modeBar.hidden = q.has('gallery');
+    modeBar.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.mode === 'all') === showAll)));
     if (q.has('gallery')) {
       const g = el('div', 'gallery');
       for (let v = 1; v <= ARTS; v++) {
@@ -177,13 +205,27 @@
       return;
     }
     if (!list.length) return;
-    box.appendChild(figure(list[todayIndex()]));
+    if (showAll) {
+      const all = el('div', 'all');
+      list.forEach(it => all.appendChild(figure(it)));
+      box.appendChild(all);
+    } else {
+      box.appendChild(figure(list[todayIndex()]));
+    }
   }
+  modeBar.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    showAll = b.dataset.mode === 'all';
+    render();
+  });
   render();
-  (function tick() {                                           // a page left open changes at midnight
+  (function tick() {
     const n = new Date();
     setTimeout(() => { render(); tick(); }, new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n + 1000);
   })();
 </script>
 </body>
 </html>
+
+
