@@ -1791,7 +1791,12 @@ body[data-page="species"] .tree-flow {
     }
 
 .line { margin: 0 0 0rem; }
-.line:has(> .note-side) { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: .4rem 2.8rem; align-items: start; }
+.line:has(> .note-side) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 12rem;
+    gap: .4rem 2.8rem;
+    align-items: start;
+    }
 .line p {
     margin-bottom: 7px;
 }
